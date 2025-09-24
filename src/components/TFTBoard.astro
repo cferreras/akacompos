@@ -1,6 +1,105 @@
 ---
 import TFTBoardCharacter from "./TFTBoardCharacter.astro";
 
-
+// Ejemplo de configuración del tablero
+const boardConfig = [
+  // Fila 1 (arriba) - 7 hexágonos
+  [
+    { champion: "Kobuko" as const, borderColor: "green" as const },
+    null,
+    { champion: "Poppy" as const, borderColor: "blue" as const },
+    { champion: "KSante" as const, borderColor: "purple" as const },
+    { champion: "Neeko" as const, borderColor: "blue" as const },
+    null,
+    { champion: "Rell" as const, borderColor: "gray" as const }
+  ],
+  // Fila 2 - 7 hexágonos (offset)
+  [
+    null, null, null, null, null, null, null
+  ],
+  // Fila 3 - 7 hexágonos
+  [
+    null, null, null, null, null, null, null
+  ],
+  // Fila 4 (abajo) - 7 hexágonos (offset)
+  [
+    { champion: "Jinx" as const, borderColor: "purple" as const },
+    null,
+    { champion: "Seraphine" as const, borderColor: "yellow" as const },
+    null,
+    { champion: "Xayah" as const, borderColor: "green" as const },
+    null,
+    { champion: "Syndra" as const, borderColor: "gray" as const }
+  ]
+];
 ---
-<TFTBoardCharacter />
+
+<div class="tft-board">
+  {boardConfig.map((row, rowIndex) => (
+    <div class={`board-row ${rowIndex % 2 === 1 ? 'offset' : ''}`}>
+      {row.map((cell, cellIndex) => (
+        <div class="hex-slot">
+          {cell ? (
+            <TFTBoardCharacter 
+              champion={cell.champion}
+              borderColor={cell.borderColor}
+              size="96px"
+            />
+          ) : (
+            <TFTBoardCharacter 
+              borderColor="gray"
+              size="96px"
+            />
+          )}
+        </div>
+      ))}
+    </div>
+  ))}
+</div>
+
+<style>
+  .tft-board {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #2a2d47 0%, #1e1e2e 50%, #161625 100%);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    max-width: fit-content;
+  }
+
+  .board-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: -20px; /* Más espacio entre filas */
+  }
+
+  .board-row.offset {
+    margin-left: 100px; /* Exactamente la mitad del ancho del hexágono + gap */
+  }
+
+  .hex-slot {
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+
+  .hex-slot:hover {
+    transform: scale(1.05);
+    z-index: 10;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .tft-board {
+      transform: scale(0.8);
+      transform-origin: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .tft-board {
+      transform: scale(0.6);
+    }
+  }
+</style>
