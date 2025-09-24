@@ -1,0 +1,278 @@
+---
+// Importar todos los assets de campeones
+import AatroxImg from "../assets/Champions/Aatrox.png";
+import AhriImg from "../assets/Champions/Ahri.png";
+import AkaliImg from "../assets/Champions/Akali.png";
+import AsheImg from "../assets/Champions/Ashe.png";
+import BraumImg from "../assets/Champions/Braum.png";
+import CaitlynImg from "../assets/Champions/Caitlyn.png";
+import DariusImg from "../assets/Champions/Darius.png";
+import DrMundoImg from "../assets/Champions/Dr Mundo.png";
+import EzrealImg from "../assets/Champions/Ezreal.png";
+import GangplankImg from "../assets/Champions/Gangplank.png";
+import GarenImg from "../assets/Champions/Garen.png";
+import GnarImg from "../assets/Champions/Gnar.png";
+import GwenImg from "../assets/Champions/Gwen.png";
+import JannaImg from "../assets/Champions/Janna.png";
+import JarvanIVImg from "../assets/Champions/JarvanIV.png";
+import JayceImg from "../assets/Champions/Jayce.png";
+import JhinImg from "../assets/Champions/Jhin.png";
+import JinxImg from "../assets/Champions/Jinx.png";
+import KaiSaImg from "../assets/Champions/KaiSa.png";
+import KalistaImg from "../assets/Champions/Kalista.png";
+import KarmaImg from "../assets/Champions/Karma.png";
+import KatarinaImg from "../assets/Champions/Katarina.png";
+import KayleImg from "../assets/Champions/Kayle.png";
+import KennenImg from "../assets/Champions/Kennen.png";
+import KobukoImg from "../assets/Champions/Kobuko.png";
+import KogMawImg from "../assets/Champions/KogMaw.png";
+import KSanteImg from "../assets/Champions/KSante.png";
+import LeeSinImg from "../assets/Champions/Lee Sin.png";
+import LeonaImg from "../assets/Champions/Leona.png";
+import LucianImg from "../assets/Champions/Lucian.png";
+import LuluImg from "../assets/Champions/Lulu.png";
+import LuxImg from "../assets/Champions/Lux.png";
+import MalphiteImg from "../assets/Champions/Malphite.png";
+import MalzaharImg from "../assets/Champions/Malzahar.png";
+import NaafiriImg from "../assets/Champions/Naafiri.png";
+import NeekoImg from "../assets/Champions/Neeko.png";
+import PoppyImg from "../assets/Champions/Poppy.png";
+import RakanImg from "../assets/Champions/Rakan.png";
+import RammusImg from "../assets/Champions/Rammus.png";
+import RellImg from "../assets/Champions/Rell.png";
+import RyzeImg from "../assets/Champions/Ryze.png";
+import SamiraImg from "../assets/Champions/Samira.png";
+import SennaImg from "../assets/Champions/Senna.png";
+import SeraphineImg from "../assets/Champions/Seraphine.png";
+import SettImg from "../assets/Champions/Sett.png";
+import ShenImg from "../assets/Champions/Shen.png";
+import SivirImg from "../assets/Champions/Sivir.png";
+import SmolderImg from "../assets/Champions/Smolder.png";
+import SwainImg from "../assets/Champions/Swain.png";
+import SyndraImg from "../assets/Champions/Syndra.png";
+import TheMightyMechImg from "../assets/Champions/The Mighty Mech.png";
+import TwistedFateImg from "../assets/Champions/Twisted Fate.png";
+import UdyrImg from "../assets/Champions/Udyr.png";
+import VarusImg from "../assets/Champions/Varus.png";
+import ViImg from "../assets/Champions/Vi.png";
+import ViegoImg from "../assets/Champions/Viego.png";
+import VolibearImg from "../assets/Champions/Volibear.png";
+import XayahImg from "../assets/Champions/Xayah.png";
+import XinZhaoImg from "../assets/Champions/Xin Zhao.png";
+import YasuoImg from "../assets/Champions/Yasuo.png";
+import YoneImg from "../assets/Champions/Yone.png";
+import YuumiImg from "../assets/Champions/Yuumi.png";
+import ZacImg from "../assets/Champions/Zac.png";
+import ZiggsImg from "../assets/Champions/Ziggs.png";
+import ZyraImg from "../assets/Champions/Zyra.png";
+
+// Colores predefinidos para los bordes
+const borderColors = {
+  purple: "#8b5cf6",   // Morado
+  blue: "#3b82f6",     // Azul
+  yellow: "#eab308",   // Amarillo
+  green: "#22c55e",    // Verde
+  gray: "#6b7280"      // Gris
+} as const;
+
+// Objeto con todos los campeones para fácil acceso
+const championAssets = {
+  Aatrox: AatroxImg,
+  Ahri: AhriImg,
+  Akali: AkaliImg,
+  Ashe: AsheImg,
+  Braum: BraumImg,
+  Caitlyn: CaitlynImg,
+  Darius: DariusImg,
+  "Dr Mundo": DrMundoImg,
+  Ezreal: EzrealImg,
+  Gangplank: GangplankImg,
+  Garen: GarenImg,
+  Gnar: GnarImg,
+  Gwen: GwenImg,
+  Janna: JannaImg,
+  JarvanIV: JarvanIVImg,
+  Jayce: JayceImg,
+  Jhin: JhinImg,
+  Jinx: JinxImg,
+  KaiSa: KaiSaImg,
+  Kalista: KalistaImg,
+  Karma: KarmaImg,
+  Katarina: KatarinaImg,
+  Kayle: KayleImg,
+  Kennen: KennenImg,
+  Kobuko: KobukoImg,
+  KogMaw: KogMawImg,
+  KSante: KSanteImg,
+  "Lee Sin": LeeSinImg,
+  Leona: LeonaImg,
+  Lucian: LucianImg,
+  Lulu: LuluImg,
+  Lux: LuxImg,
+  Malphite: MalphiteImg,
+  Malzahar: MalzaharImg,
+  Naafiri: NaafiriImg,
+  Neeko: NeekoImg,
+  Poppy: PoppyImg,
+  Rakan: RakanImg,
+  Rammus: RammusImg,
+  Rell: RellImg,
+  Ryze: RyzeImg,
+  Samira: SamiraImg,
+  Senna: SennaImg,
+  Seraphine: SeraphineImg,
+  Sett: SettImg,
+  Shen: ShenImg,
+  Sivir: SivirImg,
+  Smolder: SmolderImg,
+  Swain: SwainImg,
+  Syndra: SyndraImg,
+  "The Mighty Mech": TheMightyMechImg,
+  "Twisted Fate": TwistedFateImg,
+  Udyr: UdyrImg,
+  Varus: VarusImg,
+  Vi: ViImg,
+  Viego: ViegoImg,
+  Volibear: VolibearImg,
+  Xayah: XayahImg,
+  "Xin Zhao": XinZhaoImg,
+  Yasuo: YasuoImg,
+  Yone: YoneImg,
+  Yuumi: YuumiImg,
+  Zac: ZacImg,
+  Ziggs: ZiggsImg,
+  Zyra: ZyraImg,
+};
+
+interface Props {
+  champion?: keyof typeof championAssets;
+  imageUrl?: string;
+  borderColor?: keyof typeof borderColors | string;
+  size?: string;
+}
+
+const { 
+  champion,
+  imageUrl, 
+  borderColor = "gray", 
+  size = "96px" 
+} = Astro.props;
+
+// Usar la imagen del campeón si se especifica, sino usar imageUrl, sino mostrar vacío
+const finalImageUrl = champion ? championAssets[champion].src : imageUrl;
+const showEmptySlot = !champion && !imageUrl;
+
+// Obtener el color final del borde
+const finalBorderColor = borderColor in borderColors 
+  ? borderColors[borderColor as keyof typeof borderColors] 
+  : borderColor;
+---
+
+<div class="hexagon-container select-none" style={`--border-color: ${finalBorderColor}; --size: ${size};`}>
+  <div class="hexagon">
+    {finalImageUrl ? (
+      <img src={finalImageUrl} alt={champion ? `${champion} champion` : "Hexagon image"} class="hexagon-image" />
+    ) : (
+      <div class="empty-slot">
+        <div class="empty-slot-icon">+</div>
+        <div class="empty-slot-text">Empty</div>
+      </div>
+    )}
+  </div>
+</div>
+
+<style>
+  .hexagon-container {
+    display: inline-block;
+    position: relative;
+    width: var(--size);
+    height: var(--size);
+  }
+
+  .hexagon {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background-color: var(--border-color);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    border-radius: 0;
+    overflow: hidden;
+  }
+
+  .hexagon::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    right: 2px;
+    bottom: 2px;
+    background-color: transparent;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    z-index: 1;
+  }
+
+  .hexagon-image {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+    width: calc(100% - 14px);
+    height: calc(100% - 14px);
+    object-fit: cover;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    z-index: 2;
+  }
+
+  .empty-slot {
+    position: absolute;
+    top: 7px;
+    left: 7px;
+    right: 7px;
+    bottom: 7px;
+    width: calc(100% - 14px);
+    height: calc(100% - 14px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    z-index: 2;
+    color: #888;
+    font-family: system-ui, -apple-system, sans-serif;
+  }
+
+  .empty-slot-icon {
+    font-size: calc(var(--size) * 0.2);
+    font-weight: 300;
+    line-height: 1;
+    opacity: 0.6;
+  }
+
+  .empty-slot-text {
+    font-size: calc(var(--size) * 0.1);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    opacity: 0.7;
+  }
+
+  /* Alternativa con borde más grueso */
+  .hexagon.thick-border::before {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+  }
+
+  .hexagon.thick-border .hexagon-image {
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+  }
+</style>
