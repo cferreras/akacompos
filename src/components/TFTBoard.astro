@@ -5,31 +5,91 @@ import TFTBoardCharacter from "./TFTBoardCharacter.astro";
 const boardConfig = [
   // Fila 1 (arriba) - 7 hexágonos
   [
-    { champion: "Kobuko" as const, borderColor: "green" as const },
+    { 
+      champion: "Kobuko" as const, 
+      borderColor: "green" as const,
+      items: ["Infinity Edge" as const, "Bloodthirster" as const, "Radiant Infinity Edge" as const]
+    },
     null,
-    { champion: "Poppy" as const, borderColor: "blue" as const },
-    { champion: "KSante" as const, borderColor: "purple" as const },
-    { champion: "Neeko" as const, borderColor: "blue" as const },
+    { 
+      champion: "Poppy" as const, 
+      borderColor: "blue" as const,
+      items: ["Gargoyle Stoneplate" as const, "Bramble Vest" as const, "Sunfire Cape" as const]
+    },
+    { 
+      champion: "KSante" as const, 
+      borderColor: "purple" as const,
+      items: ["Evenshroud" as const, "Dawncore" as const]
+    },
+    { 
+      champion: "Neeko" as const, 
+      borderColor: "blue" as const,
+      items: ["Rabadon's Deathcap" as const, "Archangel's Staff" as const, "Jeweled Gauntlet" as const]
+    },
     null,
-    { champion: "Rell" as const, borderColor: "gray" as const }
+    { 
+      champion: "Rell" as const, 
+      borderColor: "gray" as const,
+      items: ["Protector Emblem" as const]
+    }
   ],
   // Fila 2 - 7 hexágonos (offset)
   [
-    null, null, null, null, null, null, null
+    null, 
+    { 
+      champion: "Ahri" as const, 
+      borderColor: "purple" as const,
+      items: ["Luden's Tempest" as const, "Deathfire Grasp" as const, "Horizon Focus" as const]
+    },
+    null, null, 
+    { 
+      champion: "Ashe" as const, 
+      borderColor: "green" as const,
+      items: ["Statikk Shiv" as const, "Giant Slayer" as const]
+    },
+    null, null
   ],
   // Fila 3 - 7 hexágonos
   [
-    null, null, null, null, null, null, null
+    null, null, 
+    { 
+      champion: "Garen" as const, 
+      borderColor: "yellow" as const,
+      items: ["Warmog's Armor" as const, "Steadfast Hammer" as const, "Crown of Demacia" as const]
+    },
+    null, 
+    { 
+      champion: "Jinx" as const, 
+      borderColor: "purple" as const,
+      items: ["Fishbones" as const, "Gold Collector" as const]
+    },
+    null, null
   ],
   // Fila 4 (abajo) - 7 hexágonos (offset)
   [
-    { champion: "Jinx" as const, borderColor: "purple" as const },
+    { 
+      champion: "Jinx" as const, 
+      borderColor: "purple" as const,
+      items: ["Guinsoo's Rageblade" as const, "Kraken's Fury" as const, "Giant Slayer" as const]
+    },
     null,
-    { champion: "Seraphine" as const, borderColor: "yellow" as const },
+    { 
+      champion: "Seraphine" as const, 
+      borderColor: "yellow" as const,
+      items: ["Blue Buff" as const, "Hand of Justice" as const, "Equinox" as const]
+    },
     null,
-    { champion: "Xayah" as const, borderColor: "green" as const },
+    { 
+      champion: "Xayah" as const, 
+      borderColor: "green" as const,
+      items: ["Rapid Firecannon" as const, "Infinity Edge" as const, "Last Whisper" as const]
+    },
     null,
-    { champion: "Syndra" as const, borderColor: "gray" as const }
+    { 
+      champion: "Syndra" as const, 
+      borderColor: "gray" as const,
+      items: ["Radiant Blue Buff" as const, "Nashor's Tooth" as const]
+    }
   ]
 ];
 ---
@@ -43,6 +103,7 @@ const boardConfig = [
             <TFTBoardCharacter 
               champion={cell.champion}
               borderColor={cell.borderColor}
+              items={cell.items}
               size="96px"
             />
           ) : (
