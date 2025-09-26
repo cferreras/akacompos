@@ -459,6 +459,11 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
       ) : (
         <div class="empty-slot"></div>
       )}
+      {champion && (
+        <div class="champion-name">
+          {champion}
+        </div>
+      )}
     </div>
   </div>
   
@@ -490,6 +495,26 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
     position: relative;
     width: var(--size);
     height: var(--size);
+  }
+
+  .champion-name {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    white-space: nowrap;
+    z-index: 30;
+    text-shadow: 
+      1px 1px 2px rgba(0, 0, 0, 0.8),
+      -1px -1px 2px rgba(0, 0, 0, 0.8),
+      1px -1px 2px rgba(0, 0, 0, 0.8),
+      -1px 1px 2px rgba(0, 0, 0, 0.8),
+      0px 0px 4px rgba(0, 0, 0, 0.9);
+    pointer-events: none;
   }
 
   .hexagon {
@@ -601,5 +626,21 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
   .character-container[style*="--size: 64px"] .item-slot {
     width: 16px;
     height: 16px;
+  }
+
+  /* Ajustar tamaño del nombre según el tamaño del hexágono */
+  .character-container[style*="--size: 96px"] .champion-name {
+    font-size: 12px;
+    padding: 2px 8px;
+  }
+
+  .character-container[style*="--size: 80px"] .champion-name {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+
+  .character-container[style*="--size: 64px"] .champion-name {
+    font-size: 8px;
+    padding: 1px 4px;
   }
 </style>
