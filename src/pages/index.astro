@@ -1,6 +1,41 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import TFTBoard from '../components/TFTBoard.astro';
+import ResponsiveTFTBoard from '../components/ResponsiveTFTBoard.astro';
+
+// Composición de ejemplo para la página principal
+const featuredComp = [
+  {
+    champion: "Neeko",
+    borderColor: "yellow" as const,
+    items: ["Steadfast Hammer", "Crownguard", "Warmog's Armor"],
+    position: { row: 0, col: 4 }
+  },
+  {
+    champion: "KSante", 
+    borderColor: "purple" as const,
+    items: ["Thief's Gloves"],
+    position: { row: 1, col: 3 }
+  },
+  {
+    champion: "Rakan",
+    borderColor: "green" as const,
+    items: [],
+    position: { row: 2, col: 1 }
+  },
+  {
+    champion: "Janna",
+    borderColor: "yellow" as const,
+    items: ["Red Buff", "Archangel's Staff"],
+    position: { row: 3, col: 4 }
+  },
+  {
+    champion: "KogMaw",
+    borderColor: "yellow" as const,
+    items: ["Archangel's Staff", "Spear of Shojin", "Spear of Shojin"],
+    position: { row: 3, col: 6 }
+  }
+];
 ---
 
 <Layout title="TFTComps - Home">
@@ -14,14 +49,29 @@ import TFTBoard from '../components/TFTBoard.astro';
 			</p>
 		</div>
 
-		<div class="max-w-4xl mx-auto">
-			<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Featured Composition</h2>
-			<TFTBoard />
+		<div class="max-w-5xl mx-auto space-y-12">
+			<div>
+				<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Featured Composition - Responsive Design</h2>
+				<ResponsiveTFTBoard 
+					champions={featuredComp}
+					title="Featured Team Comp"
+					description="Discover this powerful composition featuring strong synergies and optimal positioning"
+				/>
+			</div>
+
 			
-			<div class="mt-8 text-center">
+			
+			<div class="text-center space-y-4">
+				<a 
+					href="/responsive-demo"
+					class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-primary-light transition-all mr-4"
+				>
+					View Responsive Demo
+					<span class="material-symbols-outlined">arrow_forward</span>
+				</a>
 				<a 
 					href="/compositions/cosmic-infiltrators"
-					class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-primary-light transition-all"
+					class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all"
 				>
 					View Full Details
 					<span class="material-symbols-outlined">arrow_forward</span>

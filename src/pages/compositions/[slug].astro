@@ -1,6 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import TFTBoard from "../../components/TFTBoard.astro";
+import ResponsiveTFTBoard from "../../components/ResponsiveTFTBoard.astro";
 
 export async function getStaticPaths() {
   // Define multiple compositions for different slugs
@@ -116,9 +116,9 @@ const { slug } = Astro.params;
 ---
 
 <Layout title={`${composition.tier} - ${composition.title}`}>
-  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-    <div class="max-w-4xl mx-auto">
-      <div class="mb-8">
+  <div class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 md:py-6">
+    <div class="max-w-6xl mx-auto">
+      <div class="mb-6">
         <div
           class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
         >
@@ -155,16 +155,17 @@ const { slug } = Astro.params;
         </div>
       </div>
       
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2">
           <h2
-            class="text-2xl font-bold text-slate-900 dark:text-white mb-4"
+            class="text-2xl font-bold text-slate-900 dark:text-white mb-3"
           >
             Composition Board
           </h2>
-          <TFTBoard />
           
-          <div class="mt-8 space-y-6">
+          <ResponsiveTFTBoard />
+          
+          <div class="mt-6 space-y-4">
             <div>
               <h3
                 class="text-xl font-bold text-slate-900 dark:text-white mb-3"
