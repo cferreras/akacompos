@@ -1,5 +1,6 @@
 ---
 import TFTBoardCharacter from "./TFTBoardCharacter.astro";
+import ItemWithImage from "./ItemWithImage.astro";
 
 interface ChampionData {
   name: string;
@@ -97,7 +98,7 @@ const board = createBoard();
             {champion.items && champion.items.length > 0 && (
               <div class="champion-items">
                 {champion.items.map(item => (
-                  <span class="item-name">{item}</span>
+                  <ItemWithImage itemName={item} size="small" />
                 ))}
               </div>
             )}
@@ -222,16 +223,7 @@ const board = createBoard();
   .champion-items {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.25rem;
-  }
-
-  .item-name {
-    font-size: 0.75rem;
-    color: #94a3b8;
-    background: rgba(139, 92, 246, 0.2);
-    padding: 0.125rem 0.5rem;
-    border-radius: 4px;
-    white-space: nowrap;
+    gap: 0.5rem;
   }
 
   /* Responsive breakpoints */

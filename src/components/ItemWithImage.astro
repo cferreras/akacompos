@@ -1,0 +1,134 @@
+---
+export interface Props {
+  itemName: string;
+  description?: string;
+  size?: 'small' | 'medium' | 'large';
+}
+
+const { itemName, description, size = 'small' } = Astro.props;
+
+// Importar todas las imágenes necesarias
+import bfSword from '../assets/items/bf-sword.png';
+import chainVest from '../assets/items/chain-vest.png';
+import giantsBelt from '../assets/items/giants-belt.png';
+import needlesslyLargeRod from '../assets/items/needlessly-large-rod.png';
+import negatronCloak from '../assets/items/negatron-cloak.png';
+import recurveBow from '../assets/items/recurve-bow.png';
+import sparringGloves from '../assets/items/sparring-gloves.png';
+import spatula from '../assets/items/spatula.png';
+import tearOfTheGoddess from '../assets/items/tear-of-the-goddess.png';
+import fryingPan from '../assets/items/frying_pan.png';
+
+// Items combinados
+import infinityEdge from '../assets/items/combined/infinity-edge.png';
+import lastWhisper from '../assets/items/combined/last-whisper.png';
+import bloodthirster from '../assets/items/combined/bloodthirster.png';
+import blueBuff from '../assets/items/combined/blue-buff2.png';
+import warmogsArmor from '../assets/items/combined/warmogs-armor.png';
+import dragonsClaw from '../assets/items/combined/dragons-claw.png';
+import brambleVest from '../assets/items/combined/bramble-vest.png';
+import ionicSpark from '../assets/items/combined/ionic-spark.png';
+import deathblade from '../assets/items/combined/deathblade.png';
+import guardbreaker from '../assets/items/combined/guardbreaker.png';
+import quicksilver from '../assets/items/combined/quicksilver.png';
+import hextechGunblade from '../assets/items/combined/hextech-gunblade.png';
+import archangelsStaff from '../assets/items/combined/archangels-staff.png';
+import gargoyleStoneplate from '../assets/items/combined/gargoyle-stoneplate.png';
+import titansResolve from '../assets/items/combined/titans-resolve.png';
+import sunfireCape from '../assets/items/combined/sunfire-cape.png';
+import evenshroud from '../assets/items/combined/evenshroud.png';
+import morellonomicon from '../assets/items/combined/morellonomicon.png';
+import guinsoosRageblade from '../assets/items/combined/guinsoos-rageblade.png';
+import krakensFury from '../assets/items/combined/krakensfury.png';
+import giantSlayer from '../assets/items/combined/giant-slayer.png';
+import redBuff from '../assets/items/combined/redbuff.png';
+
+// Función para obtener la imagen correcta
+const getItemImage = (name: string) => {
+  const itemImageMap: Record<string, any> = {
+    // Items básicos
+    "BF Sword": bfSword,
+    "Chain Vest": chainVest,
+    "Giant's Belt": giantsBelt,
+    "Needlessly Large Rod": needlesslyLargeRod,
+    "Negatron Cloak": negatronCloak,
+    "Recurve Bow": recurveBow,
+    "Sparring Gloves": sparringGloves,
+    "Spatula": spatula,
+    "Tear of the Goddess": tearOfTheGoddess,
+    "Frying Pan": fryingPan,
+
+    // Items combinados
+    "Infinity Edge": infinityEdge,
+    "Last Whisper": lastWhisper,
+    "Bloodthirster": bloodthirster,
+    "Blue Buff": blueBuff,
+    "Warmog's Armor": warmogsArmor,
+    "Warmogs": warmogsArmor,
+    "Dragon's Claw": dragonsClaw,
+    "Bramble Vest": brambleVest,
+    "Ionic Spark": ionicSpark,
+    "Deathblade": deathblade,
+    "Guardian Angel": guardbreaker,
+    "Quicksilver": quicksilver,
+    "Hextech Gunblade": hextechGunblade,
+    "Archangel's Staff": archangelsStaff,
+    "Gargoyle Stoneplate": gargoyleStoneplate,
+    "Titan's Resolve": titansResolve,
+    "Sunfire Cape": sunfireCape,
+    "Evenshroud": evenshroud,
+    "Morellonomicon": morellonomicon,
+    "Guinsoo's Rageblade": guinsoosRageblade,
+    "Kraken's Fury": krakensFury,
+    "Giant Slayer": giantSlayer,
+    "Red Buff": redBuff
+  };
+
+  return itemImageMap[name]?.src || infinityEdge.src; // Default fallback
+};
+
+const imageUrl = getItemImage(itemName);
+const sizeClasses = {
+  small: 'w-6 h-6',
+  medium: 'w-8 h-8',
+  large: 'w-12 h-12'
+};
+---
+
+<div class="item-with-image">
+  <img 
+    src={imageUrl} 
+    alt={itemName}
+    class={`${sizeClasses[size]} object-cover rounded border border-slate-600`}
+    loading="lazy"
+  />
+  <span class="item-name">{itemName}</span>
+  {description && (
+    <span class="item-description">{description}</span>
+  )}
+</div>
+
+<style>
+  .item-with-image {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    background: rgba(139, 92, 246, 0.2);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .item-name {
+    font-weight: 500;
+    color: #e2e8f0;
+  }
+
+  .item-description {
+    color: #94a3b8;
+    font-size: 0.7rem;
+    font-style: italic;
+  }
+</style>

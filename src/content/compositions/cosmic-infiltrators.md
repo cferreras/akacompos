@@ -53,21 +53,3 @@ board:
       position: { row: 0, col: 4 }
       stars: 1
 ---
-
-# Estrategia Avanzada
-
-Esta composición es especialmente efectiva cuando logras conseguir todos los campeones clave temprano en la partida. Es fundamental posicionar a los infiltradores en la parte trasera del tablero para maximizar su potencial de daño.
-
-## Posicionamiento Recomendado
-
-1. Coloca a los campeones principales en las esquinas traseras
-2. Los tanques deben ir en primera línea
-3. Los campeones de apoyo en la fila media
-
-## Timing de la Composición
-
-- **Early Game**: Busca components para los items clave
-- **Mid Game**: Transiciona hacia los campeones principales
-- **Late Game**: Mejora a 3 estrellas los carries principales
-
-Esta build requiere una economía sólida y un buen timing para ser efectiva.

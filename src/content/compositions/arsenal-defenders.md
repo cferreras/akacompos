@@ -55,28 +55,3 @@ board:
       position: { row: 0, col: 1 }
       stars: 1
 ---
-
-# Guía de Arsenal Defenders
-
-Esta composición se basa en un enfoque defensivo sólido que puede aguantar las composiciones más agresivas del meta actual.
-
-## Puntos Clave
-
-- **Resistencia excepcional**: Los campeones tanque pueden absorber enormes cantidades de daño
-- **Control de masas**: Múltiples habilidades de CC para controlar el campo de batalla
-- **Escalado tardío**: Se vuelve más fuerte conforme avanza la partida
-
-## Itemización Prioritaria
-
-1. **Tanques principales**: Warmog's, Dragon's Claw, Bramble Vest
-2. **Carries de apoyo**: Items de daño sostenido
-3. **Utilidad**: Items de soporte y curación
-
-## Contras de Otros Builds
-
-Esta composición es particularmente efectiva contra:
-- Composiciones de asesinos
-- Builds de daño físico puro
-- Estrategias de rush temprano
-
-Sin embargo, puede tener dificultades contra composiciones de daño mágico verdadero o builds que ignoren las defensas.

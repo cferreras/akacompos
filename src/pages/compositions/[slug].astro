@@ -1,18 +1,20 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import TFTBoardFromData from "../../components/TFTBoardFromData.astro";
-import { getCollection, render, type CollectionEntry } from 'astro:content';
+import ItemWithImage from "../../components/ItemWithImage.astro";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 
 export async function getStaticPaths() {
-  const compositions = await getCollection('compositions');
-  
-  return compositions.map((composition: { id: any; }) => ({
+  const compositions = await getCollection("compositions");
+
+  return compositions.map((composition: CollectionEntry<"compositions">) => ({
     params: { slug: composition.id },
-    props: { composition }
+    props: { composition },
   }));
 }
 
-const { composition }: { composition: CollectionEntry<'compositions'> } = Astro.props;
+const { composition }: { composition: CollectionEntry<"compositions"> } =
+  Astro.props;
 const { slug } = Astro.params;
 
 // Render the markdown content
@@ -30,13 +32,13 @@ const { Content } = await render(composition);
             <h1
               class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white"
             >
-              <span class="text-primary-light">{composition.data.tier}</span> - {composition.data.title}
+              <span class="text-primary-light">{composition.data.tier}</span> - {
+                composition.data.title
+              }
             </h1>
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">
               Updated {composition.data.updatedAt} by
-              <a
-                class="font-medium text-primary-light hover:underline"
-                href="#"
+              <a class="font-medium text-primary-light hover:underline" href="#"
                 >{composition.data.author}</a
               >
             </p>
@@ -49,29 +51,26 @@ const { Content } = await render(composition);
           </button>
         </div>
         <div class="mt-4 flex flex-wrap gap-2">
-          {composition.data.tags.map((tag: string) => (
-            <span
-              class="px-3 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary-light"
-            >
-              {tag}
-            </span>
-          ))}
+          {
+            composition.data.tags.map((tag: string) => (
+              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary-light">
+                {tag}
+              </span>
+            ))
+          }
         </div>
       </div>
-      
+
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="lg:col-span-2">
-          <h2
-            class="text-2xl font-bold text-slate-900 dark:text-white mb-3"
-          >
+          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">
             Composition Board
           </h2>
-          
-          <TFTBoardFromData boardData={composition.data.board} />          <div class="mt-6 space-y-4">
+
+          <TFTBoardFromData boardData={composition.data.board} />
+          <div class="mt-6 space-y-4">
             <div>
-              <h3
-                class="text-xl font-bold text-slate-900 dark:text-white mb-3"
-              >
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">
                 Usage Conditions
               </h3>
               <p
@@ -81,9 +80,7 @@ const { Content } = await render(composition);
               </p>
             </div>
             <div>
-              <h3
-                class="text-xl font-bold text-slate-900 dark:text-white mb-3"
-              >
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">
                 Gameplay Mode
               </h3>
               <p
@@ -93,11 +90,9 @@ const { Content } = await render(composition);
               </p>
             </div>
             <div>
-              <h3
-                class="text-xl font-bold text-slate-900 dark:text-white mb-3"
-              >
+              <!-- <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">
                 Guía Detallada
-              </h3>
+              </h3> -->
               <div
                 class="prose prose-slate dark:prose-invert max-w-none text-sm"
               >
@@ -106,59 +101,55 @@ const { Content } = await render(composition);
             </div>
           </div>
         </div>
-        
+
         <div class="space-y-8">
           <div>
-            <h2
-              class="text-2xl font-bold text-slate-900 dark:text-white mb-4"
-            >
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">
               Core Items
             </h2>
             <div class="space-y-3">
-              {composition.data.coreItems.map((item: any) => (
-                <div
-                  class="p-4 rounded-lg bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800"
-                >
-                  <p class="font-semibold text-slate-800 dark:text-slate-100">
-                    {item.name}
-                  </p>
-                  <p class="text-sm text-slate-500 dark:text-slate-400">
-                    {item.description}
-                  </p>
-                </div>
-              ))}
+              {
+                composition.data.coreItems.map((item: any) => (
+                  <div class="p-4 rounded-lg bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
+                    <div class="flex items-center gap-3 mb-2">
+                      <ItemWithImage itemName={item.name} size="medium" />
+                    </div>
+                    <p class="text-sm text-slate-500 dark:text-slate-400">
+                      {item.description}
+                    </p>
+                  </div>
+                ))
+              }
             </div>
           </div>
-          
+
           <div>
-            <h2
-              class="text-2xl font-bold text-slate-900 dark:text-white mb-4"
-            >
+            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">
               Recommended Augments
             </h2>
             <div class="space-y-3">
-              {composition.data.augments.map((augment: any) => (
-                <a
-                  class="flex items-center gap-4 p-3 rounded-lg bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700/50 border border-slate-200 dark:border-slate-800 transition-colors"
-                  href="#"
-                >
-                  <div
-                    class="flex items-center justify-center size-10 rounded-lg bg-primary/20 text-primary-light"
+              {
+                composition.data.augments.map((augment: any) => (
+                  <a
+                    class="flex items-center gap-4 p-3 rounded-lg bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700/50 border border-slate-200 dark:border-slate-800 transition-colors"
+                    href="#"
                   >
-                    <span class="material-symbols-outlined">{augment.icon}</span>
-                  </div>
-                  <div>
-                    <p
-                      class="font-semibold text-slate-800 dark:text-slate-100"
-                    >
-                      {augment.name}
-                    </p>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">
-                      {augment.description}
-                    </p>
-                  </div>
-                </a>
-              ))}
+                    <div class="flex items-center justify-center size-10 rounded-lg bg-primary/20 text-primary-light">
+                      <span class="material-symbols-outlined">
+                        {augment.icon}
+                      </span>
+                    </div>
+                    <div>
+                      <p class="font-semibold text-slate-800 dark:text-slate-100">
+                        {augment.name}
+                      </p>
+                      <p class="text-sm text-slate-500 dark:text-slate-400">
+                        {augment.description}
+                      </p>
+                    </div>
+                  </a>
+                ))
+              }
             </div>
           </div>
         </div>
