@@ -1,0 +1,353 @@
+---
+import TFTBoardCharacter from "./TFTBoardCharacter.astro";
+
+interface ChampionData {
+  name: string;
+  position: { row: number; col: number };
+  items?: string[];
+  stars?: number;
+}
+
+interface BoardData {
+  champions: ChampionData[];
+}
+
+interface Props {
+  boardData: BoardData;
+}
+
+const { boardData } = Astro.props;
+
+// Función para determinar el color del borde basado en las estrellas
+const getBorderColor = (stars: number = 1): "purple" | "blue" | "yellow" | "green" | "gray" => {
+  switch (stars) {
+    case 3: return "yellow";
+    case 2: return "purple";
+    case 1: return "blue";
+    default: return "gray";
+  }
+};
+
+// Convertir los datos de Markdown al formato esperado por el componente
+const champions = boardData.champions.map(champ => ({
+  champion: champ.name,
+  borderColor: getBorderColor(champ.stars),
+  items: champ.items || [],
+  position: champ.position
+}));
+
+// Crear grid 4x7 para el board TFT
+const createBoard = () => {
+  const board = Array(4).fill(null).map(() => Array(7).fill(null));
+
+  champions.forEach(champion => {
+    if (champion.position.row < 4 && champion.position.col < 7) {
+      board[champion.position.row][champion.position.col] = champion;
+    }
+  });
+
+  return board;
+};
+
+const board = createBoard();
+---
+
+<div class="responsive-tft-board">
+  <div class="board-container">
+    <div class="board-grid">
+      {board.map((row, rowIndex) => (
+        <div class={`board-row ${rowIndex % 2 === 1 ? 'offset' : ''}`}>
+          {row.map((cell, colIndex) => (
+            <div class="board-cell" data-row={rowIndex} data-col={colIndex}>
+              {cell ? (
+                <TFTBoardCharacter
+                  champion={cell.champion as any}
+                  borderColor={cell.borderColor}
+                  items={cell.items as any}
+                  size="var(--hex-size)"
+                />
+              ) : (
+                <TFTBoardCharacter
+                  borderColor="gray"
+                  size="var(--hex-size)"
+                />
+              )}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Resumen de campeones con sus items -->
+  <div class="champions-summary">
+    <h3 class="summary-title">Campeones y Items</h3>
+    <div class="champions-list">
+      {boardData.champions.map(champion => (
+        <div class="champion-summary">
+          <div class="champion-info">
+            <span class="champion-name">
+              {champion.name}
+              {champion.stars && (
+                <span class="stars">
+                  {"★".repeat(champion.stars)}
+                </span>
+              )}
+            </span>
+            {champion.items && champion.items.length > 0 && (
+              <div class="champion-items">
+                {champion.items.map(item => (
+                  <span class="item-name">{item}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  :root {
+    --hex-size: 80px;
+    --board-gap: 16px;
+    --board-offset: 44px;
+  }
+
+  .responsive-tft-board {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(126, 34, 206, 0.15) 0%, rgba(22, 16, 34, 0.9) 100%);
+    border: 2px solid rgba(139, 92, 246, 0.4);
+    border-radius: 16px;
+    box-shadow:
+      0 8px 32px rgba(126, 34, 206, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+  }
+
+  .board-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+    margin-bottom: 2rem;
+  }
+
+  .board-grid {
+    margin-left: -32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: fit-content;
+  }
+
+  .board-row {
+    display: flex;
+    gap: var(--board-gap);
+    justify-content: center;
+    align-items: center;
+  }
+
+  .board-row.offset {
+    transform: translateX(var(--board-offset));
+  }
+
+  .board-cell {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: var(--hex-size);
+    height: var(--hex-size);
+  }
+
+  .champions-summary {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(139, 92, 246, 0.2);
+  }
+
+  .summary-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .champions-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .champion-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .champion-summary:hover {
+    background: rgba(139, 92, 246, 0.15);
+    border-color: rgba(139, 92, 246, 0.4);
+  }
+
+  .champion-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .champion-name {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 0.5rem;
+  }
+
+  .stars {
+    color: var(--color-primary-light);
+    margin-left: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .champion-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .item-name {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    background: rgba(139, 92, 246, 0.2);
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+
+  /* Responsive breakpoints */
+  @media (max-width: 1024px) {
+    :root {
+      --hex-size: 72px;
+      --board-gap: 7px;
+      --board-offset: 39px;
+    }
+
+    .responsive-tft-board {
+      padding: 1.25rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    :root {
+      --hex-size: 64px;
+      --board-gap: 6px;
+      --board-offset: 35px;
+    }
+
+    .responsive-tft-board {
+      padding: 1rem;
+    }
+
+    .champions-list {
+      grid-template-columns: 1fr;
+    }
+
+    .champion-summary {
+      padding: 0.75rem;
+    }
+
+    .summary-title {
+      font-size: 1.25rem;
+    }
+  }
+
+  @media (max-width: 640px) {
+    :root {
+      --hex-size: 56px;
+      --board-gap: 5px;
+      --board-offset: 30px;
+    }
+
+    .responsive-tft-board {
+      padding: 0.75rem;
+    }
+
+    .board-container {
+      margin-bottom: 1.5rem;
+      padding: 0.5rem 0;
+    }
+
+    .champions-summary {
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    :root {
+      --hex-size: 48px;
+      --board-gap: 4px;
+      --board-offset: 26px;
+    }
+
+    .responsive-tft-board {
+      padding: 0.5rem;
+    }
+
+    .champion-summary {
+      flex-direction: column;
+      text-align: center;
+      padding: 0.5rem;
+    }
+
+    .champion-info {
+      width: 100%;
+    }
+
+    .champion-items {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 360px) {
+    :root {
+      --hex-size: 42px;
+      --board-gap: 3px;
+      --board-offset: 23px;
+    }
+
+    .board-container {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .board-grid {
+      min-width: 320px;
+    }
+  }
+
+  /* Smooth transitions for responsive changes */
+  .board-grid,
+  .board-row,
+  .board-cell {
+    transition: all 0.3s ease;
+  }
+
+  /* Ensure board is always centered and scrollable on very small screens */
+  @media (max-width: 320px) {
+    .board-container {
+      justify-content: flex-start;
+      padding-left: calc(50vw - 160px);
+    }
+  }
+</style>

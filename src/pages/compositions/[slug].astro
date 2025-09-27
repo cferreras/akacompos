@@ -1,121 +1,25 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import ResponsiveTFTBoard from "../../components/ResponsiveTFTBoard.astro";
+import TFTBoardFromData from "../../components/TFTBoardFromData.astro";
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 
 export async function getStaticPaths() {
-  // Define multiple compositions for different slugs
-  const compositions = {
-    "cosmic-infiltrators": {
-      title: "Cosmic Infiltrators",
-      tier: "S Tier",
-      author: "AKAWonder",
-      updatedAt: "2 days ago",
-      tags: ["Infiltrators", "Cosmic", "High Roll", "Aggressive"],
-      description: "This composition excels in high-roll scenarios where you can quickly level up and acquire key champions. It's an aggressive playstyle focused on early and mid-game dominance. Ideal for players comfortable with fast-paced decision-making and resource management.",
-      gameplayMode: "This composition is best suited for Ranked and Normal game modes. It's highly competitive and requires strategic positioning and itemization to maximize its potential. Avoid using it in Hyper Roll due to the different leveling and economy dynamics.",
-      coreItems: [
-        { name: "Infinity Edge", description: "Increases critical strike chance and damage." },
-        { name: "Last Whisper", description: "Reduces enemy armor." },
-        { name: "Bloodthirster", description: "Provides lifesteal and a shield." },
-        { name: "Blue Buff", description: "Restores mana after casting a spell." }
-      ],
-      augments: [
-        { 
-          name: "Lucky Gloves", 
-          description: "Gain a free reroll each round.",
-          icon: "casino"
-        },
-        { 
-          name: "Component Grab Bag", 
-          description: "Gain a free item component.",
-          icon: "card_giftcard"
-        },
-        { 
-          name: "Trait Champion", 
-          description: "Gain a free champion of your chosen trait.",
-          icon: "group_add"
-        }
-      ]
-    },
-    "a": {
-      title: "Arsenal Defenders",
-      tier: "A Tier",
-      author: "TFTMaster",
-      updatedAt: "1 day ago",
-      tags: ["Defenders", "Arsenal", "Tank", "Late Game"],
-      description: "A solid defensive composition that focuses on tanky champions and strong crowd control. Perfect for players who prefer a more defensive playstyle.",
-      gameplayMode: "Best for players who like to play defensively and scale into the late game. Works well in all game modes but especially effective in longer matches.",
-      coreItems: [
-        { name: "Warmog's Armor", description: "Provides massive health regeneration." },
-        { name: "Dragon's Claw", description: "Reduces magic damage taken." },
-        { name: "Bramble Vest", description: "Reflects damage back to attackers." },
-        { name: "Ionic Spark", description: "Deals magic damage when enemies cast spells." }
-      ],
-      augments: [
-        { 
-          name: "Armor Plating", 
-          description: "All champions gain bonus armor.",
-          icon: "shield"
-        },
-        { 
-          name: "Second Wind", 
-          description: "Champions heal when taking damage.",
-          icon: "healing"
-        },
-        { 
-          name: "Stand United", 
-          description: "All allies gain damage reduction.",
-          icon: "group"
-        }
-      ]
-    },
-    "shadow-assassins": {
-      title: "Shadow Assassins",
-      tier: "B Tier",
-      author: "NinjaPlayer",
-      updatedAt: "3 days ago",
-      tags: ["Assassins", "Shadow", "Burst", "High Risk"],
-      description: "A high-risk, high-reward composition focused on eliminating key enemy champions quickly. Requires precise positioning and timing.",
-      gameplayMode: "Best for experienced players who understand positioning mechanics. Works well in fast-paced games but struggles against heavy tank compositions.",
-      coreItems: [
-        { name: "Deathblade", description: "Stacks attack damage on kills." },
-        { name: "Guardian Angel", description: "Revives champion on death." },
-        { name: "Quicksilver", description: "Prevents crowd control effects." },
-        { name: "Hextech Gunblade", description: "Heals based on damage dealt." }
-      ],
-      augments: [
-        { 
-          name: "Assassin's Toolkit", 
-          description: "Assassins gain bonus critical strike chance.",
-          icon: "sword"
-        },
-        { 
-          name: "Shadow Clone", 
-          description: "Champions have a chance to dodge attacks.",
-          icon: "visibility_off"
-        },
-        { 
-          name: "First Strike", 
-          description: "Deal bonus damage to full health enemies.",
-          icon: "flash_on"
-        }
-      ]
-    }
-  };
-
-  return Object.entries(compositions).map(([slug, composition]) => {
-    return {
-      params: { slug },
-      props: { composition }
-    };
-  });
+  const compositions = await getCollection('compositions');
+  
+  return compositions.map((composition: { id: any; }) => ({
+    params: { slug: composition.id },
+    props: { composition }
+  }));
 }
 
-const { composition } = Astro.props;
+const { composition }: { composition: CollectionEntry<'compositions'> } = Astro.props;
 const { slug } = Astro.params;
+
+// Render the markdown content
+const { Content } = await render(composition);
 ---
 
-<Layout title={`${composition.tier} - ${composition.title}`}>
+<Layout title={`${composition.data.tier} - ${composition.data.title}`}>
   <div class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 md:py-6">
     <div class="max-w-6xl mx-auto">
       <div class="mb-6">
@@ -126,14 +30,14 @@ const { slug } = Astro.params;
             <h1
               class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white"
             >
-              <span class="text-primary-light">{composition.tier}</span> - {composition.title}
+              <span class="text-primary-light">{composition.data.tier}</span> - {composition.data.title}
             </h1>
             <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">
-              Updated {composition.updatedAt} by
+              Updated {composition.data.updatedAt} by
               <a
                 class="font-medium text-primary-light hover:underline"
                 href="#"
-                >{composition.author}</a
+                >{composition.data.author}</a
               >
             </p>
           </div>
@@ -145,7 +49,7 @@ const { slug } = Astro.params;
           </button>
         </div>
         <div class="mt-4 flex flex-wrap gap-2">
-          {composition.tags.map((tag) => (
+          {composition.data.tags.map((tag: string) => (
             <span
               class="px-3 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary-light"
             >
@@ -163,9 +67,7 @@ const { slug } = Astro.params;
             Composition Board
           </h2>
           
-          <ResponsiveTFTBoard />
-          
-          <div class="mt-6 space-y-4">
+          <TFTBoardFromData boardData={composition.data.board} />          <div class="mt-6 space-y-4">
             <div>
               <h3
                 class="text-xl font-bold text-slate-900 dark:text-white mb-3"
@@ -175,7 +77,7 @@ const { slug } = Astro.params;
               <p
                 class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"
               >
-                {composition.description}
+                {composition.data.description}
               </p>
             </div>
             <div>
@@ -187,8 +89,20 @@ const { slug } = Astro.params;
               <p
                 class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"
               >
-                {composition.gameplayMode}
+                {composition.data.gameplayMode}
               </p>
+            </div>
+            <div>
+              <h3
+                class="text-xl font-bold text-slate-900 dark:text-white mb-3"
+              >
+                Guía Detallada
+              </h3>
+              <div
+                class="prose prose-slate dark:prose-invert max-w-none text-sm"
+              >
+                <Content />
+              </div>
             </div>
           </div>
         </div>
@@ -201,7 +115,7 @@ const { slug } = Astro.params;
               Core Items
             </h2>
             <div class="space-y-3">
-              {composition.coreItems.map((item) => (
+              {composition.data.coreItems.map((item: any) => (
                 <div
                   class="p-4 rounded-lg bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800"
                 >
@@ -223,7 +137,7 @@ const { slug } = Astro.params;
               Recommended Augments
             </h2>
             <div class="space-y-3">
-              {composition.augments.map((augment) => (
+              {composition.data.augments.map((augment: any) => (
                 <a
                   class="flex items-center gap-4 p-3 rounded-lg bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700/50 border border-slate-200 dark:border-slate-800 transition-colors"
                   href="#"
