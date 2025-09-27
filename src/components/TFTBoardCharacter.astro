@@ -428,6 +428,7 @@ interface Props {
   borderColor?: keyof typeof borderColors | string;
   size?: string;
   items?: (keyof typeof itemAssets)[];
+  stars?: number;
 }
 
 const { 
@@ -435,7 +436,8 @@ const {
   imageUrl, 
   borderColor = "gray", 
   size = "96px",
-  items = []
+  items = [],
+  stars = 1
 } = Astro.props;
 
 // Usar la imagen del campeón si se especifica, sino usar imageUrl, sino mostrar vacío
@@ -452,6 +454,13 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
 ---
 
 <div class="character-container select-none" style={`--border-color: ${finalBorderColor}; --size: ${size};`}>
+  {stars > 1 && (
+    <div class="stars-container">
+      {Array.from({length: stars}, (_, i) => (
+        <span class="star">★</span>
+      ))}
+    </div>
+  )}
   <div class="hexagon-container">
     <div class="hexagon">
       {finalImageUrl ? (
@@ -488,6 +497,21 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
     flex-direction: column;
     align-items: center;
     position: relative;
+  }
+
+  .stars-container {
+    position: absolute;
+    top: clamp(-16px, calc(var(--size) * -0.2), -24px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: clamp(1px, calc(var(--size) * 0.01), 2px);
+    z-index: 40;
+  }
+
+  .star {
+    color: #9333ea;
+    font-size: clamp(16px, calc(var(--size) * 0.2), 24px);
   }
 
   .hexagon-container {
@@ -634,6 +658,14 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
       font-size: clamp(6px, calc(var(--size) * 0.1), 10px);
       padding: 1px clamp(2px, calc(var(--size) * 0.05), 6px);
     }
+
+    .stars-container {
+      top: clamp(-12px, calc(var(--size) * -0.18), -18px);
+    }
+
+    .star {
+      font-size: clamp(14px, calc(var(--size) * 0.18), 20px);
+    }
   }
 
   @media (max-width: 360px) {
@@ -645,6 +677,14 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
     .champion-name {
       font-size: clamp(5px, calc(var(--size) * 0.08), 8px);
       padding: 1px clamp(2px, calc(var(--size) * 0.04), 4px);
+    }
+
+    .stars-container {
+      top: clamp(-10px, calc(var(--size) * -0.15), -14px);
+    }
+
+    .star {
+      font-size: clamp(12px, calc(var(--size) * 0.16), 18px);
     }
   }
 </style>
