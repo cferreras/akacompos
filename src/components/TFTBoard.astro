@@ -1,121 +1,98 @@
 ---
 import TFTBoardCharacter from "./TFTBoardCharacter.astro";
 
-// Ejemplo de configuración del tablero
+// Configuración de la composición que me pasaste
 const boardConfig = [
   // Fila 1 (arriba) - 7 hexágonos
   [
-    { 
-      champion: "Kobuko" as const, 
-      borderColor: "green" as const,
-      items: ["Infinity Edge" as const, "Bloodthirster" as const, "Radiant Infinity Edge" as const]
-    },
-    null,
-    { 
-      champion: "Poppy" as const, 
-      borderColor: "blue" as const,
-      items: ["Gargoyle Stoneplate" as const, "Bramble Vest" as const, "Sunfire Cape" as const]
-    },
-    { 
-      champion: "KSante" as const, 
-      borderColor: "purple" as const,
-      items: ["Evenshroud" as const, "Dawncore" as const]
-    },
-    { 
-      champion: "Neeko" as const, 
-      borderColor: "blue" as const,
-      items: ["Rabadon's Deathcap" as const, "Archangel's Staff" as const, "Jeweled Gauntlet" as const]
-    },
-    null,
-    { 
-      champion: "Rell" as const, 
+    {
+      champion: "Kennen" as const,
       borderColor: "gray" as const,
-      items: ["Protector Emblem" as const]
-    }
+      items: [],
+    },
+    {
+      champion: "Malphite" as const,
+      borderColor: "gray" as const,
+      items: [],
+    },
+    {
+      champion: "Rakan" as const,
+      borderColor: "green" as const,
+      items: [],
+    },
+    {
+      champion: "KSante" as const,
+      borderColor: "purple" as const,
+      items: [
+        "Thief's Gloves" as const,
+      ],
+    },
+    {
+      champion: "Neeko" as const,
+      borderColor: "yellow" as const,
+      items: [
+        "Steadfast Hammer" as const,
+        "Crownguard" as const,
+        "Warmog's Armor" as const,
+      ],
+    },
+    null,
+    null,
   ],
   // Fila 2 - 7 hexágonos (offset)
-  [
-    null, 
-    { 
-      champion: "Ahri" as const, 
-      borderColor: "purple" as const,
-      items: ["Luden's Tempest" as const, "Deathfire Grasp" as const, "Horizon Focus" as const]
-    },
-    null, null, 
-    { 
-      champion: "Ashe" as const, 
-      borderColor: "green" as const,
-      items: ["Statikk Shiv" as const, "Giant Slayer" as const]
-    },
-    null, null
-  ],
+  [null, null, null, null, null, null, null],
   // Fila 3 - 7 hexágonos
-  [
-    null, null, 
-    { 
-      champion: "Garen" as const, 
-      borderColor: "yellow" as const,
-      items: ["Warmog's Armor" as const, "Steadfast Hammer" as const, "Crown of Demacia" as const]
-    },
-    null, 
-    { 
-      champion: "Jinx" as const, 
-      borderColor: "purple" as const,
-      items: ["Fishbones" as const, "Gold Collector" as const]
-    },
-    null, null
-  ],
+  [null, null, null, null, null, null, null],
   // Fila 4 (abajo) - 7 hexágonos (offset)
   [
-    { 
-      champion: "Jinx" as const, 
-      borderColor: "purple" as const,
-      items: ["Guinsoo's Rageblade" as const, "Kraken's Fury" as const, "Giant Slayer" as const]
-    },
     null,
-    { 
-      champion: "Seraphine" as const, 
+    null,
+    null,
+    null,
+    {
+      champion: "Janna" as const,
       borderColor: "yellow" as const,
-      items: ["Blue Buff" as const, "Hand of Justice" as const, "Equinox" as const]
+      items: [
+        "Red Buff" as const,
+        "Archangel's Staff" as const,
+      ],
     },
     null,
-    { 
-      champion: "Xayah" as const, 
-      borderColor: "green" as const,
-      items: ["Rapid Firecannon" as const, "Infinity Edge" as const, "Last Whisper" as const]
+    {
+      champion: "KogMaw" as const,
+      borderColor: "yellow" as const,
+      items: [
+        "Archangel's Staff" as const,
+        "Spear of Shojin" as const,
+        "Spear of Shojin" as const,
+      ],
     },
-    null,
-    { 
-      champion: "Syndra" as const, 
-      borderColor: "gray" as const,
-      items: ["Radiant Blue Buff" as const, "Nashor's Tooth" as const]
-    }
-  ]
+  ],
 ];
 ---
 
+
 <div class="tft-board">
-  {boardConfig.map((row, rowIndex) => (
-    <div class={`board-row ${rowIndex % 2 === 1 ? 'offset' : ''}`}>
-      {row.map((cell, cellIndex) => (
-        <div class="hex-slot">
-          {cell ? (
-            <TFTBoardCharacter 
-              champion={cell.champion}
-              borderColor={cell.borderColor}
-              items={cell.items}
-              size="96px"
-            />
-          ) : (
-            <TFTBoardCharacter 
-              borderColor="gray"
-              size="96px"
-            />
-          )}
-        </div>
-      ))}
-    </div>
-  ))}
+  {
+    boardConfig.map((row, rowIndex) => (
+      <div class={`board-row ${rowIndex % 2 === 1 ? "offset" : ""}`}>
+        {row.map((cell, cellIndex) => (
+          <div class="hex-slot">
+            {cell ? (
+              <TFTBoardCharacter
+                champion={cell.champion}
+                borderColor={cell.borderColor}
+                items={cell.items}
+                size="96px"
+              />
+            ) : (
+              <TFTBoardCharacter borderColor="gray" size="96px" />
+            )}
+          </div>
+        ))}
+      </div>
+    ))
+  }
 </div>
 
 <style>
@@ -123,16 +100,15 @@ const boardConfig = [
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 40px;
-    background: linear-gradient(135deg, #2a2d47 0%, #1e1e2e 50%, #161625 100%);
     border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     max-width: fit-content;
+    margin-left: -50px;
   }
 
   .board-row {
     display: flex;
     gap: 10px;
+;
     margin-bottom: -20px; /* Más espacio entre filas */
   }
 
@@ -142,12 +118,6 @@ const boardConfig = [
 
   .hex-slot {
     position: relative;
-    transition: transform 0.2s ease;
-  }
-
-  .hex-slot:hover {
-    transform: scale(1.05);
-    z-index: 10;
   }
 
   /* Responsive */

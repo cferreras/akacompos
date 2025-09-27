@@ -1,1 +1,95 @@
 @import "tailwindcss";
+
+:root {
+  --color-primary: #7e22ce;
+  --color-primary-light: #9333ea;
+  --color-background-light: #f6f6f8;
+  --color-background-dark: #161022;
+  --color-accent: #a855f7;
+}
+
+/* Custom utility classes for our colors */
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-primary-light {
+  background-color: var(--color-primary-light);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-primary-light {
+  color: var(--color-primary-light);
+}
+
+.bg-background-light {
+  background-color: var(--color-background-light);
+}
+
+.bg-background-dark {
+  background-color: var(--color-background-dark);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
+}
+
+.text-accent {
+  color: var(--color-accent);
+}
+
+.font-display {
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+}
+
+/* Force dark mode styles */
+html {
+  color-scheme: dark;
+  background-color: var(--color-background-dark) !important;
+}
+
+html, html.dark {
+  background-color: var(--color-background-dark) !important;
+  color: #e2e8f0 !important;
+}
+
+body {
+  background-color: var(--color-background-dark) !important;
+  color: #e2e8f0 !important;
+}
+
+/* Force dark backgrounds on all major containers */
+.tft-board {
+  background-color: transparent !important;
+}
+
+/* Override any white backgrounds but preserve hexagon styling */
+div:not(.hexagon):not(.hexagon-container):not(.character-container):not(.item-slot),
+section, main, article, aside, header, footer, nav, 
+.container, .tft-board, .board-row, .hex-slot {
+  background-color: transparent !important;
+}
+
+/* Specifically preserve hexagon colors and styling */
+.hexagon {
+  background-color: var(--border-color) !important;
+}
+
+.hexagon::before {
+  background-color: transparent !important;
+}
+
+.empty-slot {
+  background-color: var(--color-background-dark) !important;
+  opacity: 0.8 !important;
+}
+
+/* Force all page backgrounds to be dark but preserve component styling */
+body, html, #root, [data-reactroot] {
+  background-color: var(--color-background-dark) !important;
+  color: #e2e8f0 !important;
+}
+

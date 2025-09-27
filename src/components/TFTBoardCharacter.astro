@@ -488,6 +488,7 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
     flex-direction: column;
     align-items: center;
     position: relative;
+    padding-bottom: 8px;;
   }
 
   .hexagon-container {
@@ -589,9 +590,11 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
     display: flex;
     justify-content: center;
     gap: 2px;
-    margin-top: -10px;
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 10;
-    position: relative;
   }
 
   .item-slot {

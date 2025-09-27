@@ -1,19 +1,54 @@
 ---
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+
+export interface Props {
+  title?: string;
+}
+
+const { title = "TFT Composition Details" } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html class="dark" lang="en" style="background-color: #161022 !important;">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="utf-8" />
+    <title>{title}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-    <title>Astro Basics</title>
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect" />
+    <link
+      as="style"
+      href="https://fonts.googleapis.com/css2?display=swap&family=Space+Grotesk:wght@400;500;700"
+      onload="this.rel='stylesheet'"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+    <script>
+      // Force dark mode and prevent any theme switching
+      document.documentElement.classList.add('dark');
+      // Override any potential theme switching
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem('theme', 'dark');
+      }
+    </script>
   </head>
-  <body>
-    <div class="container mx-auto px-4 py-8">
-      <slot />
+  <body
+    class="bg-background-dark font-display text-slate-200"
+    style="background-color: #161022 !important;"
+  >
+    <div class="flex flex-col min-h-screen">
+      <Navbar />
+      <main class="flex-grow">
+        <slot />
+      </main>
+      <Footer />
     </div>
   </body>
 </html>
