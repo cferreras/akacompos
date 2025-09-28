@@ -2,67 +2,81 @@
 ---
 
 <header
-  class="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800"
+  class="sticky top-0 z-50 backdrop-blur-md bg-gradient-dark/90 border-b border-purple-500/20 shadow-card"
 >
   <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex items-center justify-between h-16">
+    <div class="flex items-center justify-between h-20">
       <div class="flex items-center gap-8">
         <a
-          class="flex items-center gap-2 text-lg font-bold text-slate-900 dark:text-white"
+          class="flex items-center gap-3 text-xl font-bold text-white group"
           href="/"
         >
-          <span
-            class="material-symbols-outlined text-primary-light text-3xl"
-            >shield</span
-          >
-          <span>TFTComps</span>
+          <div class="relative">
+            <span
+              class="material-symbols-outlined text-primary-light text-3xl group-hover:rotate-12 transition-transform duration-300"
+              >shield</span
+            >
+            <div class="absolute inset-0 bg-primary-light opacity-20 blur-xl group-hover:opacity-40 transition-opacity duration-300"></div>
+          </div>
+          <span class="">TFTComps</span>
         </a>
-        <nav class="hidden md:flex items-center gap-6">
+        <nav class="hidden md:flex items-center gap-1">
           <a
-            class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-light dark:hover:text-primary-light transition-colors"
+            class="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-all duration-300 rounded-xl hover:bg-gradient-card group"
             href="/compositions"
-            >Compositions</a
           >
+            <span class="relative z-10">Compositions</span>
+            <div class="absolute inset-0 bg-primary/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </a>
           <a
-            class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-light dark:hover:text-primary-light transition-colors"
+            class="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-all duration-300 rounded-xl hover:bg-gradient-card group"
             href="/items"
-            >Items</a
           >
+            <span class="relative z-10">Items</span>
+            <div class="absolute inset-0 bg-primary/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </a>
           <a
-            class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-light dark:hover:text-primary-light transition-colors"
+            class="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-all duration-300 rounded-xl hover:bg-gradient-card group"
             href="/champions"
-            >Champions</a
           >
+            <span class="relative z-10">Champions</span>
+            <div class="absolute inset-0 bg-primary/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </a>
           <a
-            class="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary-light dark:hover:text-primary-light transition-colors"
+            class="relative px-4 py-2 text-sm font-medium text-slate-300 hover:text-white transition-all duration-300 rounded-xl hover:bg-gradient-card group"
             href="/tier-list"
-            >Tier List</a
           >
+            <span class="relative z-10">Tier List</span>
+            <div class="absolute inset-0 bg-primary/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          </a>
         </nav>
       </div>
       <div class="flex items-center gap-4">
-        <div class="relative hidden sm:block">
+        <div class="relative hidden sm:block group">
           <span
-            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500"
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary-light transition-colors"
             >search</span
           >
           <input
-            class="pl-10 pr-4 py-2 w-48 rounded-lg bg-slate-200 dark:bg-slate-800/50 text-sm focus:outline-none focus:ring-2 focus:ring-primary-light"
-            placeholder="Search..."
+            class="pl-10 pr-4 py-3 w-52 rounded-xl bg-slate-800/50 border border-slate-700/50 text-sm text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-light focus:border-transparent backdrop-blur-sm transition-all duration-300"
+            placeholder="Search compositions..."
             type="search"
           />
         </div>
         <button
-          class="p-2 rounded-full text-slate-500 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+          class="p-3 rounded-xl text-slate-400 hover:text-white hover:bg-gradient-card transition-all duration-300 group"
         >
-          <span class="material-symbols-outlined">help</span>
+          <span class="material-symbols-outlined group-hover:rotate-12 transition-transform">help</span>
         </button>
-        <button>
-          <img
-            alt="User Avatar"
-            class="size-9 rounded-full"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVLxg5kI5Nah5ecOpwba30Kwj2QejX7gC1-GgbNf2OBPnAPmiEUtr05hNqw5fzLmMUCSNG-XqqvEQlFjYyOwJl-o2uRRYYtqTgSBNUuB340eRD8-x3N89Ta6PJ2OZEWqC5pNi_v_IntWvz8heG4MQ4TL0J5ARshqcDlfz2wYfAhYgOxoyVN4C3Z0Ecxu88KYtxidFYxHPcjnWgVXzL0YTqX63pPQlmXi3f-wLZMyMR2wBmT42AyySsPbr29su71v2RI_-0ipttlTm4"
-          />
+        <button class="group">
+          <div class="relative">
+            <img
+              alt="User Avatar"
+              class="size-10 rounded-xl border-2 border-purple-500/30 group-hover:border-primary-light transition-all duration-300 shadow-card"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVLxg5kI5Nah5ecOpwba30Kwj2QejX7gC1-GgbNf2OBPnAPmiEUtr05hNqw5fzLmMUCSNG-XqqvEQlFjYyOwJl-o2uRRYYtqTgSBNUuB340eRD8-x3N89Ta6PJ2OZEWqC5pNi_v_IntWvz8heG4MQ4TL0J5ARshqcDlfz2wYfAhYgOxoyVN4C3Z0Ecxu88KYtxidFYxHPcjnWgVXzL0YTqX63pPQlmXi3f-wLZMyMR2wBmT42AyySsPbr29su71v2RI_-0ipttlTm4"
+            />
+            <div class="absolute inset-0 rounded-xl bg-gradient-primary opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+          </div>
         </button>
       </div>
     </div>

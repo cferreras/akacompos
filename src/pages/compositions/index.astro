@@ -1,0 +1,233 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+const compositions = await getCollection("compositions");
+
+// Group compositions by tier
+const tierOrder = ["S Tier", "A Tier", "B Tier", "C Tier"];
+const groupedCompositions = tierOrder.reduce((acc, tier) => {
+  acc[tier] = compositions.filter(comp => comp.data.tier === tier);
+  return acc;
+}, {} as Record<string, any[]>);
+---
+
+<Layout title="TFT Compositions - All Meta Builds">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16 animate-slide-up">
+      <h1 class="text-5xl md:text-6xl font-black text-white mb-6">
+        <span class="">All Compositions</span>
+      </h1>
+      <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
+        Discover all the meta compositions ranked by tier. Master these builds to climb the ladder and dominate your games.
+      </p>
+      
+      <!-- Search and Filters -->
+      <div class="max-w-2xl mx-auto mb-12">
+        <div class="relative">
+          <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+          <input 
+            type="search" 
+            placeholder="Search compositions, champions, or traits..."
+            class="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-800/50 border border-slate-700/50 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-primary-light focus:border-transparent backdrop-blur-sm transition-all duration-300"
+          >
+        </div>
+        
+        <!-- Filter Tags -->
+        <div class="flex flex-wrap justify-center gap-3 mt-6">
+          <button class="px-4 py-2 rounded-xl bg-gradient-primary text-white font-medium shadow-primary transition-all hover:shadow-glow">
+            All Tiers
+          </button>
+          <button class="px-4 py-2 rounded-xl bg-gradient-card border border-purple-500/20 text-primary-light font-medium hover:bg-gradient-primary hover:text-white transition-all backdrop-blur-sm">
+            S Tier Only
+          </button>
+          <button class="px-4 py-2 rounded-xl bg-gradient-card border border-purple-500/20 text-primary-light font-medium hover:bg-gradient-primary hover:text-white transition-all backdrop-blur-sm">
+            Beginner Friendly
+          </button>
+          <button class="px-4 py-2 rounded-xl bg-gradient-card border border-purple-500/20 text-primary-light font-medium hover:bg-gradient-primary hover:text-white transition-all backdrop-blur-sm">
+            Reroll Comps
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compositions by Tier -->
+    <div class="max-w-7xl mx-auto space-y-16 animate-fade-in">
+      {tierOrder.map((tier, tierIndex) => {
+        const comps = groupedCompositions[tier];
+        if (!comps || comps.length === 0) return null;
+        
+        return (
+          <div class="tier-section" style={`animation-delay: ${tierIndex * 0.1}s`}>
+            <div class="flex items-center gap-4 mb-8">
+              <div class={`tier-badge ${tier.toLowerCase().replace(' ', '-')}`}>
+                <span class="tier-letter">{tier.charAt(0)}</span>
+              </div>
+              <div>
+                <h2 class="text-3xl font-bold text-white">{tier} Compositions</h2>
+                <p class="text-slate-400">
+                  {tier === "S Tier" && "The absolute best compositions in the current meta"}
+                  {tier === "A Tier" && "Strong and reliable compositions for consistent wins"}
+                  {tier === "B Tier" && "Solid compositions that work well in most situations"}
+                  {tier === "C Tier" && "Situational compositions for specific scenarios"}
+                </p>
+              </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 stagger-animation">
+              {comps.map((composition) => (
+                <div class="composition-card group">
+                  <a href={`/compositions/${composition.id}`} class="block h-full">
+                    <div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-3xl p-6 shadow-card hover-lift h-full">
+                      <!-- Header -->
+                      <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                          <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary-light transition-colors">
+                            {composition.data.title}
+                          </h3>
+                          <div class="flex items-center gap-2 text-sm text-slate-400 mb-3">
+                            <span class="material-symbols-outlined text-primary-light">person</span>
+                            <span>{composition.data.author}</span>
+                            <span class="w-1 h-1 bg-slate-500 rounded-full"></span>
+                            <span>{composition.data.updatedAt}</span>
+                          </div>
+                        </div>
+                        <div class={`tier-mini-badge ${tier.toLowerCase().replace(' ', '-')}`}>
+                          {tier.charAt(0)}
+                        </div>
+                      </div>
+                      
+                      <!-- Tags -->
+                      <div class="flex flex-wrap gap-2 mb-4">
+                        {composition.data.tags.slice(0, 3).map((tag: string) => (
+                          <span class="px-3 py-1 text-xs font-medium rounded-lg bg-primary/20 text-primary-light border border-purple-500/30">
+                            {tag}
+                          </span>
+                        ))}
+                        {composition.data.tags.length > 3 && (
+                          <span class="px-3 py-1 text-xs font-medium rounded-lg bg-slate-700/50 text-slate-400">
+                            +{composition.data.tags.length - 3}
+                          </span>
+                        )}
+                      </div>
+                      
+                      <!-- Description -->
+                      <p class="text-slate-300 text-sm leading-relaxed mb-4 line-clamp-3">
+                        {composition.data.description}
+                      </p>
+                      
+                      <!-- Stats Preview -->
+                      <div class="grid grid-cols-3 gap-3 mb-4">
+                        <div class="text-center p-2 bg-slate-800/30 rounded-lg border border-purple-500/10">
+                          <div class="text-sm font-bold text-primary-light">85%</div>
+                          <div class="text-xs text-slate-400">Win Rate</div>
+                        </div>
+                        <div class="text-center p-2 bg-slate-800/30 rounded-lg border border-purple-500/10">
+                          <div class="text-sm font-bold text-gold">4.2</div>
+                          <div class="text-xs text-slate-400">Avg Place</div>
+                        </div>
+                        <div class="text-center p-2 bg-slate-800/30 rounded-lg border border-purple-500/10">
+                          <div class="text-sm font-bold text-green-400">High</div>
+                          <div class="text-xs text-slate-400">Difficulty</div>
+                        </div>
+                      </div>
+                      
+                      <!-- CTA -->
+                      <div class="flex items-center justify-between pt-4 border-t border-purple-500/10">
+                        <span class="text-sm text-slate-400">Click to view details</span>
+                        <span class="material-symbols-outlined text-primary-light group-hover:translate-x-1 transition-transform">
+                          arrow_forward
+                        </span>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .tier-badge {
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    display: flex;
+    items-center: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 28px;
+    box-shadow: var(--shadow-card);
+  }
+  
+  .tier-mini-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+  
+  .s-tier {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+  }
+  
+  .a-tier {
+    background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+    color: white;
+  }
+  
+  .b-tier {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+  }
+  
+  .c-tier {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+    color: white;
+  }
+  
+  .tier-section {
+    animation: slideUp 0.8s ease-out both;
+  }
+  
+  .composition-card {
+    transition: all 0.3s ease;
+  }
+  
+  .composition-card:hover {
+    transform: translateY(-4px);
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Responsive improvements */
+  @media (max-width: 768px) {
+    .tier-badge {
+      width: 48px;
+      height: 48px;
+      font-size: 20px;
+    }
+    
+    .tier-mini-badge {
+      width: 24px;
+      height: 24px;
+      font-size: 12px;
+    }
+  }
+</style>

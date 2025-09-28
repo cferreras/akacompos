@@ -22,134 +22,181 @@ const { Content } = await render(composition);
 ---
 
 <Layout title={`${composition.data.tier} - ${composition.data.title}`}>
-  <div class="container mx-auto px-3 sm:px-4 lg:px-6 py-4 md:py-6">
-    <div class="max-w-6xl mx-auto">
-      <div class="mb-6">
-        <div
-          class="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
-        >
-          <div>
-            <h1
-              class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white"
-            >
-              <span class="text-primary-light">{composition.data.tier}</span> - {
-                composition.data.title
-              }
-            </h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">
-              Updated {composition.data.updatedAt} by
-              <a class="font-medium text-primary-light hover:underline" href="#"
-                >{composition.data.author}</a
-              >
-            </p>
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+    <div class="max-w-7xl mx-auto">
+      <!-- Hero Section -->
+      <div class="mb-12 animate-slide-up">
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center gap-3 bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-full px-6 py-2 mb-6 shadow-card">
+            <span class="material-symbols-outlined text-gold text-xl">military_tech</span>
+            <span class="text-gold font-bold text-lg">{composition.data.tier}</span>
           </div>
-          <button
-            class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary-light transition-all"
-          >
-            <span class="material-symbols-outlined">content_copy</span>
-            Copy Link
-          </button>
-        </div>
-        <div class="mt-4 flex flex-wrap gap-2">
-          {
-            composition.data.tags.map((tag: string) => (
-              <span class="px-3 py-1 text-xs font-semibold rounded-full bg-primary/20 text-primary-light">
+          <h1 class="text-4xl md:text-6xl font-black text-white mb-4">
+            <span class="">{composition.data.title}</span>
+          </h1>
+          <p class="text-lg text-slate-300 max-w-3xl mx-auto leading-relaxed mb-6">
+            {composition.data.description}
+          </p>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8">
+            <div class="flex items-center gap-2 text-slate-400">
+              <span class="material-symbols-outlined text-primary-light">schedule</span>
+              <span>Updated {composition.data.updatedAt}</span>
+            </div>
+            <div class="flex items-center gap-2 text-slate-400">
+              <span class="material-symbols-outlined text-primary-light">person</span>
+              <span>by <span class="text-primary-light font-medium">{composition.data.author}</span></span>
+            </div>
+          </div>
+          <div class="flex flex-wrap justify-center gap-2 mb-8">
+            {composition.data.tags.map((tag: string) => (
+              <span class="px-4 py-2 text-sm font-semibold rounded-xl bg-gradient-card border border-purple-500/20 text-primary-light backdrop-blur-sm shadow-card hover-lift">
                 {tag}
               </span>
-            ))
-          }
+            ))}
+          </div>
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button class="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-primary text-white font-bold shadow-primary hover:shadow-glow transition-all duration-300 transform hover:scale-105 hover:-translate-y-1">
+              <span class="material-symbols-outlined group-hover:rotate-12 transition-transform">content_copy</span>
+              Copy Composition Link
+            </button>
+            <button class="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl border-2 border-purple-500/50 text-primary-light font-bold hover:bg-gradient-primary hover:text-white hover:border-transparent transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 backdrop-blur-sm">
+              <span class="material-symbols-outlined group-hover:rotate-12 transition-transform">bookmark_add</span>
+              Save to Favorites
+            </button>
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div class="lg:col-span-2">
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-3">
-            Composition Board
-          </h2>
+      <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="xl:col-span-2 space-y-8">
+          <!-- TFT Board Section -->
+          <div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-3xl p-8 shadow-card animate-fade-in">
+            <div class="text-center mb-6">
+              <h2 class="text-3xl font-bold text-white mb-3 flex items-center justify-center gap-3">
+                <span class="material-symbols-outlined text-gold text-3xl">dashboard</span>
+                Team Formation
+              </h2>
+            </div>
+            <TFTBoardFromData boardData={composition.data.board} />
+          </div>
 
-          <TFTBoardFromData boardData={composition.data.board} />
-          <div class="mt-6 space-y-4">
-            <div>
-              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">
-                Usage Conditions
-              </h3>
-              <p
-                class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"
-              >
-                {composition.data.description}
-              </p>
-            </div>
-            <div>
-              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">
-                Gameplay Mode
-              </h3>
-              <p
-                class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed"
-              >
-                {composition.data.gameplayMode}
-              </p>
-            </div>
-            <div>
-              <!-- <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">
-                Guía Detallada
-              </h3> -->
-              <div
-                class="prose prose-slate dark:prose-invert max-w-none text-sm"
-              >
-                <Content />
+          <!-- Strategy Guide -->
+          <div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-3xl p-8 shadow-card animate-fade-in">
+            <h3 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary-light text-2xl">strategy</span>
+              Strategy Guide
+            </h3>
+            <div class="space-y-6">
+              <div class="bg-slate-800/30 rounded-2xl p-6 border border-purple-500/10">
+                <h4 class="text-lg font-semibold text-primary-light mb-3 flex items-center gap-2">
+                  <span class="material-symbols-outlined">info</span>
+                  Usage Conditions
+                </h4>
+                <p class="text-slate-300 leading-relaxed">
+                  {composition.data.description}
+                </p>
+              </div>
+              <div class="bg-slate-800/30 rounded-2xl p-6 border border-purple-500/10">
+                <h4 class="text-lg font-semibold text-primary-light mb-3 flex items-center gap-2">
+                  <span class="material-symbols-outlined">sports_esports</span>
+                  Gameplay Mode
+                </h4>
+                <p class="text-slate-300 leading-relaxed">
+                  {composition.data.gameplayMode}
+                </p>
+              </div>
+              <div class="bg-slate-800/30 rounded-2xl p-6 border border-purple-500/10">
+                <h4 class="text-lg font-semibold text-primary-light mb-3 flex items-center gap-2">
+                  <span class="material-symbols-outlined">book</span>
+                  Detailed Guide
+                </h4>
+                <div class="prose prose-slate dark:prose-invert max-w-none">
+                  <Content />
+                </div>
               </div>
             </div>
           </div>
         </div>
 
+        <!-- Sidebar -->
         <div class="space-y-8">
-          <div>
-            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+          <!-- Core Items -->
+          <div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-3xl p-6 shadow-card animate-fade-in">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <span class="material-symbols-outlined text-gold text-2xl">category</span>
               Core Items
             </h2>
-            <div class="space-y-3">
-              {
-                composition.data.coreItems.map((item: any) => (
-                  <div class="p-4 rounded-lg bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
-                    <div class="flex items-center gap-3 mb-2">
-                      <ItemWithImage itemName={item.name} size="medium" />
-                    </div>
-                    <p class="text-sm text-slate-500 dark:text-slate-400">
-                      {item.description}
-                    </p>
-                  </div>
-                ))
-              }
+            <div class="space-y-4">
+              {composition.data.coreItems.map((item: any) => (
+                <div class="group bg-slate-800/30 rounded-2xl p-6 border border-purple-500/10 hover:border-purple-500/30 transition-all duration-300 hover-lift">
+                  <ItemWithImage 
+                    itemName={item.name} 
+                    description={item.description}
+                    size="large" 
+                    showLabel={true}
+                  />
+                </div>
+              ))}
             </div>
           </div>
 
-          <div>
-            <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+          <!-- Recommended Augments -->
+          <div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-3xl p-6 shadow-card animate-fade-in">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <span class="material-symbols-outlined text-gold text-2xl">auto_awesome</span>
               Recommended Augments
             </h2>
-            <div class="space-y-3">
-              {
-                composition.data.augments.map((augment: any) => (
-                  <a
-                    class="flex items-center gap-4 p-3 rounded-lg bg-slate-100 dark:bg-slate-800/50 hover:bg-slate-200 dark:hover:bg-slate-700/50 border border-slate-200 dark:border-slate-800 transition-colors"
-                    href="#"
-                  >
-                    <div class="flex items-center justify-center size-10 rounded-lg bg-primary/20 text-primary-light">
-                      <span class="material-symbols-outlined">
-                        {augment.icon}
-                      </span>
-                    </div>
-                    <div>
-                      <p class="font-semibold text-slate-800 dark:text-slate-100">
-                        {augment.name}
-                      </p>
-                      <p class="text-sm text-slate-500 dark:text-slate-400">
-                        {augment.description}
-                      </p>
-                    </div>
-                  </a>
-                ))
-              }
+            <div class="space-y-4">
+              {composition.data.augments.map((augment: any) => (
+                <a
+                  class="group flex items-center gap-4 p-4 rounded-2xl bg-slate-800/30 hover:bg-slate-700/40 border border-purple-500/10 hover:border-purple-500/30 transition-all duration-300 hover-lift cursor-pointer"
+                  href="#"
+                >
+                  <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-primary text-white group-hover:rotate-12 transition-transform duration-300">
+                    <span class="material-symbols-outlined text-xl">
+                      {augment.icon}
+                    </span>
+                  </div>
+                  <div class="flex-1">
+                    <h3 class="font-bold text-white text-lg mb-1 group-hover:text-primary-light transition-colors">
+                      {augment.name}
+                    </h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                      {augment.description}
+                    </p>
+                  </div>
+                  <span class="material-symbols-outlined text-slate-500 group-hover:text-primary-light group-hover:translate-x-1 transition-all">
+                    arrow_forward
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-3xl p-6 shadow-card animate-fade-in">
+            <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+              <span class="material-symbols-outlined text-gold text-2xl">analytics</span>
+              Quick Stats
+            </h2>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="text-center p-4 bg-slate-800/30 rounded-2xl border border-purple-500/10">
+                <div class="text-2xl font-bold text-primary-light mb-1">85%</div>
+                <div class="text-sm text-slate-400">Win Rate</div>
+              </div>
+              <div class="text-center p-4 bg-slate-800/30 rounded-2xl border border-purple-500/10">
+                <div class="text-2xl font-bold text-gold mb-1">4.2</div>
+                <div class="text-sm text-slate-400">Avg Place</div>
+              </div>
+              <div class="text-center p-4 bg-slate-800/30 rounded-2xl border border-purple-500/10">
+                <div class="text-2xl font-bold text-green-400 mb-1">High</div>
+                <div class="text-sm text-slate-400">Difficulty</div>
+              </div>
+              <div class="text-center p-4 bg-slate-800/30 rounded-2xl border border-purple-500/10">
+                <div class="text-2xl font-bold text-blue-400 mb-1">Mid</div>
+                <div class="text-sm text-slate-400">Game Phase</div>
+              </div>
             </div>
           </div>
         </div>

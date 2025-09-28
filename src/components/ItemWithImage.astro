@@ -3,9 +3,10 @@ export interface Props {
   itemName: string;
   description?: string;
   size?: 'small' | 'medium' | 'large';
+  showLabel?: boolean;
 }
 
-const { itemName, description, size = 'small' } = Astro.props;
+const { itemName, description, size = 'small', showLabel = true } = Astro.props;
 
 // Importar todas las imágenes necesarias
 import bfSword from '../assets/items/bf-sword.png';
@@ -90,21 +91,33 @@ const getItemImage = (name: string) => {
 const imageUrl = getItemImage(itemName);
 const sizeClasses = {
   small: 'w-6 h-6',
-  medium: 'w-8 h-8',
-  large: 'w-12 h-12'
+  medium: 'w-10 h-10',
+  large: 'w-16 h-16'
 };
 ---
 
-<div class="item-with-image">
-  <img 
-    src={imageUrl} 
-    alt={itemName}
-    class={`${sizeClasses[size]} object-cover rounded border border-slate-600`}
-    loading="lazy"
-  />
-  <span class="item-name">{itemName}</span>
-  {description && (
-    <span class="item-description">{description}</span>
+<div class="item-with-image group">
+  <div class="item-image-container">
+    <img 
+      src={imageUrl} 
+      alt={itemName}
+      class={`item-image ${sizeClasses[size]}`}
+      loading="lazy"
+    />
+    {!showLabel && (
+      <div class="item-tooltip">
+        <span class="tooltip-text">{itemName}</span>
+        {description && <span class="tooltip-description">{description}</span>}
+      </div>
+    )}
+  </div>
+  {showLabel && (
+    <div class="item-info">
+      <span class="item-name">{itemName}</span>
+      {description && (
+        <span class="item-description">{description}</span>
+      )}
+    </div>
   )}
 </div>
 
@@ -112,21 +125,121 @@ const sizeClasses = {
   .item-with-image {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.5rem;
-    border-radius: 0.25rem;
-    white-space: nowrap;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    position: relative;
+  }
+
+  .item-image-container {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .item-image {
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid var(--color-primary);
+    background: linear-gradient(135deg, rgba(22, 16, 34, 0.8) 0%, rgba(15, 15, 26, 0.9) 100%);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .item-image:hover {
+    border-color: var(--color-primary-light);
+    box-shadow: 0 6px 20px rgba(126, 34, 206, 0.3);
+    transform: scale(1.05);
+    opacity: 1;
+  }
+
+  .item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
   }
 
   .item-name {
-    font-weight: 500;
-    color: #e2e8f0;
+    font-weight: 600;
+    color: #f1f5f9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .item-description {
     color: #94a3b8;
-    font-size: 0.7rem;
-    font-style: italic;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Tooltip styles */
+  .item-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 8px;
+    background: rgba(15, 15, 26, 0.95);
+    border: 1px solid var(--color-primary);
+    border-radius: 8px;
+    padding: 8px 12px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 50;
+    white-space: nowrap;
+  }
+
+  .item-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(15, 15, 26, 0.95);
+  }
+
+  .item-image-container:hover .item-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-4px);
+  }
+
+  .tooltip-text {
+    display: block;
+    font-weight: 600;
+    color: #f1f5f9;
+    font-size: 0.875rem;
+    margin-bottom: 4px;
+  }
+
+  .tooltip-description {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 640px) {
+    .item-with-image {
+      gap: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .item-name {
+      font-size: 0.875rem;
+    }
+
+    .item-description {
+      font-size: 0.7rem;
+    }
   }
 </style>

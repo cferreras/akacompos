@@ -12,7 +12,7 @@ const featuredComp = [
     position: { row: 0, col: 4 }
   },
   {
-    champion: "KSante", 
+    champion: "KSante",
     borderColor: "purple" as const,
     items: ["Thief's Gloves"],
     position: { row: 1, col: 3 }
@@ -39,43 +39,90 @@ const featuredComp = [
 ---
 
 <Layout title="TFTComps - Home">
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-		<div class="text-center mb-12">
-			<h1 class="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white mb-4">
-				<span class="text-primary-light">TFT</span>Comps
-			</h1>
-			<p class="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-				Discover the best Teamfight Tactics compositions, items, and strategies to dominate the battlefield.
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
+		<!-- Hero Section -->
+		<div class="text-center mb-16 animate-slide-up">
+			<div class="relative inline-block mb-6">
+				<h1 class="text-5xl md:text-7xl font-black text-white mb-4 relative z-10">
+					AKAComps 
+				</h1>
+				<div class="absolute inset-0 bg-gradient-primary opacity-20 blur-2xl animate-glow"></div>
+			</div>
+			<p class="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
+				Discover the most powerful <span class="text-gold font-semibold">Teamfight Tactics</span> compositions, optimized items, and winning strategies to dominate the battlefield.
 			</p>
+
+			<!-- Stats badges -->
+			<div class="flex flex-wrap justify-center gap-4 mb-8">
+				<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-full px-6 py-2 shadow-card">
+					<span class="text-gold font-bold">500+</span>
+					<span class="text-slate-300 ml-2">Compositions</span>
+				</div>
+				<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-full px-6 py-2 shadow-card">
+					<span class="text-gold font-bold">Daily</span>
+					<span class="text-slate-300 ml-2">Updates</span>
+				</div>
+				<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-full px-6 py-2 shadow-card">
+					<span class="text-gold font-bold">Pro</span>
+					<span class="text-slate-300 ml-2">Insights</span>
+				</div>
+			</div>
 		</div>
 
-		<div class="max-w-5xl mx-auto space-y-12">
-			<div>
-				<h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-6">Featured Composition - Responsive Design</h2>
-				<ResponsiveTFTBoard 
-					champions={featuredComp}
-					title="Featured Team Comp"
-					description="Discover this powerful composition featuring strong synergies and optimal positioning"
-				/>
-			</div>
 
-			
-			
-			<div class="text-center space-y-4">
-				<a 
-					href="/responsive-demo"
-					class="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/30 hover:bg-primary-light transition-all mr-4"
-				>
-					View Responsive Demo
-					<span class="material-symbols-outlined">arrow_forward</span>
-				</a>
-				<a 
-					href="/compositions/cosmic-infiltrators"
-					class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-primary text-primary font-bold hover:bg-primary hover:text-white transition-all"
-				>
-					View Full Details
-					<span class="material-symbols-outlined">arrow_forward</span>
-				</a>
+			<!-- Action Buttons -->
+			<div class="text-center space-y-6 animate-fade-in">
+				<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+					<a
+						href="/responsive-demo"
+						class="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-primary text-white font-bold shadow-primary hover:shadow-glow transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
+					>
+						<span class="material-symbols-outlined group-hover:rotate-12 transition-transform">rocket_launch</span>
+						View Interactive Demo
+						<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+					</a>
+					<a
+						href="/compositions/cosmic-infiltrators"
+						class="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl border-2 border-purple-500/50 text-primary-light font-bold hover:bg-gradient-primary hover:text-white hover:border-transparent transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 backdrop-blur-sm"
+					>
+						<span class="material-symbols-outlined group-hover:rotate-12 transition-transform">visibility</span>
+						Explore Compositions
+						<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+					</a>
+				</div>
+
+				<!-- Quick navigation cards -->
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+					<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 shadow-card hover-lift cursor-pointer group">
+						<div class="text-center">
+							<div class="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
+								<span class="material-symbols-outlined text-white text-2xl">shield</span>
+							</div>
+							<h3 class="text-xl font-bold text-white mb-2">Champions Guide</h3>
+							<p class="text-slate-400">Master each champion's abilities and optimal positioning</p>
+						</div>
+					</div>
+
+					<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 shadow-card hover-lift cursor-pointer group">
+						<div class="text-center">
+							<div class="w-16 h-16 bg-gradient-gold rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
+								<span class="material-symbols-outlined text-white text-2xl">category</span>
+							</div>
+							<h3 class="text-xl font-bold text-white mb-2">Items Database</h3>
+							<p class="text-slate-400">Complete item combinations and strategic recommendations</p>
+						</div>
+					</div>
+
+					<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 shadow-card hover-lift cursor-pointer group">
+						<div class="text-center">
+							<div class="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
+								<span class="material-symbols-outlined text-white text-2xl">trending_up</span>
+							</div>
+							<h3 class="text-xl font-bold text-white mb-2">Meta Tracker</h3>
+							<p class="text-slate-400">Stay updated with the latest meta shifts and tier lists</p>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

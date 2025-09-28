@@ -1,0 +1,174 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ResponsiveTFTBoard from "../components/ResponsiveTFTBoard.astro";
+
+// Ejemplo de diferentes composiciones para mostrar la responsividad
+const demoCompositions = [
+  {
+    title: "Shadow Assassins",
+    description: "High-damage composition focused on eliminating key targets",
+    champions: [
+      {
+        champion: "Akali",
+        borderColor: "purple" as const,
+        items: ["Infinity Edge", "Last Whisper", "Bloodthirster"],
+        position: { row: 3, col: 0 }
+      },
+      {
+        champion: "Katarina",
+        borderColor: "purple" as const,
+        items: ["Blue Buff", "Archangel's Staff"],
+        position: { row: 3, col: 1 }
+      },
+      {
+        champion: "Yasuo",
+        borderColor: "yellow" as const,
+        items: ["Guinsoo's Rageblade"],
+        position: { row: 2, col: 3 }
+      },
+      {
+        champion: "Shen",
+        borderColor: "green" as const,
+        items: ["Gargoyle Stoneplate", "Warmog's Armor"],
+        position: { row: 0, col: 3 }
+      },
+      {
+        champion: "Kennen",
+        borderColor: "blue" as const,
+        items: ["Morellonomicon"],
+        position: { row: 1, col: 2 }
+      }
+    ]
+  },
+  {
+    title: "Arsenal Defenders",
+    description: "Tanky composition with strong defensive capabilities",
+    champions: [
+      {
+        champion: "Malphite",
+        borderColor: "green" as const,
+        items: ["Bramble Vest", "Dragon's Claw", "Warmog's Armor"],
+        position: { row: 0, col: 3 }
+      },
+      {
+        champion: "Leona",
+        borderColor: "green" as const,
+        items: ["Evenshroud", "Gargoyle Stoneplate"],
+        position: { row: 0, col: 2 }
+      },
+      {
+        champion: "Braum",
+        borderColor: "green" as const,
+        items: ["Titan's Resolve"],
+        position: { row: 0, col: 4 }
+      },
+      {
+        champion: "Jinx",
+        borderColor: "yellow" as const,
+        items: ["Giant Slayer", "Last Whisper", "Bloodthirster"],
+        position: { row: 3, col: 5 }
+      },
+      {
+        champion: "Jayce",
+        borderColor: "blue" as const,
+        items: ["Blue Buff"],
+        position: { row: 2, col: 1 }
+      }
+    ]
+  }
+];
+---
+
+<Layout title="Responsive TFT Board Demo">
+  <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16 animate-slide-up">
+      <h1 class="text-5xl md:text-6xl font-black text-white mb-6">
+        <span class="">Responsive</span> Demo
+      </h1>
+      <p class="text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
+        Experience how our TFT board adapts perfectly to any screen size. Resize your browser window to see the magic in action!
+      </p>
+      
+      <!-- Device indicators -->
+      <div class="flex flex-wrap justify-center gap-4 mb-12">
+        <div class="flex items-center gap-2 bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-full px-4 py-2 shadow-card">
+          <span class="material-symbols-outlined text-primary-light">desktop_windows</span>
+          <span class="text-slate-300 text-sm">Desktop</span>
+        </div>
+        <div class="flex items-center gap-2 bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-full px-4 py-2 shadow-card">
+          <span class="material-symbols-outlined text-primary-light">tablet</span>
+          <span class="text-slate-300 text-sm">Tablet</span>
+        </div>
+        <div class="flex items-center gap-2 bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-full px-4 py-2 shadow-card">
+          <span class="material-symbols-outlined text-primary-light">smartphone</span>
+          <span class="text-slate-300 text-sm">Mobile</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demo Compositions -->
+    <div class="max-w-7xl mx-auto space-y-16">
+      {demoCompositions.map((comp, index) => (
+        <div class="animate-fade-in" style={`animation-delay: ${index * 0.2}s`}>
+          <div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-3xl p-8 shadow-card">
+            <ResponsiveTFTBoard 
+              champions={comp.champions}
+              title={comp.title}
+              description={comp.description}
+            />
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <!-- Features Section -->
+    <div class="mt-20 animate-fade-in">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+          🌟 Responsive Features
+        </h2>
+        <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+          Our TFT board automatically adapts to provide the best viewing experience on any device
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 shadow-card hover-lift text-center">
+          <div class="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-white text-2xl">zoom_in</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Smart Scaling</h3>
+          <p class="text-slate-400">Champions and items automatically resize based on screen size while maintaining perfect proportions</p>
+        </div>
+        
+        <div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 shadow-card hover-lift text-center">
+          <div class="w-16 h-16 bg-gradient-gold rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-white text-2xl">touch_app</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Touch Friendly</h3>
+          <p class="text-slate-400">Optimized for touch devices with proper spacing and hover alternatives for mobile users</p>
+        </div>
+        
+        <div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 shadow-card hover-lift text-center">
+          <div class="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-white text-2xl">speed</span>
+          </div>
+          <h3 class="text-xl font-bold text-white mb-3">Performance</h3>
+          <p class="text-slate-400">Smooth animations and transitions that work flawlessly across all devices and browsers</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Back to Home -->
+    <div class="text-center mt-16">
+      <a 
+        href="/"
+        class="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-primary text-white font-bold shadow-primary hover:shadow-glow transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
+      >
+        <span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+        Back to Home
+      </a>
+    </div>
+  </div>
+</Layout>
