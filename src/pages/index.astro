@@ -1,126 +1,53 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-// Composición de ejemplo para la página principal
-const featuredComp = [
-  {
-    champion: "Neeko",
-    borderColor: "yellow" as const,
-    items: ["Steadfast Hammer", "Crownguard", "Warmog's Armor"],
-    position: { row: 0, col: 4 }
-  },
-  {
-    champion: "KSante",
-    borderColor: "purple" as const,
-    items: ["Thief's Gloves"],
-    position: { row: 1, col: 3 }
-  },
-  {
-    champion: "Rakan",
-    borderColor: "green" as const,
-    items: [],
-    position: { row: 2, col: 1 }
-  },
-  {
-    champion: "Janna",
-    borderColor: "yellow" as const,
-    items: ["Red Buff", "Archangel's Staff"],
-    position: { row: 3, col: 4 }
-  },
-  {
-    champion: "KogMaw",
-    borderColor: "yellow" as const,
-    items: ["Archangel's Staff", "Spear of Shojin", "Spear of Shojin"],
-    position: { row: 3, col: 6 }
-  }
-];
+import akaWonderImage from '../assets/akawonder.png';
 ---
 
-<Layout title="AKACompos - Home">
-	<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-16">
-		<!-- Hero Section -->
-		<div class="text-center mb-16 animate-slide-up">
-			<div class="relative inline-block mb-6">
-				<h1 class="text-5xl md:text-7xl font-black text-white mb-4 relative z-10">
-					AKACompos 
+<Layout title="AKACompos - Composiciones de AKAWonder">
+	<div class="container mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
+		<div class="text-center max-w-4xl mx-auto">
+			<!-- Streamer Image -->
+			<div class="mb-8">
+				<div class="relative inline-block">
+					<img 
+						src={akaWonderImage.src} 
+						alt="AKAWonder" 
+						class="w-48 h-48 md:w-64 md:h-64 rounded-full mx-auto object-cover shadow-2xl border-4 border-primary-light/30"
+					/>
+					<div class="absolute inset-0 rounded-full bg-gradient-primary opacity-20 blur-xl animate-glow"></div>
+				</div>
+			</div>
+
+			<!-- Title -->
+			<div class="mb-6">
+				<h1 class="text-4xl md:text-6xl font-black text-white mb-4">
+					AKACompos
 				</h1>
-				<div class="absolute inset-0 bg-gradient-primary opacity-20 blur-2xl animate-glow"></div>
+				<p class="text-lg md:text-xl text-slate-300 mb-8">
+					Las mejores composiciones de <span class="text-gold font-semibold">AKAWonder</span><br>
+					para dominar en Teamfight Tactics
+				</p>
 			</div>
-			<p class="text-xl md:text-2xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-8">
-				Discover the most powerful <span class="text-gold font-semibold">Teamfight Tactics</span> compositions, optimized items, and winning strategies to dominate the battlefield.
-			</p>
-
-			<!-- Stats badges -->
-			<div class="flex flex-wrap justify-center gap-4 mb-8">
-				<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-full px-6 py-2 shadow-card">
-					<span class="text-gold font-bold">500+</span>
-					<span class="text-slate-300 ml-2">Compositions</span>
-				</div>
-				<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-full px-6 py-2 shadow-card">
-					<span class="text-gold font-bold">Daily</span>
-					<span class="text-slate-300 ml-2">Updates</span>
-				</div>
-				<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-full px-6 py-2 shadow-card">
-					<span class="text-gold font-bold">Pro</span>
-					<span class="text-slate-300 ml-2">Insights</span>
-				</div>
-			</div>
-		</div>
-
 
 			<!-- Action Buttons -->
-			<div class="text-center space-y-6 animate-fade-in">
-				<div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-					<a
-						href="/responsive-demo"
-						class="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-primary text-white font-bold shadow-primary hover:shadow-glow transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
-					>
-						<span class="material-symbols-outlined group-hover:rotate-12 transition-transform">rocket_launch</span>
-						View Interactive Demo
-						<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-					</a>
-					<a
-						href="/compositions/cosmic-infiltrators"
-						class="group inline-flex items-center gap-3 px-8 py-4 rounded-2xl border-2 border-purple-500/50 text-primary-light font-bold hover:bg-gradient-primary hover:text-white hover:border-transparent transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 backdrop-blur-sm"
-					>
-						<span class="material-symbols-outlined group-hover:rotate-12 transition-transform">visibility</span>
-						Explore Compositions
-						<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
-					</a>
-				</div>
-
-				<!-- Quick navigation cards -->
-				<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
-					<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 shadow-card hover-lift cursor-pointer group">
-						<div class="text-center">
-							<div class="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
-								<span class="material-symbols-outlined text-white text-2xl">shield</span>
-							</div>
-							<h3 class="text-xl font-bold text-white mb-2">Champions Guide</h3>
-							<p class="text-slate-400">Master each champion's abilities and optimal positioning</p>
-						</div>
-					</div>
-
-					<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 shadow-card hover-lift cursor-pointer group">
-						<div class="text-center">
-							<div class="w-16 h-16 bg-gradient-gold rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
-								<span class="material-symbols-outlined text-white text-2xl">category</span>
-							</div>
-							<h3 class="text-xl font-bold text-white mb-2">Items Database</h3>
-							<p class="text-slate-400">Complete item combinations and strategic recommendations</p>
-						</div>
-					</div>
-
-					<div class="bg-gradient-card backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 shadow-card hover-lift cursor-pointer group">
-						<div class="text-center">
-							<div class="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:rotate-12 transition-transform duration-300">
-								<span class="material-symbols-outlined text-white text-2xl">trending_up</span>
-							</div>
-							<h3 class="text-xl font-bold text-white mb-2">Meta Tracker</h3>
-							<p class="text-slate-400">Stay updated with the latest meta shifts and tier lists</p>
-						</div>
-					</div>
-				</div>
+			<div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+				<a
+					href="/compositions"
+					class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-primary text-white font-bold shadow-primary hover:shadow-glow transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
+				>
+					<span class="material-symbols-outlined">apps</span>
+					Ver Composiciones
+				</a>
+				
+				<a
+					href="https://twitch.tv/akawonder"
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex items-center gap-3 px-8 py-4 rounded-2xl border-2 border-purple-500/50 text-primary-light font-bold hover:bg-gradient-primary hover:text-white hover:border-transparent transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 backdrop-blur-sm"
+				>
+					<span class="material-symbols-outlined">live_tv</span>
+					Ver Canal
+				</a>
 			</div>
 		</div>
 	</div>
