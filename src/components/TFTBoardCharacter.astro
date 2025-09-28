@@ -549,13 +549,7 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
     clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
     border-radius: 0;
     overflow: hidden;
-    transition: all 0.3s ease;
     filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-  }
-
-  .character-container:hover .hexagon {
-    filter: drop-shadow(0 8px 20px rgba(126, 34, 206, 0.4));
-    transform: scale(1.05);
   }
 
   .hexagon::before {
@@ -599,11 +593,7 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
     border: 1px solid rgba(126, 34, 206, 0.1);
   }
 
-  .character-container:hover .empty-slot {
-    background: linear-gradient(135deg, #3a3a4a 0%, #2a2a3a 100%);
-    opacity: 0.8;
-    border-color: rgba(126, 34, 206, 0.2);
-  }
+
 
   /* Alternativa con borde más grueso */
   .hexagon.thick-border::before {
@@ -640,15 +630,8 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    transition: all 0.3s ease;
     background: linear-gradient(135deg, rgba(22, 16, 34, 0.8) 0%, rgba(15, 15, 26, 0.9) 100%);
     border: 1px solid rgba(126, 34, 206, 0.2);
-  }
-
-  .character-container:hover .item-slot {
-    box-shadow: 0 6px 16px rgba(126, 34, 206, 0.3);
-    border-color: rgba(126, 34, 206, 0.4);
-    transform: translateY(-2px);
   }
 
   .item-image {

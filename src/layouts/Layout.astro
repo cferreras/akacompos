@@ -11,7 +11,7 @@ const { title = "TFT Composition Details" } = Astro.props;
 ---
 
 <!doctype html>
-<html class="dark" lang="en">
+<html class="dark" lang="es">
   <head>
     <meta charset="utf-8" />
     <title>{title}</title>
@@ -21,41 +21,21 @@ const { title = "TFT Composition Details" } = Astro.props;
     <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect" />
     <link
       as="style"
-      href="https://fonts.googleapis.com/css2?display=swap&family=Space+Grotesk:wght@300;400;500;600;700;800"
+      href="https://fonts.googleapis.com/css2?display=swap&family=Space+Grotesk:wght@400;500;700"
       onload="this.rel='stylesheet'"
       rel="stylesheet"
     />
-
     <link
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
       rel="stylesheet"
     />
-    <script>
-      // Force dark mode and prevent any theme switching
-      document.documentElement.classList.add('dark');
-      // Override any potential theme switching
-      if (typeof localStorage !== 'undefined') {
-        localStorage.setItem('theme', 'dark');
-      }
-    </script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      rel="stylesheet"
+    />
   </head>
-  <body class="bg-gradient-dark font-display text-slate-200 relative overflow-x-hidden min-h-screen">
-    <!-- Solid background layer to prevent any gaps -->
-    <div class="fixed inset-0 w-full h-full bg-gradient-dark z-0"></div>
-    
-    <!-- Animated background elements -->
-    <div class="fixed inset-0 w-full h-full z-0 pointer-events-none">
-      <div class="absolute top-20 left-10 w-64 h-64 bg-primary opacity-10 rounded-full blur-3xl animate-float"></div>
-      <div class="absolute top-40 right-20 w-96 h-96 bg-accent opacity-8 rounded-full blur-3xl animate-float" style="animation-delay: -1s;"></div>
-      <div class="absolute bottom-20 left-1/4 w-80 h-80 bg-primary-light opacity-6 rounded-full blur-3xl animate-float" style="animation-delay: -2s;"></div>
-      <div class="absolute top-1/3 right-1/3 w-48 h-48 bg-accent-light opacity-5 rounded-full blur-3xl animate-float" style="animation-delay: -0.5s;"></div>
-      <!-- Additional background elements to fill more space -->
-      <div class="absolute top-60 left-1/2 w-72 h-72 bg-primary opacity-4 rounded-full blur-3xl animate-float" style="animation-delay: -3s;"></div>
-      <div class="absolute bottom-40 right-10 w-56 h-56 bg-accent-light opacity-6 rounded-full blur-3xl animate-float" style="animation-delay: -1.5s;"></div>
-    </div>
-    
-    <!-- Main content -->
-    <div class="relative z-10 flex flex-col min-h-screen">
+  <body class="bg-background-dark font-display text-slate-800 dark:text-slate-200">
+    <div class="flex flex-col min-h-screen">
       <Navbar />
       <main class="flex-grow">
         <slot />
@@ -65,25 +45,4 @@ const { title = "TFT Composition Details" } = Astro.props;
   </body>
 </html>
 
-<style>
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    min-height: 100vh;
-    height: 100%;
-  }
 
-  /* Ensure full coverage of background */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: var(--gradient-dark);
-    z-index: -1;
-  }
-</style>

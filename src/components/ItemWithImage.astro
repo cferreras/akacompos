@@ -140,15 +140,7 @@ const sizeClasses = {
     border-radius: 8px;
     border: 2px solid var(--color-primary);
     background: linear-gradient(135deg, rgba(22, 16, 34, 0.8) 0%, rgba(15, 15, 26, 0.9) 100%);
-    transition: all 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  }
-
-  .item-image:hover {
-    border-color: var(--color-primary-light);
-    box-shadow: 0 6px 20px rgba(126, 34, 206, 0.3);
-    transform: scale(1.05);
-    opacity: 1;
   }
 
   .item-info {
@@ -190,7 +182,6 @@ const sizeClasses = {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     opacity: 0;
     visibility: hidden;
-    transition: all 0.3s ease;
     pointer-events: none;
     z-index: 50;
     white-space: nowrap;
@@ -204,12 +195,6 @@ const sizeClasses = {
     transform: translateX(-50%);
     border: 6px solid transparent;
     border-top-color: rgba(15, 15, 26, 0.95);
-  }
-
-  .item-image-container:hover .item-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(-4px);
   }
 
   .tooltip-text {
