@@ -66,13 +66,6 @@ body {
   background-color: transparent !important;
 }
 
-/* Override any white backgrounds but preserve hexagon styling */
-div:not(.hexagon):not(.hexagon-container):not(.character-container):not(.item-slot),
-section, main, article, aside, header, footer, nav, 
-.container, .tft-board, .board-row, .hex-slot {
-  background-color: transparent !important;
-}
-
 /* Specifically preserve hexagon colors and styling */
 .hexagon {
   background-color: var(--border-color) !important;
@@ -87,11 +80,6 @@ section, main, article, aside, header, footer, nav,
   opacity: 0.8 !important;
 }
 
-/* Force all page backgrounds to be dark but preserve component styling */
-body, html, #root, [data-reactroot] {
-  background-color: var(--color-background-dark) !important;
-  color: #e2e8f0 !important;
-}
 
 /* Prose styles for markdown content */
 .prose {

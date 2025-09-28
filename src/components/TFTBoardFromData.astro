@@ -54,7 +54,7 @@ const createBoard = () => {
 const board = createBoard();
 ---
 
-<div class="responsive-tft-board">
+<div class="bg-slate-200/50 dark:bg-slate-800/20 rounded-xl p-4 border border-slate-200 dark:border-slate-800 responsive-tft-board">
   <div class="board-container">
     <div class="board-grid">
       {board.map((row, rowIndex) => (
@@ -96,14 +96,6 @@ const board = createBoard();
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
-    padding: 1.5rem;
-    background: linear-gradient(135deg, rgba(126, 34, 206, 0.15) 0%, rgba(22, 16, 34, 0.9) 100%);
-    border: 2px solid rgba(139, 92, 246, 0.4);
-    border-radius: 16px;
-    box-shadow:
-      0 8px 32px rgba(126, 34, 206, 0.25),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(8px);
   }
 
   .board-container {
