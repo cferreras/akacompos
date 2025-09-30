@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import { getChampionImage } from '../../utils/assets';
 
 // Get all compositions
 const compositions = await getCollection('compositions');
@@ -66,7 +67,7 @@ function formatTags(tags: string[]): { text: string; style: string }[] {
                         <img 
                           alt={comp.data.title} 
                           class="h-full w-full object-cover object-center" 
-                          src={comp.data.image}
+                          src={getChampionImage(comp.data.image)}
                         />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                       </div>
