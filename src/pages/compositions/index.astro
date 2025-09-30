@@ -1,0 +1,109 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+
+// Get all compositions
+const compositions = await getCollection('compositions');
+
+// Group compositions by tier
+const compositionsByTier = compositions.reduce((acc, comp) => {
+  const tier = comp.data.tier;
+  if (!acc[tier]) {
+    acc[tier] = [];
+  }
+  acc[tier].push(comp);
+  return acc;
+}, {} as Record<string, typeof compositions>);
+
+// Define tier order
+const tierOrder = ['S Tier', 'A Tier', 'B Tier', 'C Tier'];
+
+// Function to format tags for display
+function formatTags(tags: string[]): { text: string; style: string }[] {
+  return tags.slice(0, 2).map(tag => {
+    // Determine tag style based on content
+    let style = 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-primary';
+    
+    if (tag.toLowerCase().includes('fast')) {
+      style = 'bg-blue-500/10 text-blue-600 dark:bg-blue-500/20 dark:text-blue-400';
+    } else if (tag.toLowerCase().includes('reroll')) {
+      style = 'bg-green-500/10 text-green-600 dark:bg-green-500/20 dark:text-green-400';
+    } else if (tag.toLowerCase().includes('aggressive')) {
+      style = 'bg-red-500/10 text-red-600 dark:bg-red-500/20 dark:text-red-400';
+    } else if (tag.toLowerCase().includes('defensive')) {
+      style = 'bg-yellow-500/10 text-yellow-600 dark:bg-yellow-500/20 dark:text-yellow-400';
+    }
+    
+    return { text: tag, style };
+  });
+}
+---
+
+<Layout title="TFT Compositions">
+  <div class="bg-background-dark font-display text-gray-800 dark:text-gray-200">
+    <div class="flex h-auto min-h-screen w-full flex-col">
+      <main class="flex-1">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          <h1 class="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">TFT Compositions by AKAWonder</h1>
+          
+          {tierOrder.map(tier => {
+            const tieredComps = compositionsByTier[tier] || [];
+            if (tieredComps.length === 0) return null;
+            
+            return (
+              <div class="mt-12">
+                <div class="flex items-baseline gap-4">
+                  <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{tier}</h2>
+                  <div class="h-px flex-1 bg-primary/20 dark:bg-primary/30"></div>
+                </div>
+                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+                  {tieredComps.map(comp => (
+                    <a 
+                      href={`/compositions/${comp.id}`}
+                      class="group relative flex cursor-pointer flex-col overflow-hidden rounded-lg bg-white/5 dark:bg-black/10 shadow-lg transition-all hover:scale-105"
+                    >
+                      <div class="aspect-[16/9] w-full overflow-hidden relative">
+                        <img 
+                          alt={comp.data.title} 
+                          class="h-full w-full object-cover object-center" 
+                          src={comp.data.image}
+                        />
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                      </div>
+                      <div class="p-4">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white">{comp.data.title}</h3>
+                        <div class="mt-2 flex flex-wrap gap-2">
+                          {formatTags(comp.data.tags).map(tag => (
+                            <span class={`rounded px-2 py-1 text-xs font-medium ${tag.style}`}>
+                              {tag.text}
+                            </span>
+                          ))}
+                        </div>
+                        <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Updated {comp.data.updatedAt}</p>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </main>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  /* Custom CSS variables matching your design */
+  :root {
+    --primary: #5211d4;
+    --background-light: #f6f6f8;
+    --background-dark: #161022;
+  }
+  
+  .dark {
+    --primary: #5211d4;
+    --background-light: #f6f6f8;
+    --background-dark: #161022;
+  }
+</style>

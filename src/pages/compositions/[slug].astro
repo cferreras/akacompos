@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import TFTBoardFromData from "../../components/TFTBoardFromData.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
+import ItemWithImage from "../../components/ItemWithImage.astro";
 
 export async function getStaticPaths() {
   const compositions = await getCollection("compositions");
@@ -52,7 +53,7 @@ const { Content } = await render(composition);
         <div class="lg:col-span-2">
           <h2 class="text-2xl font-bold text-slate-900 dark:text-white mb-4">Composition Board</h2>
           <div class="relative  bg-slate-200/50 dark:bg-slate-800/20 rounded-xl p-4 border border-slate-200 dark:border-slate-800">
-            <TFTBoardFromData boardData={composition.data.board} />
+            <TFTBoardFromData boardSize="large" boardData={composition.data.board} />
           </div>
           
           <div class="mt-6 space-y-5">
@@ -84,8 +85,7 @@ const { Content } = await render(composition);
             <div class="space-y-3">
               {composition.data.coreItems.map((item: any) => (
                 <div class="p-4 rounded-lg bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800">
-                  <p class="font-semibold text-slate-800 dark:text-slate-200">{item.name}</p>
-                  <p class="text-sm text-slate-500 dark:text-slate-400">{item.description}</p>
+                  <ItemWithImage itemName={item.name}  description={item.description} size="medium"/>
                 </div>
               ))}
             </div>

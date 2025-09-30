@@ -1,14 +1,18 @@
 @import "tailwindcss";
 
+html{
+    font-size: 1.25rem;
+}
+
 :root {
-  --color-primary: 82 17 212;
+  --color-primary: 164 107 255;
   --color-background-light: 246 246 248;
   --color-background-dark: 22 16 34;
 }
 
 
 .text-primary {
-  color: rgb(82 17 212);
+  color: rgb(164, 107, 255);
 }
 
 .bg-primary {

@@ -8,6 +8,7 @@ const compositions = defineCollection({
     tier: z.string(),
     author: z.string(),
     updatedAt: z.string(),
+    image: z.string(),
     tags: z.array(z.string()),
     description: z.string(),
     gameplayMode: z.string(),
