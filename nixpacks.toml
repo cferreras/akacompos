@@ -5,13 +5,5 @@
 NIXPACKS_NODE_VERSION = "20"
 NODE_ENV = "production"
 
-# Custom build phase to ensure file system compatibility
-[phases.build]
-cmds = [
-  "find src/assets -name '*.png' -type f | head -10",
-  "ls -la src/assets/items/spatula.png || echo 'File not found'",
-  "pnpm run build"
-]
-
 [start]
 cmd = "npx serve dist -s -l 3000"
