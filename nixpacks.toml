@@ -2,10 +2,8 @@
 # Configuration file for Nixpacks deployment
 
 [variables]
-# Force Node.js version 20 to avoid conflicts
 NIXPACKS_NODE_VERSION = "20"
 NODE_ENV = "production"
 
 [start]
-# Since this is a static site, we'll use a simple HTTP server to serve the built files
 cmd = "npx serve dist -s -l 3000"
