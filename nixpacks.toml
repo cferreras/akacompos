@@ -1,0 +1,25 @@
+# nixpacks.toml
+# Configuration file for Nixpacks deployment
+
+# Use the detected providers (Node.js) and extend with any additional ones if needed
+providers = ["..."]
+
+[phases.setup]
+# Install Nix packages needed for the build process
+nixPkgs = ["...", "nodejs_20", "pnpm"]
+
+[phases.install]
+# Install dependencies using pnpm
+cmds = ["pnpm install --frozen-lockfile"]
+
+[phases.build]
+# Build the Astro project for static deployment
+cmds = ["pnpm run build"]
+
+[start]
+# Since this is a static site, we'll use a simple HTTP server to serve the built files
+cmd = "npx serve dist -s -l 3000"
+
+# Environment variables
+[variables]
+NODE_ENV = "production"
