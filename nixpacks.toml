@@ -6,4 +6,4 @@ NIXPACKS_NODE_VERSION = "20"
 NODE_ENV = "production"
 
 [start]
-cmd = "npx serve dist -s -l 3000"
+cmd = "npx serve dist -l 3000"
