@@ -1,6 +1,7 @@
 ---
 import TFTBoardCharacter from "./TFTBoardCharacter.astro";
 import ItemWithImage from "./ItemWithImage.astro";
+import {championRarity} from "../utils/assets.ts";
 
 interface ChampionData {
     name: string;
@@ -21,19 +22,21 @@ interface Props {
 const { boardData, boardSize = 'medium' } = Astro.props;
 
 // Función para determinar el color del borde basado en las estrellas
-const getBorderColor = (stars: number = 1): "purple" | "blue" | "yellow" | "green" | "gray" => {
-    switch (stars) {
-        case 3: return "yellow";
-        case 2: return "purple";
-        case 1: return "blue";
-        default: return "gray";
+const getBorderColor = (champ : ChampionData): "purple" | "blue" | "yellow" | "green" | "gray" | "empty" => {
+    switch (championRarity[champ.name]) {
+        case 5: return "yellow";
+        case 4: return "purple";
+        case 3: return "blue";
+        case 2: return "green";
+        case 1: return "gray";
+        default: return "empty";
     }
 };
 
 // Convertir los datos de Markdown al formato esperado por el componente
 const champions = boardData.champions.map(champ => ({
     champion: champ.name,
-    borderColor: getBorderColor(champ.stars),
+    borderColor: getBorderColor(champ),
     items: champ.items || [],
     position: champ.position,
     stars: champ.stars
@@ -72,7 +75,7 @@ const board = createBoard();
                                             />
                                     ) : (
                                             <TFTBoardCharacter
-                                                    borderColor="gray"
+                                                    borderColor="empty"
                                                     size="var(--hex-size)"
                                             />
                                     )}
@@ -158,6 +161,10 @@ const board = createBoard();
         align-items: center;
         width: var(--hex-size);
         height: var(--hex-size);
+    }
+
+    .responsive-tft-board {
+        padding: 1.5rem 5rem 1rem;
     }
 
 

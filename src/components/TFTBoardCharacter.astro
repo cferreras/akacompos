@@ -1,15 +1,16 @@
 ---
 // Importar assets centralizados
-import { championAssets, itemAssets } from "../utils/assets";
+import {championAssets, itemAssets} from "../utils/assets";
 
 
 // Colores predefinidos para los bordes
 const borderColors = {
-  purple: "#8b5cf6",   // Morado
-  blue: "#3b82f6",     // Azul
-  yellow: "#eab308",   // Amarillo
-  green: "#22c55e",    // Verde
-  gray: "#6b7280"      // Gris
+    purple: "#8b5cf6",   // Morado
+    blue: "#3b82f6",     // Azul
+    yellow: "#eab308",   // Amarillo
+    green: "#22c55e",    // Verde
+    gray: "#6b7280",
+    empty: "#2a2a3a"// Gris
 } as const;
 
 // Objeto con todos los campeones para fácil acceso
@@ -18,273 +19,285 @@ const borderColors = {
 // Using centralized itemAssets from utils/assets.ts
 
 interface Props {
-  champion?: keyof typeof championAssets;
-  imageUrl?: string;
-  borderColor?: keyof typeof borderColors | string;
-  size?: string;
-  items?: (keyof typeof itemAssets)[];
-  stars?: number;
+    champion?: keyof typeof championAssets;
+    imageUrl?: string;
+    borderColor?: keyof typeof borderColors | string;
+    size?: string;
+    items?: (keyof typeof itemAssets)[];
+    stars?: number;
 }
 
-const { 
-  champion,
-  imageUrl, 
-  borderColor = "gray", 
-  size = "96px",
-  items = [],
-  stars = 1
+const {
+    champion,
+    imageUrl,
+    borderColor = "gray",
+    size = "96px",
+    items = [],
+    stars = 1
 } = Astro.props;
 
-// Usar la imagen del campeón si se especifica, sino usar imageUrl, sino mostrar vacío
+// Usar la imagen del campeón si se especifica, si no usar imageUrl, sino mostrar vacío
 const finalImageUrl = champion ? championAssets[champion].src : imageUrl;
 const showEmptySlot = !champion && !imageUrl;
 
 // Obtener el color final del borde
-const finalBorderColor = borderColor in borderColors 
-  ? borderColors[borderColor as keyof typeof borderColors] 
-  : borderColor;
+const finalBorderColor =  borderColors[borderColor as keyof typeof borderColors];
 
 // Filtrar y limitar los items a máximo 3
 const validItems = items.slice(0, 3).filter(item => item in itemAssets);
 ---
 
 <div class="character-container select-none" style={`--border-color: ${finalBorderColor}; --size: ${size};`}>
-  {stars > 1 && (
-    <div class="stars-container">
-      {Array.from({length: stars}, (_, i) => (
-        <span class="star">★</span>
-      ))}
-    </div>
-  )}
-  <div class="hexagon-container">
-    <div class="hexagon">
-      {finalImageUrl ? (
-        <img src={finalImageUrl} alt={champion ? `${champion} champion` : "Hexagon image"} class="hexagon-image" />
-      ) : (
-        <div class="empty-slot"></div>
-      )}
-      {champion && (
-        <div class="champion-name font-base">
-          {champion}
+    {stars > 1 && (
+            <div class="stars-container">
+                {Array.from({length: stars}, (_, i) => (
+                        <span class="star">★</span>
+                ))}
+            </div>
+    )}
+    <div class="hexagon-container">
+        <div class="hexagon">
+            {finalImageUrl ? (
+                    <img src={finalImageUrl} alt={champion ? `${champion} champion` : "Hexagon image"}
+                         class="hexagon-image"/>
+            ) : (
+                    <div class="empty-slot"></div>
+            )}
+            {champion && (
+                    <div class="champion-name font-base">
+                        {champion}
+                    </div>
+            )}
         </div>
-      )}
     </div>
-  </div>
-  
-  {validItems.length > 0 && (
-    <div class="items-container">
-      {validItems.map((item) => (
-        <div class="item-slot">
-          <img 
-            src={itemAssets[item].src} 
-            alt={`${item} item`} 
-            class="item-image"
-          />
-        </div>
-      ))}
-    </div>
-  )}
+
+    {validItems.length > 0 && (
+            <div class="items-container">
+                {validItems.map((item) => (
+                        <div class="item-slot">
+                            <img
+                                    src={itemAssets[item].src}
+                                    alt={`${item} item`}
+                                    class="item-image"
+                            />
+                        </div>
+                ))}
+            </div>
+    )}
 </div>
 
 <style>
-  .character-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-  }
-
-  .stars-container {
-    position: absolute;
-    top: clamp(-16px, calc(var(--size) * -0.2), -24px);
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: clamp(1px, calc(var(--size) * 0.01), 2px);
-    z-index: 40;
-  }
-
-  .star {
-    color: #9333ea;
-    font-size: clamp(16px, calc(var(--size) * 0.2), 24px);
-  }
-
-  .hexagon-container {
-    display: inline-block;
-    position: relative;
-    width: var(--size);
-    height: var(--size);
-  }
-
-  .champion-name {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: white;
-    font-weight: bold;
-    font-size: 12px;
-    text-align: center;
-    white-space: nowrap;
-    z-index: 30;
-    text-shadow: 
-      1px 1px 2px rgba(0, 0, 0, 0.8),
-      -1px -1px 2px rgba(0, 0, 0, 0.8),
-      1px -1px 2px rgba(0, 0, 0, 0.8),
-      -1px 1px 2px rgba(0, 0, 0, 0.8),
-      0px 0px 4px rgba(0, 0, 0, 0.9);
-    pointer-events: none;
-  }
-
-  .hexagon {
-    width: 100%;
-    height: 100%;
-    position: relative;
-    background-color: var(--border-color);
-    clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
-    border-radius: 12px;
-    overflow: hidden;
-    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-  }
-
-  .hexagon::before {
-    content: '';
-    position: absolute;
-    top: 1px;
-    left: 1px;
-    right: 1px;
-    bottom: 1px;
-    background-color: transparent;
-    clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
-    z-index: 1;
-  }
-
-  .hexagon-image {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    right: 4px;
-    bottom: 4px;
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
-    object-fit: cover;
-    object-position: 70% 20%;
-    clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
-    z-index: 2;
-  }
-
-  .empty-slot {
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    right: 4px;
-    bottom: 4px;
-    width: calc(100% - 8px);
-    height: calc(100% - 8px);
-    background: linear-gradient(135deg, #2a2a3a 0%, #1a1a2a 100%);
-    clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
-    z-index: 2;
-    opacity: 0.6;
-    border: 1px solid rgba(126, 34, 206, 0.1);
-  }
-
-
-
-  /* Alternativa con borde más grueso */
-  .hexagon.thick-border::before {
-    top: 8px;
-    left: 8px;
-    right: 8px;
-    bottom: 8px;
-  }
-
-  .hexagon.thick-border .hexagon-image {
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
-    width: calc(100% - 20px);
-    height: calc(100% - 20px);
-  }
-
-  /* Estilos para los items */
-  .items-container {
-    display: flex;
-    justify-content: center;
-    gap: clamp(1px, calc(var(--size) * 0.02), 3px);
-    position: absolute;
-    bottom: clamp(-12px, calc(var(--size) * -0.15), -18px);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-  }
-
-  .item-slot {
-    border-radius: clamp(2px, calc(var(--size) * 0.04), 6px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    background: linear-gradient(135deg, rgba(22, 16, 34, 0.8) 0%, rgba(15, 15, 26, 0.9) 100%);
-    border: 1px solid rgba(126, 34, 206, 0.2);
-  }
-
-  .item-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 2px;
-  }
-
-  /* Responsive item sizing based on hexagon size */
-  .item-slot {
-    width: clamp(16px, calc(var(--size) * 0.25), 28px);
-    height: clamp(16px, calc(var(--size) * 0.25), 28px);
-  }
-
-  /* Responsive champion name sizing */
-  .champion-name {
-    padding: clamp(1px, calc(var(--size) * 0.02), 3px) clamp(4px, calc(var(--size) * 0.08), 10px);
-  }
-
-  /* Additional responsive adjustments */
-  @media (max-width: 480px) {
-    .item-slot {
-      width: clamp(12px, calc(var(--size) * 0.2), 20px);
-      height: clamp(12px, calc(var(--size) * 0.2), 20px);
+    --root {
+       --size: 0px;
+        --border-color: #2a2a3a;
     }
-    
-    .champion-name {
-      font-size: clamp(6px, calc(var(--size) * 0.1), 10px);
-      padding: 1px clamp(2px, calc(var(--size) * 0.05), 6px);
+    .character-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
     }
 
     .stars-container {
-      top: clamp(-12px, calc(var(--size) * -0.18), -18px);
+        position: absolute;
+        top: clamp(-16px, calc(var(--size) * -0.2), -24px);
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: clamp(1px, calc(var(--size) * 0.01), 2px);
+        z-index: 40;
     }
 
     .star {
-      font-size: clamp(14px, calc(var(--size) * 0.18), 20px);
+        color: #9333ea;
+        font-size: clamp(16px, calc(var(--size) * 0.2), 24px);
     }
-  }
 
-  @media (max-width: 360px) {
-    .item-slot {
-      width: clamp(10px, calc(var(--size) * 0.18), 16px);
-      height: clamp(10px, calc(var(--size) * 0.18), 16px);
+    .hexagon-container {
+        display: inline-block;
+        position: relative;
+        width: var(--size);
+        height: var(--size);
     }
-    
+
     .champion-name {
-      font-size: clamp(5px, calc(var(--size) * 0.08), 8px);
-      padding: 1px clamp(2px, calc(var(--size) * 0.04), 4px);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-weight: bold;
+        font-size: 12px;
+        text-align: center;
+        white-space: nowrap;
+        z-index: 30;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8),
+        -1px -1px 2px rgba(0, 0, 0, 0.8),
+        1px -1px 2px rgba(0, 0, 0, 0.8),
+        -1px 1px 2px rgba(0, 0, 0, 0.8),
+        0px 0px 4px rgba(0, 0, 0, 0.9);
+        pointer-events: none;
     }
 
-    .stars-container {
-      top: clamp(-10px, calc(var(--size) * -0.15), -14px);
+    .hexagon {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        background-color: var(--border-color);
+        clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
+        border-radius: 12px;
+        overflow: hidden;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
     }
 
-    .star {
-      font-size: clamp(12px, calc(var(--size) * 0.16), 18px);
+    .hexagon.empty {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        background-color: unset;
+        clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
+        border-radius: 12px;
+        overflow: hidden;
+        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
     }
-  }
+
+    .hexagon::before {
+        content: '';
+        position: absolute;
+        top: 1px;
+        left: 1px;
+        right: 1px;
+        bottom: 1px;
+        background-color: transparent;
+        clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
+        z-index: 1;
+    }
+
+    .hexagon-image {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        right: 4px;
+        bottom: 4px;
+        width: calc(100% - 8px);
+        height: calc(100% - 8px);
+        object-fit: cover;
+        object-position: 70% 20%;
+        clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
+        z-index: 2;
+    }
+
+    .empty-slot {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        right: 4px;
+        bottom: 4px;
+        width: calc(100% - 8px);
+        height: calc(100% - 8px);
+        background: #2a2a3a;
+        clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
+        z-index: 2;
+        opacity: 0.6;
+        border: 1px solid rgba(126, 34, 206, 0.1);
+    }
+
+
+    /* Alternativa con borde más grueso */
+    .hexagon.thick-border::before {
+        top: 8px;
+        left: 8px;
+        right: 8px;
+        bottom: 8px;
+    }
+
+    .hexagon.thick-border .hexagon-image {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        bottom: 10px;
+        width: calc(100% - 20px);
+        height: calc(100% - 20px);
+    }
+
+    /* Estilos para los items */
+    .items-container {
+        display: flex;
+        justify-content: center;
+        gap: clamp(1px, calc(var(--size) * 0.02), 3px);
+        position: absolute;
+        bottom: clamp(-12px, calc(var(--size) * -0.15), -18px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+    }
+
+    .item-slot {
+        border-radius: clamp(2px, calc(var(--size) * 0.04), 6px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        background: linear-gradient(135deg, rgba(22, 16, 34, 0.8) 0%, rgba(15, 15, 26, 0.9) 100%);
+        border: 1px solid rgba(126, 34, 206, 0.2);
+    }
+
+    .item-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 2px;
+    }
+
+    /* Responsive item sizing based on hexagon size */
+    .item-slot {
+        width: clamp(16px, calc(var(--size) * 0.25), 28px);
+        height: clamp(16px, calc(var(--size) * 0.25), 28px);
+    }
+
+    /* Responsive champion name sizing */
+    .champion-name {
+        padding: clamp(1px, calc(var(--size) * 0.02), 3px) clamp(4px, calc(var(--size) * 0.08), 10px);
+    }
+
+    /* Additional responsive adjustments */
+    @media (max-width: 480px) {
+        .item-slot {
+            width: clamp(12px, calc(var(--size) * 0.2), 20px);
+            height: clamp(12px, calc(var(--size) * 0.2), 20px);
+        }
+
+        .champion-name {
+            font-size: clamp(6px, calc(var(--size) * 0.1), 10px);
+            padding: 1px clamp(2px, calc(var(--size) * 0.05), 6px);
+        }
+
+        .stars-container {
+            top: clamp(-12px, calc(var(--size) * -0.18), -18px);
+        }
+
+        .star {
+            font-size: clamp(14px, calc(var(--size) * 0.18), 20px);
+        }
+    }
+
+    @media (max-width: 360px) {
+        .item-slot {
+            width: clamp(10px, calc(var(--size) * 0.18), 16px);
+            height: clamp(10px, calc(var(--size) * 0.18), 16px);
+        }
+
+        .champion-name {
+            font-size: clamp(5px, calc(var(--size) * 0.08), 8px);
+            padding: 1px clamp(2px, calc(var(--size) * 0.04), 4px);
+        }
+
+        .stars-container {
+            top: clamp(-10px, calc(var(--size) * -0.15), -14px);
+        }
+
+        .star {
+            font-size: clamp(12px, calc(var(--size) * 0.16), 18px);
+        }
+    }
 </style>
