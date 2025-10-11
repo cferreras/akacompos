@@ -148,7 +148,7 @@ const board = createBoard();
   }
 
   .board-row.offset {
-    transform: translateX(var(--board-offset));
+    transform: translateX(calc(calc(var(--hex-size) / 2) + calc(var(--board-gap) / 2)));
   }
 
   .board-cell {
@@ -163,15 +163,27 @@ const board = createBoard();
 
 
   /* Responsive breakpoints */
-  @media (max-width: 1024px) {
+  @media (max-width: 1400px){
+      :root {
+          --hex-size: 72px;
+          --board-gap: 7px;
+          --board-offset: 39px;
+      }
+
+      .responsive-tft-board {
+          padding: 1.25rem;
+      }
+  }
+
+  @media (max-width: 1180px) {
     :root {
-      --hex-size: 72px;
-      --board-gap: 7px;
-      --board-offset: 39px;
+      --hex-size: 64px;
+      --board-gap: 6px;
+      --board-offset: 35px;
     }
 
     .responsive-tft-board {
-      padding: 1.25rem;
+      padding: 1rem;
     }
   }
 
@@ -206,10 +218,27 @@ const board = createBoard();
     }
   }
 
+  @media (max-width: 580px) {
+      :root {
+          --hex-size: 44px;
+          --board-gap: 4px;
+          --board-offset: 28px;
+      }
+
+      .responsive-tft-board {
+          padding: 0.75rem;
+      }
+
+      .board-container {
+          margin-bottom: 1.5rem;
+          padding: 0.5rem 0;
+      }
+  }
+
   @media (max-width: 480px) {
     :root {
-      --hex-size: 48px;
-      --board-gap: 4px;
+      --hex-size: 36px;
+      --board-gap: 3px;
       --board-offset: 26px;
     }
 
