@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
 import es from "dayjs/locale/es";
+import {getChampionImage, getChampionNames, getItemImage, getItemNames} from "../../utils/assets.ts";
 dayjs.locale(es);
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -28,6 +29,18 @@ const {slug} = Astro.params;
 const {Content, remarkPluginFrontmatter} = await render(composition);
 
 const lastModified = dayjs(remarkPluginFrontmatter.lastModified).utc().fromNow();
+
+export function parseImages(description: string): string {
+    var result = description
+    var allKeywords = getItemNames().concat(getChampionNames())
+    for (const matchName of allKeywords) {
+        console.log(`Match! ${matchName}`)
+        result = result.replace(new RegExp(`${matchName}`, 'gi'), `<b>${matchName}</b> <img src="${getChampionNames().includes(matchName) ? getChampionImage(matchName) : getItemImage(matchName)}.png" alt="${matchName}" class="rounded-full aspect-square h-7 inline align-middle border-2 border-primary object-fill drop-shadow-md"/>`);
+    }
+
+
+    return result;
+}
 ---
 
 <Layout title={`${composition.data.tier} - ${composition.data.title}`}>
@@ -46,7 +59,7 @@ const lastModified = dayjs(remarkPluginFrontmatter.lastModified).utc().fromNow()
                     </div>
                     <button class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all">
                         <span class="material-symbols-outlined">content_copy</span>
-                        Copy Link
+                        Copiar enlace
                     </button>
                 </div>
                 <div class="mt-4 flex flex-wrap gap-2">
@@ -60,26 +73,26 @@ const lastModified = dayjs(remarkPluginFrontmatter.lastModified).utc().fromNow()
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
                 <div class="lg:col-span-2">
-                    <h2 class="text-2xl font-bold text-white mb-4">Composition Board</h2>
+                    <h2 class="text-2xl font-bold text-white mb-4">Composición</h2>
                     <div class="relative  bg-slate-800/20 rounded-xl p-4 border border-slate-800">
                         <TFTBoardFromData boardSize="large" boardData={composition.data.board}/>
                     </div>
 
                     <div class="mt-6 space-y-5">
                         <div>
-                            <h3 class="text-xl font-bold text-white mb-3">Usage Conditions</h3>
+                            <h3 class="text-xl font-bold text-white mb-3">Cuándo jugarla</h3>
                             <p class="text-sm text-slate-300 leading-relaxed">
-                                {composition.data.description}
+                                <Fragment set:html={parseImages(composition.data.description)}/>
                             </p>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-white mb-3">Gameplay Mode</h3>
+                            <h3 class="text-xl font-bold text-white mb-3">Modo de juego</h3>
                             <p class="text-sm text-slate-300 leading-relaxed">
-                                {composition.data.gameplayMode}
+                                <Fragment set:html={parseImages(composition.data.gameplayMode)}/>
                             </p>
                         </div>
                         <div>
-                            <h3 class="text-xl font-bold text-white mb-3">Detailed Guide</h3>
+                            <h3 class="text-xl font-bold text-white mb-3">Guía detallada</h3>
                             <div class="prose prose-invert max-w-none text-sm text-slate-300">
                                 <Content/>
                             </div>
