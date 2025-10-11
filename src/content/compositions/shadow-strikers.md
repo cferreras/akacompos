@@ -2,7 +2,6 @@
 title: "Shadow Strikers"
 tier: "S Tier"
 author: "AKAWonder"
-updatedAt: "1 semana atrás"
 image: "/src/assets/Champions/Yone.png"
 tags: ["LVL 3 Reroll", "Aggressive", "Shadow", "Strikers"]
 description: "Una composición agresiva centrada en asesinos sombríos que eliminan rápidamente a los enemigos clave. Perfecta para jugadores experimentados."

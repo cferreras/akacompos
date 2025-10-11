@@ -2,7 +2,6 @@
 title: "Arsenal Defenders"
 tier: "A Tier"
 author: "TFTMaster"
-updatedAt: "1 día atrás"
 image: "/src/assets/Champions/Braum.png"
 tags: ["Defenders", "Arsenal", "Tank", "Late Game"]
 description: "A solid defensive composition that focuses on tanky champions and strong crowd control. Perfect for players who prefer a more defensive playstyle."

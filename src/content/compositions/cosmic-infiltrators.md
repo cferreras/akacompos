@@ -2,7 +2,6 @@
 title: "Cosmic Infiltrators"
 tier: "S Tier"
 author: "AKAWonder"
-updatedAt: "2 días atrás"
 image: "/src/assets/Champions/Akali.png"
 tags: ["Infiltrators", "Cosmic", "High Roll", "Aggressive"]
 description: "This composition excels in high-roll scenarios where you can quickly level up and acquire key champions. It's an aggressive playstyle focused on early and mid-game dominance. Ideal for players comfortable with fast-paced decision-making and resource management."
