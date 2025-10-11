@@ -1,7 +1,14 @@
 ---
-import { getCollection } from 'astro:content';
+import {getCollection, render} from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { getChampionImage } from '../../utils/assets';
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import relativeTime from "dayjs/plugin/relativeTime";
+import es from "dayjs/locale/es";
+dayjs.locale(es);
+dayjs.extend(utc);
+dayjs.extend(relativeTime);
 
 // Get all compositions
 const compositions = await getCollection('compositions');
@@ -37,6 +44,11 @@ function formatTags(tags: string[]): { text: string; style: string }[] {
     
     return { text: tag, style };
   });
+}
+
+async function getUpdateTime(composition: any) {
+    const {remarkPluginFrontmatter} = await render(composition);
+    return dayjs(remarkPluginFrontmatter.lastModified).utc().fromNow();
 }
 ---
 
@@ -80,7 +92,7 @@ function formatTags(tags: string[]): { text: string; style: string }[] {
                             </span>
                           ))}
                         </div>
-                        <p class="mt-2 text-sm text-gray-400">Updated {comp.data.updatedAt}</p>
+                        <p class="mt-2 text-sm text-gray-400">Actualizado {getUpdateTime(comp)}</p>
                       </div>
                     </a>
                   ))}
