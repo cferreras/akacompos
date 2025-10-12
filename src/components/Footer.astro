@@ -1,8 +1,17 @@
 ---
+import { execSync } from 'child_process';
+
+let version = 'unknown';
+try {
+  version = execSync('git rev-parse --short HEAD').toString().trim();
+} catch (error) {
+  console.error('Failed to get git commit hash:', error);
+}
 ---
 
 <footer class="bg-background-dark border-t border-slate-200 dark:border-slate-800">
   <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
     <p>Web hecha por Carlos Ferreras y Jota</p>
+      <p class="mt-1 text-xs"><a href={`https://github.com/cferreras/akacompos/commit/${version}`}>Versión {version}</a></p>
   </div>
 </footer>
