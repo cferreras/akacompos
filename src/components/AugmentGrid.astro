@@ -1,0 +1,225 @@
+---
+import { allAugments } from "../utils/augments.ts";
+
+interface Props {
+  augments: Array<{
+    name: string;
+    description: string;
+    icon?: string;
+  }>;
+}
+
+const { augments } = Astro.props;
+
+// Try to match augments with our database by name similarity
+const augmentsWithImages = augments.map((aug) => {
+  // Create a normalized version of the name for comparison
+  const normalizedName = aug.name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+  
+  // Try to find a matching augment by name similarity
+  const foundAugment = allAugments.find((dbAug) => {
+    const dbNormalizedName = dbAug.name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+    return dbNormalizedName === normalizedName || 
+           dbNormalizedName.includes(normalizedName) ||
+           normalizedName.includes(dbNormalizedName);
+  });
+  
+  return {
+    ...aug,
+    image: foundAugment?.image,
+    tier: foundAugment?.tier || "gold",
+  };
+}).filter((aug) => aug.image); // SOLO mostrar aumentos con imagen real
+---
+<!-- //TODO: Mejora la presentación de los aumentos -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+  {augmentsWithImages.map((augment) => (
+    <div class="augment-card group relative">
+      <div class="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-800/50 border-2 border-slate-800 transition-all hover:bg-slate-800 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 cursor-pointer">
+        {/* Augment Image */}
+        <div class={`relative w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden transition-all ${
+          augment.tier === 'silver' ? 'ring-2 ring-slate-400 shadow-lg shadow-slate-400/30' :
+          augment.tier === 'gold' ? 'ring-2 ring-amber-400 shadow-lg shadow-amber-400/30' :
+          augment.tier === 'prismatic' ? 'ring-2 ring-purple-400 shadow-lg shadow-purple-400/30' :
+          'ring-2 ring-slate-600 shadow-lg shadow-slate-600/30'
+        }`}>
+          <img 
+            src={augment.image.src} 
+            alt={augment.name}
+            class="w-full h-full object-cover"
+          />
+        </div>
+        
+        {/* Augment Name */}
+        <p class="text-xs md:text-sm font-semibold text-slate-200 text-center line-clamp-2 min-h-[2.5rem] flex items-center">
+          {augment.name}
+        </p>
+        
+      </div>
+      
+      {/* Tooltip on hover */}
+      <div class="augment-tooltip absolute bottom-full mb-2 p-3 rounded-lg bg-slate-900/95 backdrop-blur-sm border-2 border-primary shadow-2xl shadow-primary/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
+        <div class="flex items-start gap-3 mb-2">
+          <div class={`flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden ${
+            augment.tier === 'silver' ? 'ring-2 ring-slate-400' :
+            augment.tier === 'gold' ? 'ring-2 ring-amber-400' :
+            augment.tier === 'prismatic' ? 'ring-2 ring-purple-400' :
+            'ring-2 ring-slate-600'
+          }`}>
+            <img 
+              src={augment.image.src} 
+              alt={augment.name}
+              class="w-full h-full object-cover"
+            />
+          </div>
+          <div class="flex-1">
+            <h4 class="text-sm font-bold text-white leading-tight">{augment.name}</h4>
+            <span class={`text-xs font-semibold capitalize ${
+              augment.tier === 'silver' ? 'text-slate-400' :
+              augment.tier === 'gold' ? 'text-amber-400' :
+              augment.tier === 'prismatic' ? 'text-purple-400' :
+              'text-slate-600'
+            }`}>
+              {augment.tier}
+            </span>
+          </div>
+        </div>
+        <p class="text-xs text-slate-300 leading-relaxed">
+          {augment.description}
+        </p>
+        {/* Tooltip arrow */}
+        <div class="tooltip-arrow"></div>
+      </div>
+    </div>
+  ))}
+</div>
+
+<style>
+  .augment-card {
+    position: relative;
+  }
+
+  .augment-tooltip {
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(90vw, 22rem);
+    max-width: 22rem;
+    transition: opacity 150ms ease-in-out, 
+                visibility 150ms ease-in-out;
+  }
+
+  /* Tooltip arrow */
+  .tooltip-arrow {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: -2px;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid var(--primary, #f97316);
+  }
+
+  /* Animation */
+  .augment-card:hover .augment-tooltip {
+    animation: tooltipFadeIn 200ms ease-out;
+  }
+
+  @keyframes tooltipFadeIn {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(0.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* Adjust for edge cards on desktop */
+  @media (min-width: 768px) {
+    /* First column card */
+    .augment-card:nth-child(3n + 1) .augment-tooltip {
+      left: 0;
+      transform: translateX(0);
+    }
+
+    .augment-card:nth-child(3n + 1) .tooltip-arrow {
+      left: 3rem;
+      transform: translateX(0);
+    }
+
+    .augment-card:nth-child(3n + 1):hover .augment-tooltip {
+      animation: tooltipFadeInLeft 200ms ease-out;
+    }
+
+    @keyframes tooltipFadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(0) translateY(0.5rem);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+      }
+    }
+
+    /* Last column card */
+    .augment-card:nth-child(3n) .augment-tooltip {
+      left: auto;
+      right: 0;
+      transform: translateX(0);
+    }
+
+    .augment-card:nth-child(3n) .tooltip-arrow {
+      left: auto;
+      right: 3rem;
+      transform: translateX(0);
+    }
+
+    .augment-card:nth-child(3n):hover .augment-tooltip {
+      animation: tooltipFadeInRight 200ms ease-out;
+    }
+
+    @keyframes tooltipFadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(0) translateY(0.5rem);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0) translateY(0);
+      }
+    }
+  }
+
+  /* Mobile: Fixed centered tooltip */
+  @media (max-width: 767px) {
+    .group:hover .augment-tooltip {
+      position: fixed;
+      left: 50% !important;
+      right: auto !important;
+      bottom: auto !important;
+      top: 50% !important;
+      transform: translate(-50%, -50%) !important;
+      width: calc(100vw - 2rem);
+      max-width: 20rem;
+      z-index: 9999;
+    }
+    
+    .group:hover .tooltip-arrow {
+      display: none;
+    }
+
+    @keyframes tooltipFadeIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+  }
+</style>

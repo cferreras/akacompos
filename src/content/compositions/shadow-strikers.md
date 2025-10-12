@@ -16,14 +16,14 @@ coreItems:
   - name: "Guardian Angel"
     description: "Revive al campeón al morir."
 augments:
-  - name: "Assassin's Toolkit"
-    description: "Los asesinos ganan probabilidad crítica extra."
+  - name: "Avenging Shades"
+    description: "The first 3 Wraith champions to die each combat summon a monstrosity from the Shadow Realm."
+    icon: "dark_mode"
+  - name: "Gain The Edge"
+    description: "Edgelords now gain up to 200% of their Attack Speed bonus the lower health their target is."
     icon: "sword"
-  - name: "Shadow Clone"
-    description: "Posibilidad de esquivar ataques."
-    icon: "visibility_off"
-  - name: "First Strike"
-    description: "Daño extra contra enemigos con vida completa."
+  - name: "Evil Beyond Measure"
+    description: "Your champions deal 4.5% of their damage as True Damage for each Star level."
     icon: "flash_on"
 board:
   champions:

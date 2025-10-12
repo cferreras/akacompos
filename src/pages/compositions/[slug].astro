@@ -3,6 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import TFTBoardFromData from "../../components/TFTBoardFromData.astro";
 import {getCollection, render, type CollectionEntry} from "astro:content";
 import ItemWithImage from "../../components/ItemWithImage.astro";
+import AugmentGrid from "../../components/AugmentGrid.astro";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -114,20 +115,7 @@ export function parseImages(description: string): string {
                     <!-- Recommended Augments -->
                     <div>
                         <h2 class="text-2xl font-bold text-white mb-4">Recommended Augments</h2>
-                        <div class="space-y-3">
-                            {composition.data.augments.map((augment: any) => (
-                                    <a class="flex items-center gap-4 p-3 rounded-lg bg-slate-800/50 hover:bg-slate-800 border border-slate-800 transition-colors"
-                                       href="#">
-                                        <div class="flex items-center justify-center size-10 rounded-lg bg-primary/20 text-primary">
-                                            <span class="material-symbols-outlined">{augment.icon}</span>
-                                        </div>
-                                        <div>
-                                            <p class="font-semibold text-slate-200">{augment.name}</p>
-                                            <p class="text-sm text-slate-400">{augment.description}</p>
-                                        </div>
-                                    </a>
-                            ))}
-                        </div>
+                        <AugmentGrid augments={composition.data.augments}/>
                     </div>
                 </div>
             </div>

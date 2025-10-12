@@ -16,14 +16,14 @@ coreItems:
   - name: "Locket of the Iron Solari"
     description: "Proporciona un escudo a los aliados."
 augments:
-  - name: "Guardian Heart"
-    description: "Los guardianes obtienen salud y armadura extra."
+  - name: "Preemptive Protection"
+    description: "Combat start: Protectors shield themselves and their closest ally for 18% of their maximum health. Shields stack."
     icon: "shield"
-  - name: "Celestial Blessing"
-    description: "Los aliados se curan al atacar."
-    icon: "healing"
-  - name: "Stand United"
-    description: "Todos los aliados obtienen reducción de daño."
+  - name: "Raid Boss"
+    description: "Your strongest Bastion champion gains 25% max Health. When other Bastions die, they transfer 20% of their Armor and Magic Resist to it."
+    icon: "fitness_center"
+  - name: "Power of Friendship"
+    description: "Star Guardians who start combat adjacent to at least one other Star Guardian gain 1 Mana Regeneration, 20 Armor, and 20 Magic Resist."
     icon: "group"
 board:
   champions:

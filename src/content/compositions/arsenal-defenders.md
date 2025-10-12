@@ -16,14 +16,14 @@ coreItems:
   - name: "Ionic Spark"
     description: "Deals magic damage when enemies cast spells."
 augments:
-  - name: "Armor Plating"
-    description: "All champions gain bonus armor."
+  - name: "Indomitable"
+    description: "Whenever an ally Juggernaut dies, all other Juggernauts gain a 10% max Health shield for 5 seconds and gain 2% more Durability."
     icon: "shield"
-  - name: "Second Wind"
-    description: "Champions heal when taking damage."
+  - name: "Last Second Save"
+    description: "The first time each ally falls below 35% Health, they restore 22% maximum Health."
     icon: "healing"
-  - name: "Stand United"
-    description: "All allies gain damage reduction."
+  - name: "Hold The Line"
+    description: "Combat Start: Champions in your back row gain 10% Ability Power and 9% Attack Damage for each champion in your front row."
     icon: "group"
 board:
   champions:
