@@ -1,36 +1,41 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import akaWonderImage from '../assets/akawonder.png';
-
 ---
 
 <Layout title="AKACompos - TFT Compositions by AKAWonder">
-	<div class="relative overflow-hidden">
-		<div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-			<div class="grid md:grid-cols-2 gap-12 items-center">
-				<div class="text-center md:text-left">
-					<h1 class="text-4xl md:text-6xl font-bold  text-white  leading-tight">
-						Las mejores composiciones de <span class="text-primary">TFT</span>, por <span class="text-primary">AKAWonder</span>
-					</h1>
-					<p class="mt-6 text-lg text-slate-300">
-						Bienvenido a AKACompos, tu fuente de referencia para las composiciones más potentes y actualizadas de Teamfight Tactics, directamente desde la mente del maestro estratega, AKAWonder.
-					</p>
-					<div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-						<a class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-white text-base font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all" href="/compositions">
-							Ver Composiciones
-							<span class="material-symbols-outlined ml-2">arrow_forward</span>
-						</a>
-						<a class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-slate-800  text-slate-200 text-base font-bold hover:bg-slate-700 transition-all" href="https://www.twitch.tv/akawonder" target="_blank">
-							<i class="fa-brands fa-twitch mr-2"></i>
-							Canal de Twitch
-						</a>
-					</div>
-				</div>
-				<div class="relative flex justify-center items-center">
-					<div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-					<img alt="AKAWonder" class="relative w-80 h-80 md:w-96 md:h-96 object-cover rounded-full border-4 border-primary shadow-2xl shadow-primary/20 object-top" src={akaWonderImage.src}/>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="relative overflow-hidden">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-center md:text-left">
+                    <h1 class="text-4xl md:text-6xl font-bold  text-white  leading-tight">
+                        Las mejores composiciones de <span class="text-primary">TFT</span>, por <span
+                            class="text-primary">AKAWonder</span>
+                    </h1>
+                    <p class="mt-6 text-lg text-slate-300">
+                        Bienvenido a AKACompos, tu fuente de referencia para las composiciones más potentes y
+                        actualizadas de Teamfight Tactics, directamente desde la mente del maestro estratega, AKAWonder.
+                    </p>
+                    <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <a class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-primary text-white text-base font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all"
+                           href="/compositions">
+                            Ver Composiciones
+                            <span class="material-symbols-outlined ml-2">arrow_forward</span>
+                        </a>
+                        <a class="inline-flex items-center justify-center px-6 py-3 rounded-lg bg-slate-800  text-slate-200 text-base font-bold hover:bg-slate-700 transition-all"
+                           href="https://www.twitch.tv/akawonder" target="_blank">
+                            <i class="fa-brands fa-twitch mr-2"></i>
+                            Canal de Twitch
+                        </a>
+                    </div>
+                </div>
+                <div class="relative flex justify-center items-center">
+                    <div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
+                    <img alt="AKAWonder"
+                         class="relative w-80 h-80 md:w-96 md:h-96 object-cover rounded-full border-4 border-primary shadow-2xl shadow-primary/20 object-top"
+                         src={akaWonderImage.src}/>
+                </div>
+            </div>
+        </div>
+    </div>
 </Layout>

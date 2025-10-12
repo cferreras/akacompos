@@ -1,0 +1,23 @@
+---
+interface Props {
+    stars: number;
+}
+
+const {stars} = Astro.props;
+---
+{stars > 1 && (
+<div class="star-container flex h-full w-[80%] max-h-3 -skew-x-[10deg] flex-row items-center justify-center gap-0.25 rounded-[3px] bg-yellow-400 px-1 py-[2.5px] lg:px-2">
+
+    {Array.from({length: stars}, (_) => (
+            <span class="star">★</span>
+    ))}
+
+</div>
+    )}
+
+<style>
+    .star {
+        color: black;
+        font-size: clamp(16px, calc(var(--size) * 0.2), 24px);
+    }
+</style>

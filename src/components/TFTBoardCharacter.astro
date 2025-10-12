@@ -1,6 +1,7 @@
 ---
 // Importar assets centralizados
 import {championAssets, itemAssets} from "../utils/assets";
+import StarsComponent from "./StarsComponent.astro";
 
 
 // Colores predefinidos para los bordes
@@ -48,13 +49,7 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
 ---
 
 <div class="character-container select-none" style={`--border-color: ${finalBorderColor}; --size: ${size};`}>
-    {stars > 1 && (
-            <div class="stars-container">
-                {Array.from({length: stars}, (_, i) => (
-                        <span class="star">★</span>
-                ))}
-            </div>
-    )}
+    <StarsComponent stars={stars} />
     <div class="hexagon-container">
         <div class="hexagon">
             {finalImageUrl ? (
@@ -96,21 +91,6 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
         flex-direction: column;
         align-items: center;
         position: relative;
-    }
-
-    .stars-container {
-        position: absolute;
-        top: clamp(-16px, calc(var(--size) * -0.2), -24px);
-        left: 50%;
-        transform: translateX(-50%);
-        display: flex;
-        gap: clamp(1px, calc(var(--size) * 0.01), 2px);
-        z-index: 40;
-    }
-
-    .star {
-        color: #9333ea;
-        font-size: clamp(16px, calc(var(--size) * 0.2), 24px);
     }
 
     .hexagon-container {
