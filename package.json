@@ -14,10 +14,14 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@directus/sdk": "^20.1.0",
     "@tailwindcss/vite": "^4.1.13",
     "astro": "^5.13.11",
     "dayjs": "^1.11.18",
     "serve": "^14.2.5",
     "tailwindcss": "^4.1.13"
+  },
+  "devDependencies": {
+    "vite": "^7.1.9"
   }
 }

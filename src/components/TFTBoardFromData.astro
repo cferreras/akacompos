@@ -34,13 +34,16 @@ const getBorderColor = (champ : ChampionData): "purple" | "blue" | "yellow" | "g
 };
 
 // Convertir los datos de Markdown al formato esperado por el componente
-const champions = boardData.champions.map(champ => ({
-    champion: champ.name,
-    borderColor: getBorderColor(champ),
-    items: champ.items || [],
-    position: champ.position,
-    stars: champ.stars
-}));
+const champions = boardData.champions.map(champ => {
+    console.log('Processing champion:', champ.name, 'stars:', champ.stars, 'items:', champ.items);
+    return {
+        champion: champ.name,
+        borderColor: getBorderColor(champ),
+        items: champ.items || [],
+        position: champ.position,
+        stars: champ.stars || 1
+    };
+});
 
 // Crear grid 4x7 para el board TFT
 const createBoard = () => {

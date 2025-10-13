@@ -2,7 +2,7 @@
 import {allAugments} from "../utils/augments.ts";
 
 interface Props {
-    augments: Array<{
+    augments: Array<string | {
         name: string;
         description: string;
         icon?: string;
@@ -11,25 +11,41 @@ interface Props {
 
 const {augments} = Astro.props;
 
-// Try to match augments with our database by name similarity
-const augmentsWithImages = augments.map((aug) => {
-    // Create a normalized version of the name for comparison
-    const normalizedName = aug.name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+// Handle both array of strings (IDs) and array of objects
+const augmentsWithImages = augments?.map((aug) => {
+    // If it's a string, it's an augment ID
+    if (typeof aug === 'string') {
+        const foundAugment = allAugments.find((dbAug) => dbAug.id === aug);
+        if (foundAugment) {
+            return {
+                name: foundAugment.name,
+                description: foundAugment.description,
+                image: foundAugment.image,
+                tier: foundAugment.tier,
+            };
+        }
+        return null;
+    }
+    
+    // If it's an object, try to match by name similarity
+    if (aug && aug.name) {
+        const normalizedName = aug.name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+        const foundAugment = allAugments.find((dbAug) => {
+            const dbNormalizedName = dbAug.name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+            return dbNormalizedName === normalizedName ||
+                dbNormalizedName.includes(normalizedName) ||
+                normalizedName.includes(dbNormalizedName);
+        });
 
-    // Try to find a matching augment by name similarity
-    const foundAugment = allAugments.find((dbAug) => {
-        const dbNormalizedName = dbAug.name.toLowerCase().replace(/[^a-z0-9]+/g, "");
-        return dbNormalizedName === normalizedName ||
-            dbNormalizedName.includes(normalizedName) ||
-            normalizedName.includes(dbNormalizedName);
-    });
-
-    return {
-        ...aug,
-        image: foundAugment?.image,
-        tier: foundAugment?.tier || "gold",
-    };
-}).filter((aug) => aug.image); // SOLO mostrar aumentos con imagen real
+        return {
+            ...aug,
+            image: foundAugment?.image,
+            tier: foundAugment?.tier || "gold",
+        };
+    }
+    
+    return null;
+}).filter((aug): aug is NonNullable<typeof aug> => aug && aug.image) || []; // SOLO mostrar aumentos con imagen real
 ---
 <div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4">
     {augmentsWithImages.map((augment) => (
