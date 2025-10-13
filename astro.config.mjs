@@ -1,6 +1,5 @@
 // @ts-check
 import {defineConfig} from 'astro/config';
-import node from '@astrojs/node';
 
 import tailwindcss from '@tailwindcss/vite';
 import {remarkModifiedTime} from "./remark-modified-time.mjs";
@@ -16,7 +15,5 @@ export default defineConfig({
     },
     // Cambiar a SSR para evitar cache y reflejar cambios de Directus inmediatamente
     output: 'server',
-    adapter: node({
-        mode: 'standalone'
-    })
+    adapter: undefined
 });
