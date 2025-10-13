@@ -100,7 +100,7 @@ function getUpdateTime(composition: any) {
                         <img 
                           alt={comp.title} 
                           class="h-full w-full object-cover object-center" 
-                          src={comp.image ? `${import.meta.env.DIRECTUS_URL}/assets/${comp.image}` : getChampionImage('placeholder')}
+                          src={comp.cover ? `${import.meta.env.DIRECTUS_URL}/assets/${comp.cover}` : getChampionImage('placeholder')}
                         />
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                       </div>
