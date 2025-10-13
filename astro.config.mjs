@@ -13,7 +13,6 @@ export default defineConfig({
     markdown: {
         remarkPlugins: [remarkModifiedTime],
     },
-    // Cambiar a SSR para evitar cache y reflejar cambios de Directus inmediatamente
-    output: 'server',
-    adapter: undefined
+    // Static output for simple deployment with serve
+    output: 'static'
 });
