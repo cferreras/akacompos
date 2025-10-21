@@ -46,7 +46,7 @@ export function parseImages(description: string): string {
     let result = description;
     const allKeywords = getItemNames().concat(getChampionNames());
     for (const matchName of allKeywords) {
-        result = result.replace(new RegExp(`${matchName}`, 'gi'), `<b>${matchName}</b> <img src="${getChampionNames().includes(matchName) ? getChampionImage(matchName) : getItemImage(matchName)}.png" alt="${matchName}" class="rounded-full aspect-square h-7 inline align-middle border-2 border-primary object-fill drop-shadow-md"/>`);
+        result = result.replace(new RegExp(`${matchName}`, 'gi'), `<b>${matchName}</b> <img src="${getChampionNames().includes(matchName) ? getChampionImage(matchName) : getItemImage(matchName)}" alt="${matchName}" class="rounded-full aspect-square h-7 inline align-middle border-2 border-primary object-fill drop-shadow-md"/>`);
     }
     return result;
 }
