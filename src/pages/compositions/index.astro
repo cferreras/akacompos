@@ -99,10 +99,13 @@ function getUpdateTime(composition: any) {
                     >
                       <div class="aspect-[16/9] w-full overflow-hidden relative">
                         {comp.cover ? (
-                          <img 
+                          <Image 
+                            src={`${import.meta.env.DIRECTUS_URL}/assets/${comp.cover}`}
                             alt={comp.title} 
                             class="h-full w-full object-cover object-center" 
-                            src={`${import.meta.env.DIRECTUS_URL}/assets/${comp.cover}`}
+                            width={480}
+                            height={270}
+                            quality={80}
                             loading="lazy"
                             decoding="async"
                           />
