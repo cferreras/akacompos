@@ -1,6 +1,7 @@
 ---
 // Importar helper function from centralized assets
-import { getItemImage } from '../utils/assets';
+import { itemAssets } from '../utils/assets';
+import { Image } from 'astro:assets';
 
 export interface Props {
   itemName: string;
@@ -11,22 +12,35 @@ export interface Props {
 
 const { itemName, description, size = 'small', showLabel = true } = Astro.props;
 
-const imageUrl = getItemImage(itemName);
+const itemImage = itemAssets[itemName as keyof typeof itemAssets];
 const sizeClasses = {
   small: 'w-6 h-6',
   medium: 'w-10 h-10',
   large: 'w-16 h-16'
 };
+const sizePixels = {
+  small: 24,
+  medium: 40,
+  large: 64
+};
 ---
 
 <div class="item-with-image group">
   <div class="item-image-container">
-    <img 
-      src={imageUrl} 
-      alt={itemName}
-      class={`item-image ${sizeClasses[size]}`}
-      loading="lazy"
-    />
+    {itemImage ? (
+      <Image 
+        src={itemImage} 
+        alt={itemName}
+        class={`item-image ${sizeClasses[size]}`}
+        width={sizePixels[size]}
+        height={sizePixels[size]}
+        quality={85}
+        loading="lazy"
+        decoding="async"
+      />
+    ) : (
+      <div class={`item-placeholder ${sizeClasses[size]}`}></div>
+    )}
     {!showLabel && (
       <div class="item-tooltip">
         <span class="tooltip-text">{itemName}</span>
@@ -60,6 +74,13 @@ const sizeClasses = {
 
   .item-image {
     object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid var(--color-primary);
+    background: linear-gradient(135deg, rgba(22, 16, 34, 0.8) 0%, rgba(15, 15, 26, 0.9) 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .item-placeholder {
     border-radius: 8px;
     border: 2px solid var(--color-primary);
     background: linear-gradient(135deg, rgba(22, 16, 34, 0.8) 0%, rgba(15, 15, 26, 0.9) 100%);

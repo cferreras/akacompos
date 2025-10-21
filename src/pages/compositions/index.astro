@@ -1,7 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import { getChampionImage } from '../../utils/assets';
+import { getChampionImage, championAssets } from '../../utils/assets';
 import { getCompositions } from '../../lib/directus';
+import { Image } from 'astro:assets';
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -97,11 +98,26 @@ function getUpdateTime(composition: any) {
                       class="group relative flex cursor-pointer flex-col overflow-hidden rounded-lg bg-black/10 shadow-lg transition-all hover:scale-105"
                     >
                       <div class="aspect-[16/9] w-full overflow-hidden relative">
-                        <img 
-                          alt={comp.title} 
-                          class="h-full w-full object-cover object-center" 
-                          src={comp.cover ? `${import.meta.env.DIRECTUS_URL}/assets/${comp.cover}` : getChampionImage('placeholder')}
-                        />
+                        {comp.cover ? (
+                          <img 
+                            alt={comp.title} 
+                            class="h-full w-full object-cover object-center" 
+                            src={`${import.meta.env.DIRECTUS_URL}/assets/${comp.cover}`}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        ) : (
+                          <Image
+                            src={championAssets.Aatrox}
+                            alt={comp.title}
+                            class="h-full w-full object-cover object-center"
+                            width={480}
+                            height={270}
+                            quality={80}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        )}
                         <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                       </div>
                       <div class="p-4">

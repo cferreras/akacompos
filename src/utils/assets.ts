@@ -273,12 +273,33 @@ export function getChampionImage(imagePath: string): string {
 }
 
 /**
+ * Obtiene la metadata de imagen de un campeón para usar con el componente Image de Astro
+ * @param imagePath - Ruta como "/src/assets/Champions/Braum.png" o nombre como "Braum"
+ * @returns ImageMetadata para usar con el componente Image de Astro
+ */
+export function getChampionImageMeta(imagePath: string) {
+  const match = imagePath.match(/\/([^\/]+)\.png$/);
+  const championName = match ? match[1] : imagePath;
+  
+  return championAssets[championName as keyof typeof championAssets];
+}
+
+/**
  * Obtiene la imagen de un item a partir del nombre
  * @param itemName - Nombre del item como "Infinity Edge"
  * @returns La URL de la imagen o una imagen por defecto
  */
 export function getItemImage(itemName: string): string {
   return itemAssets[itemName as keyof typeof itemAssets]?.src || "";
+}
+
+/**
+ * Obtiene la metadata de imagen de un item para usar con el componente Image de Astro
+ * @param itemName - Nombre del item como "Infinity Edge"
+ * @returns ImageMetadata para usar con el componente Image de Astro
+ */
+export function getItemImageMeta(itemName: string) {
+  return itemAssets[itemName as keyof typeof itemAssets];
 }
 
 /**

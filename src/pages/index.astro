@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
 import akaWonderImage from '../assets/akawonder.png';
 ---
 
@@ -31,9 +32,16 @@ import akaWonderImage from '../assets/akawonder.png';
                 </div>
                 <div class="relative flex justify-center items-center">
                     <div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full"></div>
-                    <img alt="AKAWonder"
-                         class="relative w-80 h-80 md:w-96 md:h-96 object-cover rounded-full border-4 border-primary shadow-2xl shadow-primary/20 object-top"
-                         src={akaWonderImage.src}/>
+                    <Image 
+                        src={akaWonderImage}
+                        alt="AKAWonder"
+                        class="relative w-80 h-80 md:w-96 md:h-96 object-cover rounded-full border-4 border-primary shadow-2xl shadow-primary/20 object-top"
+                        width={384}
+                        height={384}
+                        quality={90}
+                        loading="eager"
+                        decoding="async"
+                    />
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@
 // Importar assets centralizados
 import {championAssets, itemAssets} from "../utils/assets";
 import StarsComponent from "./StarsComponent.astro";
-
+import { Image } from 'astro:assets';
 
 // Colores predefinidos para los bordes
 const borderColors = {
@@ -38,7 +38,7 @@ const {
 } = Astro.props;
 
 // Usar la imagen del campeón si se especifica, si no usar imageUrl, sino mostrar vacío
-const finalImageUrl = champion ? championAssets[champion].src : imageUrl;
+const finalImageSrc = champion ? championAssets[champion] : null;
 const showEmptySlot = !champion && !imageUrl;
 
 // Obtener el color final del borde
@@ -46,15 +46,42 @@ const finalBorderColor =  borderColors[borderColor as keyof typeof borderColors]
 
 // Filtrar y limitar los items a máximo 3
 const validItems = items.slice(0, 3).filter(item => item in itemAssets);
+
+// Calcular tamaño numérico para el componente Image
+const numericSize = parseInt(size.replace('px', ''));
+
+// Determinar tamaño optimizado para Image basado en el size prop
+const getOptimizedSize = (size: string): number => {
+    const num = parseInt(size.replace('px', ''));
+    if (num <= 64) return 64;
+    if (num <= 96) return 96;
+    if (num <= 128) return 128;
+    if (num <= 160) return 160;
+    return 192;
+};
+
+const optimizedSize = getOptimizedSize(size);
+const optimizedItemSize = Math.max(16, Math.min(28, Math.floor(numericSize * 0.25)));
 ---
 
 <div class="character-container select-none" style={`--border-color: ${finalBorderColor}; --size: ${size};`}>
     <StarsComponent stars={stars} />
     <div class="hexagon-container">
         <div class="hexagon">
-            {finalImageUrl ? (
-                    <img src={finalImageUrl} alt={champion ? `${champion} champion` : "Hexagon image"}
-                         class="hexagon-image"/>
+            {finalImageSrc ? (
+                    <Image 
+                        src={finalImageSrc} 
+                        alt={champion ? `${champion} champion` : "Champion"}
+                        class="hexagon-image"
+                        width={optimizedSize}
+                        height={optimizedSize}
+                        quality={85}
+                        loading="lazy"
+                        decoding="async"
+                        densities={[1, 2]}
+                    />
+            ) : imageUrl ? (
+                    <img src={imageUrl} alt="Champion" class="hexagon-image"/>
             ) : (
                     <div class="empty-slot"></div>
             )}
@@ -70,10 +97,16 @@ const validItems = items.slice(0, 3).filter(item => item in itemAssets);
             <div class="items-container">
                 {validItems.map((item) => (
                         <div class="item-slot">
-                            <img
-                                    src={itemAssets[item].src}
+                            <Image
+                                    src={itemAssets[item]}
                                     alt={`${item} item`}
                                     class="item-image"
+                                    width={28}
+                                    height={28}
+                                    quality={80}
+                                    loading="lazy"
+                                    decoding="async"
+                                    densities={[1, 2]}
                             />
                         </div>
                 ))}
