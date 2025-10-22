@@ -3,6 +3,37 @@
 // ============================================================================
 // Data scraped from https://tactics.tools/info/traits
 
+// ============================================================================
+// TRAIT ICONS IMPORTS
+// ============================================================================
+import battleAcademiaIcon from "../assets/Traits/Trait_Icon_15_Battle Academia.svg";
+import crystalGambitIcon from "../assets/Traits/Trait_Icon_15_Crystal Gambit.svg";
+import luchadorIcon from "../assets/Traits/Trait_Icon_15_Luchador.svg";
+import mentorIcon from "../assets/Traits/Trait_Icon_15_Mentor.svg";
+import mightyMechIcon from "../assets/Traits/Trait_Icon_15_Mighty Mech.svg";
+import monsterTrainerIcon from "../assets/Traits/Trait_Icon_15_MonsterTrainer.svg";
+import rogueCaptainIcon from "../assets/Traits/Trait_Icon_15_RogueCaptain.svg";
+import rosemotherIcon from "../assets/Traits/Trait_Icon_15_Rosemother.svg";
+import soulFighterIcon from "../assets/Traits/Trait_Icon_15_SoulFighter.svg";
+import stanceMasterIcon from "../assets/Traits/Trait_Icon_15_Stance Master.svg";
+import starGuardianIcon from "../assets/Traits/Trait_Icon_15_StarGuardian.svg";
+import supremeCellsIcon from "../assets/Traits/Trait_Icon_15_SupremeCells.svg";
+import theChampIcon from "../assets/Traits/Trait_Icon_15_The Champ.svg";
+import theCrewIcon from "../assets/Traits/Trait_Icon_15_StarCrew.svg";
+import wraithIcon from "../assets/Traits/Trait_Icon_15_Wraith.svg";
+
+import bastionIcon from "../assets/Traits/Trait_Icon_15_Bastion.svg";
+import duelistIcon from "../assets/Traits/Trait_Icon_15_Duelist.svg";
+import edgelordIcon from "../assets/Traits/Trait_Icon_15_Edgelord.svg";
+import executionerIcon from "../assets/Traits/Trait_Icon_15_Executioner.svg";
+import heavyweightIcon from "../assets/Traits/Trait_Icon_15_Heavyweight.svg";
+import juggernautIcon from "../assets/Traits/Trait_Icon_15_Juggernaut.svg";
+import prodigyIcon from "../assets/Traits/Trait_Icon_15_Prodigy.svg";
+import protectorIcon from "../assets/Traits/Trait_Icon_15_Protector.svg";
+import sniperIcon from "../assets/Traits/Trait_Icon_15_Sniper.svg";
+import sorcererIcon from "../assets/Traits/Trait_Icon_15_Sorcerer.svg";
+import strategistIcon from "../assets/Traits/Trait_Icon_15_Amp.svg";
+
 export type TraitType = "origin" | "class";
 
 export interface TraitTier {
@@ -17,6 +48,7 @@ export interface Trait {
   description: string;
   tiers: TraitTier[];
   champions: string[];
+  icon: ImageMetadata;
 }
 
 // ============================================================================
@@ -35,6 +67,7 @@ export const origins: Trait[] = [
       { count: 7, effect: "7 Potential + True Potential Unlocked: +10 Potential" },
     ],
     champions: ["Ezreal", "Garen", "Katarina", "Rakan", "Caitlyn", "Jayce", "Leona", "Yuumi"],
+    icon: battleAcademiaIcon,
   },
   {
     id: "crystalgambit",
@@ -47,6 +80,7 @@ export const origins: Trait[] = [
       { count: 7, effect: "130% rewards. Crystal Gambit units gain 300 Health and 15% Damage Amplification" },
     ],
     champions: ["Syndra", "Janna", "Vi", "Swain", "Ashe", "Zyra"],
+    icon: crystalGambitIcon,
   },
   {
     id: "luchador",
@@ -58,6 +92,7 @@ export const origins: Trait[] = [
       { count: 4, effect: "40% Attack Damage; 50% Health heal" },
     ],
     champions: ["Gnar", "Dr. Mundo", "Volibear", "Braum"],
+    icon: luchadorIcon,
   },
   {
     id: "mentor",
@@ -69,6 +104,7 @@ export const origins: Trait[] = [
       { count: 4, effect: "Mentors gain all bonuses and upgrade their abilities. Kobuko: 6% Damage Reduction, Udyr: 8% Attack Damage and Ability Power, Yasuo: 10% Attack Speed, Ryze: Attacks grant 2 bonus Mana" },
     ],
     champions: ["Kobuko", "Udyr", "Yasuo", "Ryze"],
+    icon: mentorIcon,
   },
   {
     id: "mightymech",
@@ -81,6 +117,7 @@ export const origins: Trait[] = [
       { count: 7, effect: "Blade Protocol: Level 2" },
     ],
     champions: ["Aatrox", "Lucian", "Gangplank", "Senna", "JarvanIV", "Karma", "Yone"],
+    icon: mightyMechIcon,
   },
   {
     id: "monstertrainer",
@@ -91,6 +128,7 @@ export const origins: Trait[] = [
       { count: 1, effect: "Summon a monster" },
     ],
     champions: ["Lulu"],
+    icon: monsterTrainerIcon,
   },
   {
     id: "roguecaptain",
@@ -101,6 +139,7 @@ export const origins: Trait[] = [
       { count: 1, effect: "Upgrade Crew Ship" },
     ],
     champions: ["Twisted Fate"],
+    icon: rogueCaptainIcon,
   },
   {
     id: "rosemother",
@@ -111,6 +150,7 @@ export const origins: Trait[] = [
       { count: 1, effect: "Gain plants based on star level" },
     ],
     champions: ["Zyra"],
+    icon: rosemotherIcon,
   },
   {
     id: "soulfighter",
@@ -124,6 +164,7 @@ export const origins: Trait[] = [
       { count: 8, effect: "600 Health, 4% AD/AP, +28% damage" },
     ],
     champions: ["Kalista", "Naafiri", "Lux", "Xin Zhao", "Viego", "Samira", "Sett", "Gwen"],
+    icon: soulFighterIcon,
   },
   {
     id: "stancemaster",
@@ -134,6 +175,7 @@ export const origins: Trait[] = [
       { count: 1, effect: "Choose stance for Lee Sin" },
     ],
     champions: ["Lee Sin"],
+    icon: stanceMasterIcon,
   },
   {
     id: "starguardian",
@@ -151,6 +193,7 @@ export const origins: Trait[] = [
       { count: 9, effect: "Seraphine: Gain every stat" },
     ],
     champions: ["Rell", "Syndra", "Xayah", "Ahri", "Neeko", "Jinx", "Poppy", "Seraphine"],
+    icon: starGuardianIcon,
   },
   {
     id: "supremecells",
@@ -163,6 +206,7 @@ export const origins: Trait[] = [
       { count: 4, effect: "28% Damage Amp | 50% Damage Amp (Supreme). Gain a second Supreme" },
     ],
     champions: ["Kennen", "Kai'Sa", "Darius", "Akali"],
+    icon: supremeCellsIcon,
   },
   {
     id: "thechamp",
@@ -173,6 +217,7 @@ export const origins: Trait[] = [
       { count: 1, effect: "Gain Poro-fans on victories" },
     ],
     champions: ["Braum"],
+    icon: theChampIcon,
   },
   {
     id: "thecrew",
@@ -188,6 +233,7 @@ export const origins: Trait[] = [
       { count: 7, effect: "Fire the Planet Cracker (5x 3-star)" },
     ],
     champions: ["Malphite", "Sivir", "Shen", "Ziggs", "Twisted Fate"],
+    icon: theCrewIcon,
   },
   {
     id: "wraith",
@@ -200,6 +246,7 @@ export const origins: Trait[] = [
       { count: 6, effect: "60% damage" },
     ],
     champions: ["Kayle", "Zac", "Jhin", "Malzahar", "K'Sante", "Varus"],
+    icon: wraithIcon,
   },
 ];
 
@@ -219,6 +266,7 @@ export const classes: Trait[] = [
       { count: 6, effect: "75 Armor/MR; Non-Bastions gain an additional 25 Armor/MR" },
     ],
     champions: ["Garen", "Rell", "Shen", "Xin Zhao", "Swain", "Leona", "Braum"],
+    icon: bastionIcon,
   },
   {
     id: "duelist",
@@ -231,6 +279,7 @@ export const classes: Trait[] = [
       { count: 6, effect: "10% Attack Speed; Duelists gain 12% Damage Reduction" },
     ],
     champions: ["Kayle", "Gangplank", "Kai'Sa", "Udyr", "Viego", "Ashe"],
+    icon: duelistIcon,
   },
   {
     id: "edgelord",
@@ -243,6 +292,7 @@ export const classes: Trait[] = [
       { count: 6, effect: "15% Omnivamp, 60% Attack Damage" },
     ],
     champions: ["Shen", "Xayah", "Yasuo", "Samira", "Volibear", "Yone"],
+    icon: edgelordIcon,
   },
   {
     id: "executioner",
@@ -256,6 +306,7 @@ export const classes: Trait[] = [
       { count: 5, effect: "55% Crit Chance; 28% Crit Damage" },
     ],
     champions: ["Kalista", "Katarina", "Senna", "Akali", "Ryze"],
+    icon: executionerIcon,
   },
   {
     id: "heavyweight",
@@ -268,6 +319,7 @@ export const classes: Trait[] = [
       { count: 6, effect: "65% Health | 0.6% Health to AD" },
     ],
     champions: ["Aatrox", "Zac", "Kobuko", "Darius", "Jayce", "Poppy"],
+    icon: heavyweightIcon,
   },
   {
     id: "juggernaut",
@@ -280,6 +332,7 @@ export const classes: Trait[] = [
       { count: 6, effect: "25% or 35% Damage Reduction" },
     ],
     champions: ["Aatrox", "Naafiri", "Dr. Mundo", "Vi", "Udyr", "Sett"],
+    icon: juggernautIcon,
   },
   {
     id: "prodigy",
@@ -293,6 +346,7 @@ export const classes: Trait[] = [
       { count: 5, effect: "1 Mana Regen | 7 Mana Regen (Prodigy) | Prodigy abilities heal an ally for 12% of the damage dealt" },
     ],
     champions: ["Ezreal", "Syndra", "Malzahar", "Yuumi", "Seraphine"],
+    icon: prodigyIcon,
   },
   {
     id: "protector",
@@ -305,6 +359,7 @@ export const classes: Trait[] = [
       { count: 6, effect: "55% Health shield" },
     ],
     champions: ["Kennen", "Malphite", "Janna", "Rakan", "Neeko", "K'Sante"],
+    icon: protectorIcon,
   },
   {
     id: "sniper",
@@ -318,6 +373,7 @@ export const classes: Trait[] = [
       { count: 5, effect: "25% Damage Amp; +10% per hex" },
     ],
     champions: ["Gnar", "Sivir", "Jhin", "Caitlyn", "Jinx", "Varus"],
+    icon: sniperIcon,
   },
   {
     id: "sorcerer",
@@ -330,6 +386,7 @@ export const classes: Trait[] = [
       { count: 6, effect: "80% Ability Power; 12% max Health to 2 enemies" },
     ],
     champions: ["Kennen", "Lucian", "Lux", "Ahri", "Swain", "Karma", "Gwen"],
+    icon: sorcererIcon,
   },
   {
     id: "strategist",
@@ -343,6 +400,7 @@ export const classes: Trait[] = [
       { count: 5, effect: "450 Shield; 14% Damage Amp" },
     ],
     champions: ["Janna", "Ziggs", "JarvanIV", "Ryze"],
+    icon: strategistIcon,
   },
 ];
 
