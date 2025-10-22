@@ -1,0 +1,125 @@
+---
+import { calculateActiveTraits, type Trait, type TraitTier } from '../utils/traits';
+import { Image } from 'astro:assets';
+
+interface Props {
+  champions: string[];
+}
+
+const { champions } = Astro.props;
+
+const activeTraits = calculateActiveTraits(champions);
+
+// Función para obtener el color del borde según el tier
+function getTierColor(tierIndex: number, totalTiers: number): string {
+  // Para traits únicos (1 tier), usar degradado ambar
+  if (totalTiers === 1) {
+    return 'border-gradient-amber';
+  }
+  
+  // Para traits con múltiples tiers
+  if (tierIndex === 0) {
+    return 'border-bronze'; // Bronce
+  } else if (tierIndex === 1) {
+    return 'border-silver'; // Plata
+  } else if (tierIndex === 2) {
+    return 'border-gold'; // Oro
+  } else {
+    return 'border-gold'; // Oro para tier 3+
+  }
+}
+
+// Función para obtener el estilo de fondo según el tier
+function getTierBgClass(tierIndex: number, totalTiers: number): string {
+  // Para traits únicos (1 tier), usar degradado ambar
+  if (totalTiers === 1) {
+    return 'bg-gradient-to-br from-amber-900/30 via-amber-800/20 to-amber-700/30';
+  }
+  
+  // Para traits con múltiples tiers
+  if (tierIndex === 0) {
+    return 'bg-gradient-to-br from-orange-950/30 via-orange-900/20 to-orange-950/30'; // Bronce
+  } else if (tierIndex === 1) {
+    return 'bg-gradient-to-br from-slate-600/30 via-slate-500/20 to-slate-600/30'; // Plata
+  } else if (tierIndex === 2) {
+    return 'bg-gradient-to-br from-yellow-700/30 via-yellow-600/20 to-yellow-700/30'; // Oro
+  } else {
+    return 'bg-gradient-to-br from-yellow-700/30 via-yellow-600/20 to-yellow-700/30'; // Oro
+  }
+}
+---
+
+<div class="traits-display">
+  {activeTraits.length === 0 ? (
+    <div class="p-4 bg-slate-800/20 rounded-lg border border-slate-700">
+      <p class="text-slate-400 text-sm">
+        No se encontraron traits activos. Champions: {champions.length > 0 ? champions.join(', ') : 'Ninguno'}
+      </p>
+    </div>
+  ) : (
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+      {activeTraits.map(({ trait, activeCount, activeTier, tierIndex }) => (
+        <div 
+          class={`trait-card relative rounded-lg p-3 transition-all hover:scale-105 ${getTierBgClass(tierIndex, trait.tiers.length)} ${getTierColor(tierIndex, trait.tiers.length)}`}
+          title={`${trait.name}: ${activeTier?.effect}`}
+        >
+          <div class="flex items-center gap-2">
+            <div class="relative flex-shrink-0">
+              <Image 
+                src={trait.icon} 
+                alt={trait.name}
+                width={40}
+                height={40}
+                class="w-10 h-10 rounded-md trait-icon-white"
+              />
+              <span class="absolute -bottom-1 -right-1 bg-slate-900 border-2 border-current rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                {activeCount}
+              </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-white text-sm truncate">{trait.name}</p>
+              <p class="text-xs text-slate-300 opacity-80">{trait.type === 'origin' ? 'Origin' : 'Class'}</p>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .trait-icon-white {
+    filter: brightness(0) invert(1);
+  }
+  
+  .border-bronze {
+    border: 2px solid #cd7f32;
+    box-shadow: 0 0 15px rgba(205, 127, 50, 0.5), inset 0 0 10px rgba(205, 127, 50, 0.2);
+  }
+  
+  .border-silver {
+    border: 2px solid #c0c0c0;
+    box-shadow: 0 0 15px rgba(192, 192, 192, 0.5), inset 0 0 10px rgba(192, 192, 192, 0.2);
+  }
+  
+  .border-gold {
+    border: 2px solid #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.6), inset 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+  
+  .border-gradient-amber {
+    border: 2px solid #f59e0b;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.6), inset 0 0 10px rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.2));
+  }
+  
+  .trait-card {
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+  }
+  
+  .trait-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+</style>

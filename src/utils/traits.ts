@@ -494,3 +494,60 @@ export function getOriginNames(): string[] {
 export function getClassNames(): string[] {
   return classes.map((classItem) => classItem.name);
 }
+
+/**
+ * Calculate active traits from a list of champions
+ */
+export function calculateActiveTraits(championNames: string[]): {
+  trait: Trait;
+  activeCount: number;
+  activeTier: TraitTier | null;
+  tierIndex: number;
+}[] {
+  const traitCounts = new Map<string, number>();
+  
+  // Count champions per trait
+  championNames.forEach(championName => {
+    const championTraits = getChampionTraits(championName);
+    championTraits.forEach(trait => {
+      const currentCount = traitCounts.get(trait.id) || 0;
+      traitCounts.set(trait.id, currentCount + 1);
+    });
+  });
+  
+  // Calculate active traits with their tiers
+  const activeTraits = Array.from(traitCounts.entries())
+    .map(([traitId, count]) => {
+      const trait = getTraitById(traitId);
+      if (!trait) return null;
+      
+      // Find the highest tier that is active
+      let activeTier: TraitTier | null = null;
+      let tierIndex = -1;
+      
+      for (let i = trait.tiers.length - 1; i >= 0; i--) {
+        if (count >= trait.tiers[i].count) {
+          activeTier = trait.tiers[i];
+          tierIndex = i;
+          break;
+        }
+      }
+      
+      return {
+        trait,
+        activeCount: count,
+        activeTier,
+        tierIndex
+      };
+    })
+    .filter((item): item is NonNullable<typeof item> => item !== null && item.activeTier !== null)
+    .sort((a, b) => {
+      // Sort by type (origins first), then by count
+      if (a.trait.type !== b.trait.type) {
+        return a.trait.type === 'origin' ? -1 : 1;
+      }
+      return b.activeCount - a.activeCount;
+    });
+  
+  return activeTraits;
+}

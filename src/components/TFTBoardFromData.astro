@@ -35,7 +35,6 @@ const getBorderColor = (champ : ChampionData): "purple" | "blue" | "yellow" | "g
 
 // Convertir los datos de Markdown al formato esperado por el componente
 const champions = boardData.champions.map(champ => {
-    console.log('Processing champion:', champ.name, 'stars:', champ.stars, 'items:', champ.items);
     return {
         champion: champ.name,
         borderColor: getBorderColor(champ),

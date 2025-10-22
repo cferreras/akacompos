@@ -32,16 +32,17 @@ export interface Composition {
   slug: string;
   tier: string;
   author: string;
-  image?: string;
-  tags?: string; // Por ahora como string simple
+  cover?: string; // Cambiar de image a cover
+  tags?: string | string[]; // Puede ser string o array
   description: string;
   gameplayMode: string;
+  compCode?: string; // Código de la composición
   status: 'draft' | 'published';
   date_created: string;
   date_updated: string;
-  board?: Board; // Campo JSON para el tablero
-  coreItems?: CoreItem[]; // Campo JSON para items principales
-  augments?: Augment[]; // Campo JSON para augmentos
+  board?: Board | string; // Campo JSON para el tablero (puede venir como string)
+  coreItems?: CoreItem[] | string; // Campo JSON para items principales
+  augments?: Augment[] | string; // Campo JSON para augmentos
 }
 
 export interface Board {

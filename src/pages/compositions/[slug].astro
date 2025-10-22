@@ -1,6 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import TFTBoardFromData from "../../components/TFTBoardFromData.astro";
+import TraitsDisplay from "../../components/TraitsDisplay.astro";
 import {getCompositions, getComposition} from "../../lib/directus";
 import ItemWithImage from "../../components/ItemWithImage.astro";
 import AugmentGrid from "../../components/AugmentGrid.astro";
@@ -41,6 +42,44 @@ if (!currentComposition) {
 }
 
 const lastModified = dayjs(currentComposition.date_updated || currentComposition.date_created).utc().fromNow();
+
+// Parsear board si es un string JSON
+let boardData = currentComposition.board;
+if (typeof boardData === 'string') {
+  try {
+    boardData = JSON.parse(boardData);
+  } catch (e) {
+    console.error('Error parsing board JSON:', e);
+    boardData = null;
+  }
+}
+
+// Parsear coreItems si es un string JSON
+let coreItemsData = currentComposition.coreItems;
+if (typeof coreItemsData === 'string') {
+  try {
+    coreItemsData = JSON.parse(coreItemsData);
+  } catch (e) {
+    console.error('Error parsing coreItems JSON:', e);
+    coreItemsData = [];
+  }
+}
+
+// Parsear augments si es un string JSON
+let augmentsData = currentComposition.augments;
+if (typeof augmentsData === 'string') {
+  try {
+    augmentsData = JSON.parse(augmentsData);
+  } catch (e) {
+    console.error('Error parsing augments JSON:', e);
+    augmentsData = [];
+  }
+}
+
+// Extraer lista de campeones del board
+const championsList = boardData?.champions 
+  ? boardData.champions.map((champ: any) => champ.name)
+  : [];
 
 export function parseImages(description: string): string {
     let result = description;
@@ -83,9 +122,17 @@ export function parseImages(description: string): string {
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
                 <div class="lg:col-span-2">
                     <h2 class="text-2xl font-bold text-white mb-4">Composición</h2>
-                    {currentComposition.board ? (
+                    
+                    <!-- Traits Display -->
+                    {championsList.length > 0 && (
+                        <div class="mb-6">
+                            <TraitsDisplay champions={championsList} />
+                        </div>
+                    )}
+                    
+                    {boardData ? (
                             <div class="relative  bg-slate-800/20 rounded-xl p-4 border border-slate-800">
-                                <TFTBoardFromData boardSize="large" boardData={currentComposition.board}/>
+                                <TFTBoardFromData boardSize="large" boardData={boardData}/>
                             </div>
                     ) : (
                             <div class="relative bg-slate-800/20 rounded-xl p-4 border border-slate-800 text-center">
@@ -111,11 +158,11 @@ export function parseImages(description: string): string {
 
                 <div class="space-y-6">
                     <!-- Core Items -->
-                    {currentComposition.coreItems && currentComposition.coreItems.length > 0 && (
+                    {coreItemsData && Array.isArray(coreItemsData) && coreItemsData.length > 0 && (
                             <div>
                                 <h2 class="text-2xl font-bold text-white mb-4">Core Items</h2>
                                 <div class="space-y-3">
-                                    {currentComposition.coreItems.map((item: any) => (
+                                    {coreItemsData.map((item: any) => (
                                             <div class="p-4 rounded-lg bg-slate-800/50 border border-slate-800">
                                                 <ItemWithImage itemName={item.name} description={item.description}
                                                                size="medium"/>
@@ -126,10 +173,10 @@ export function parseImages(description: string): string {
                     )}
 
                     <!-- Recommended Augments -->
-                    {currentComposition.augments && currentComposition.augments.length > 0 && (
+                    {augmentsData && Array.isArray(augmentsData) && augmentsData.length > 0 && (
                             <div>
                                 <h2 class="text-2xl font-bold text-white mb-4">Recommended Augments</h2>
-                                <AugmentGrid augments={currentComposition.augments}/>
+                                <AugmentGrid augments={augmentsData}/>
                             </div>
                     )}
                 </div>
