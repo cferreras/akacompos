@@ -140,7 +140,7 @@ const optimizedItemSize = Math.max(16, Math.min(28, Math.floor(numericSize * 0.2
         transform: translate(-50%, -50%);
         color: white;
         font-weight: bold;
-        font-size: 12px;
+        font-size: clamp(10px, calc(var(--size) * 0.14), 16px);
         text-align: center;
         white-space: nowrap;
         z-index: 30;
@@ -270,7 +270,7 @@ const optimizedItemSize = Math.max(16, Math.min(28, Math.floor(numericSize * 0.2
 
     /* Responsive champion name sizing */
     .champion-name {
-        padding: clamp(1px, calc(var(--size) * 0.02), 3px) clamp(4px, calc(var(--size) * 0.08), 10px);
+        padding: clamp(2px, calc(var(--size) * 0.03), 4px) clamp(4px, calc(var(--size) * 0.08), 10px);
     }
 
     /* Additional responsive adjustments */
@@ -281,8 +281,8 @@ const optimizedItemSize = Math.max(16, Math.min(28, Math.floor(numericSize * 0.2
         }
 
         .champion-name {
-            font-size: clamp(6px, calc(var(--size) * 0.1), 10px);
-            padding: 1px clamp(2px, calc(var(--size) * 0.05), 6px);
+            font-size: clamp(9px, calc(var(--size) * 0.13), 14px);
+            padding: 2px clamp(3px, calc(var(--size) * 0.06), 8px);
         }
 
         .stars-container {
@@ -301,8 +301,8 @@ const optimizedItemSize = Math.max(16, Math.min(28, Math.floor(numericSize * 0.2
         }
 
         .champion-name {
-            font-size: clamp(5px, calc(var(--size) * 0.08), 8px);
-            padding: 1px clamp(2px, calc(var(--size) * 0.04), 4px);
+            font-size: clamp(8px, calc(var(--size) * 0.12), 12px);
+            padding: 2px clamp(3px, calc(var(--size) * 0.05), 6px);
         }
 
         .stars-container {
