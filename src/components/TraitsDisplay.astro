@@ -1,6 +1,7 @@
 ---
 import { calculateActiveTraits, type Trait, type TraitTier } from '../utils/traits';
 import { Image } from 'astro:assets';
+import { getChampionImageMeta } from '../utils/assets';
 
 interface Props {
   champions: string[];
@@ -57,37 +58,253 @@ function getTierBgClass(tierIndex: number, totalTiers: number): string {
       </p>
     </div>
   ) : (
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-      {activeTraits.map(({ trait, activeCount, activeTier, tierIndex }) => (
-        <div 
-          class={`trait-card relative rounded-lg p-3 transition-all hover:scale-105 ${getTierBgClass(tierIndex, trait.tiers.length)} ${getTierColor(tierIndex, trait.tiers.length)}`}
-          title={`${trait.name}: ${activeTier?.effect}`}
-        >
-          <div class="flex items-center gap-2">
-            <div class="relative flex-shrink-0">
-              <Image 
-                src={trait.icon} 
-                alt={trait.name}
-                width={40}
-                height={40}
-                class="w-10 h-10 rounded-md trait-icon-white"
-              />
-              <span class="absolute -bottom-1 -right-1 bg-slate-900 border-2 border-current rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                {activeCount}
-              </span>
+    <div class="traits-container">
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+        {activeTraits.map(({ trait, activeCount, activeTier, tierIndex }) => (
+          <div 
+            class={`trait-card relative rounded-lg p-3 ${getTierBgClass(tierIndex, trait.tiers.length)} ${getTierColor(tierIndex, trait.tiers.length)}`}
+            data-trait-name={trait.name}
+            data-trait-description={trait.description}
+            data-trait-icon={trait.icon.src}
+            data-trait-tiers={JSON.stringify(trait.tiers)}
+            data-trait-tier-index={tierIndex}
+            data-active-count={activeCount}
+            data-trait-champions={JSON.stringify(trait.champions)}
+            data-all-champions={JSON.stringify(champions)}
+          >
+            <div class="flex items-center gap-2">
+              <div class="relative flex-shrink-0">
+                <Image 
+                  src={trait.icon} 
+                  alt={trait.name}
+                  width={40}
+                  height={40}
+                  class="w-10 h-10 rounded-md trait-icon-white"
+                />
+                <span class="absolute -bottom-1 -right-1 bg-slate-900 border-2 border-current rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                  {activeCount}
+                </span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="font-semibold text-white text-sm truncate">{trait.name}</p>
+                <p class="text-xs text-slate-300 opacity-80">{trait.type === 'origin' ? 'Origin' : 'Class'}</p>
+              </div>
             </div>
-            <div class="flex-1 min-w-0">
-              <p class="font-semibold text-white text-sm truncate">{trait.name}</p>
-              <p class="text-xs text-slate-300 opacity-80">{trait.type === 'origin' ? 'Origin' : 'Class'}</p>
+            
+            <!-- Pre-renderizar imágenes de champions para este trait (ocultas) -->
+            <div class="champion-images-cache" style="display: none;">
+              {trait.champions.map((championName) => {
+                try {
+                  const championImg = getChampionImageMeta(championName);
+                  if (championImg) {
+                    return (
+                      <div data-champion-name={championName}>
+                        <Image 
+                          src={championImg} 
+                          alt={championName}
+                          width={64}
+                          height={64}
+                          class="champion-img-prerendered"
+                        />
+                      </div>
+                    );
+                  }
+                } catch (e) {
+                  console.warn(`Image not found for champion: ${championName}`);
+                }
+                return null;
+              })}
             </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   )}
 </div>
 
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const traitCards = document.querySelectorAll('.trait-card');
+    let currentTooltip: HTMLDivElement | null = null;
+    let updateInterval: number | null = null;
+    let removeTimeout: number | null = null;
+
+    const createTooltip = (card: HTMLElement): HTMLDivElement => {
+      const tooltip = document.createElement('div');
+      tooltip.className = 'trait-tooltip-custom';
+      
+      // Obtener datos del trait
+      const name = card.dataset.traitName || '';
+      const description = card.dataset.traitDescription || '';
+      const iconSrc = card.dataset.traitIcon || '';
+      const tiers = JSON.parse(card.dataset.traitTiers || '[]');
+      const tierIndex = parseInt(card.dataset.traitTierIndex || '0');
+      const activeCount = parseInt(card.dataset.activeCount || '0');
+      const traitChampions = JSON.parse(card.dataset.traitChampions || '[]');
+      const allChampions = JSON.parse(card.dataset.allChampions || '[]');
+      
+      // Obtener el cache de imágenes pre-renderizadas
+      const imageCache = card.querySelector('.champion-images-cache');
+      
+      // Crear HTML del tooltip
+      tooltip.innerHTML = `
+        <div class="tooltip-content-custom">
+          <div class="tooltip-header-custom">
+            <img src="${iconSrc}" alt="${name}" style="width: 1.5rem; height: 1.5rem; filter: brightness(0) invert(1); border-radius: 0.25rem;">
+            <h3 style="font-size: 0.9375rem; font-weight: 700; color: white; margin: 0;">${name}</h3>
+          </div>
+          
+          <p style="color: rgb(203 213 225); font-size: 0.75rem; margin: 0.375rem 0; line-height: 1.35;">${description}</p>
+          
+          <div class="tooltip-tiers-custom">
+            <p style="color: rgb(148 163 184); font-size: 0.625rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.25rem; letter-spacing: 0.025em;">Unlock ${name}</p>
+            ${tiers.map((tier: any, idx: number) => `
+              <div class="tier-row-custom ${idx === tierIndex ? 'tier-active-custom' : ''} ${activeCount >= tier.count ? 'tier-unlocked-custom' : ''}">
+                <span style="color: rgb(203 213 225); font-weight: 600; font-size: 0.75rem;">(${tier.count})</span>
+                <span style="color: rgb(226 232 240); flex: 1; font-size: 0.75rem;">${tier.effect}</span>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div class="tooltip-champions-custom">
+            <p style="color: rgb(148 163 184); font-size: 0.625rem; font-weight: 600; text-transform: uppercase; margin-bottom: 0.25rem; letter-spacing: 0.025em;">Champions:</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.25rem;">
+              ${traitChampions.map((champion: string) => {
+                const isActive = allChampions.includes(champion);
+                
+                // Buscar la imagen pre-renderizada en el cache
+                let championImgHTML = '';
+                if (imageCache) {
+                  const cachedDiv = imageCache.querySelector(`[data-champion-name="${champion}"]`);
+                  if (cachedDiv) {
+                    const img = cachedDiv.querySelector('img');
+                    if (img) {
+                      championImgHTML = img.outerHTML;
+                    }
+                  }
+                }
+                
+                return `
+                  <div class="champion-img-container ${isActive ? 'champion-img-active' : 'champion-img-inactive'}" title="${champion}">
+                    ${championImgHTML}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+        </div>
+        <div class="tooltip-arrow-custom"></div>
+      `;
+      
+      return tooltip;
+    };
+
+    const positionTooltip = (tooltip: HTMLDivElement, card: HTMLElement) => {
+      const cardRect = card.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+      
+      // Centrar horizontalmente respecto al card
+      let left = cardRect.left + (cardRect.width / 2) - (tooltipRect.width / 2);
+      
+      // Ajustar si se sale de la pantalla
+      const margin = 10;
+      if (left < margin) left = margin;
+      if (left + tooltipRect.width > window.innerWidth - margin) {
+        left = window.innerWidth - tooltipRect.width - margin;
+      }
+      
+      // Posicionar debajo del card
+      const top = cardRect.bottom + 8;
+      
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+      
+      // Posicionar la flecha
+      const arrow = tooltip.querySelector('.tooltip-arrow-custom') as HTMLElement;
+      if (arrow) {
+        const arrowLeft = cardRect.left + (cardRect.width / 2) - left - 6;
+        arrow.style.left = `${arrowLeft}px`;
+      }
+    };
+
+    traitCards.forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        // Cancelar cualquier timeout de eliminación pendiente
+        if (removeTimeout) {
+          clearTimeout(removeTimeout);
+          removeTimeout = null;
+        }
+        
+        // Limpiar tooltip anterior inmediatamente
+        if (currentTooltip) {
+          currentTooltip.remove();
+        }
+        if (updateInterval) {
+          clearInterval(updateInterval);
+        }
+        
+        // Crear nuevo tooltip
+        currentTooltip = createTooltip(card as HTMLElement);
+        
+        // Agregar al body con opacity 0
+        currentTooltip.style.opacity = '0';
+        document.body.appendChild(currentTooltip);
+        
+        // Posicionar después de que se agregue al DOM
+        requestAnimationFrame(() => {
+          if (currentTooltip) {
+            positionTooltip(currentTooltip, card as HTMLElement);
+            
+            // Hacer visible en el siguiente frame
+            requestAnimationFrame(() => {
+              if (currentTooltip) {
+                currentTooltip.style.opacity = '1';
+              }
+            });
+            
+            // Actualizar posición continuamente
+            updateInterval = window.setInterval(() => {
+              if (currentTooltip) {
+                positionTooltip(currentTooltip, card as HTMLElement);
+              }
+            }, 16);
+          }
+        });
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        if (currentTooltip) {
+          const tooltipToRemove = currentTooltip;
+          tooltipToRemove.style.opacity = '0';
+          
+          // Guardar el timeout para poder cancelarlo
+          removeTimeout = window.setTimeout(() => {
+            tooltipToRemove.remove();
+            if (currentTooltip === tooltipToRemove) {
+              currentTooltip = null;
+            }
+            removeTimeout = null;
+          }, 150);
+        }
+        if (updateInterval) {
+          clearInterval(updateInterval);
+          updateInterval = null;
+        }
+      });
+    });
+  });
+</script>
+
 <style>
+  .traits-container {
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(30, 41, 59, 0.5));
+    border: 2px solid rgba(148, 163, 184, 0.3);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
   .trait-icon-white {
     filter: brightness(0) invert(1);
   }
@@ -115,11 +332,125 @@ function getTierBgClass(tierIndex: number, totalTiers: number): string {
   
   .trait-card {
     backdrop-filter: blur(8px);
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
+    will-change: transform;
   }
   
-  .trait-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  .traits-container .trait-card:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+    filter: brightness(1.15);
+    z-index: 10;
+  }
+
+  /* Estilos globales para tooltips (se agregan al body) */
+  :global(.trait-tooltip-custom) {
+    position: fixed;
+    z-index: 999999;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+  }
+
+  :global(.tooltip-content-custom) {
+    min-width: 220px;
+    max-width: 260px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+    border: 2px solid rgba(148, 163, 184, 0.5);
+    border-radius: 8px;
+    padding: 0.625rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+  }
+
+  :global(.tooltip-header-custom) {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  }
+
+  :global(.tooltip-tiers-custom) {
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: 6px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+  }
+
+  :global(.tier-row-custom) {
+    display: flex;
+    gap: 0.375rem;
+    padding: 0.1875rem 0.25rem;
+    margin: 0.125rem 0;
+    border-radius: 3px;
+    font-size: 0.75rem;
+  }
+
+  :global(.tier-row-custom.tier-unlocked-custom) {
+    background: rgba(71, 85, 105, 0.3);
+  }
+
+  :global(.tier-row-custom.tier-active-custom) {
+    background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(202, 138, 4, 0.15));
+    border: 1px solid rgba(234, 179, 8, 0.4);
+    color: rgb(250, 204, 21);
+  }
+
+  :global(.tooltip-champions-custom) {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.2);
+  }
+
+  :global(.champion-img-container) {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    border: 2px solid rgba(100, 116, 139, 0.5);
+    transition: all 0.2s ease;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(15, 23, 42, 0.5);
+  }
+
+  :global(.champion-img-container img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  :global(.champion-img-inactive) {
+    opacity: 0.35;
+    filter: grayscale(0.6);
+  }
+
+  :global(.champion-img-active) {
+    opacity: 1;
+    border-color: rgba(34, 197, 94, 0.6);
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
+  }
+
+  :global(.champion-img-container:hover) {
+    transform: scale(1.1);
+    z-index: 10;
+  }
+
+  :global(.tooltip-arrow-custom) {
+    position: absolute;
+    top: -6px;
+    width: 12px;
+    height: 12px;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+    border-left: 2px solid rgba(148, 163, 184, 0.5);
+    border-top: 2px solid rgba(148, 163, 184, 0.5);
+    transform: rotate(45deg);
+    z-index: -1;
   }
 </style>
