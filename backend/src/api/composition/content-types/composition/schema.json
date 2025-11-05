@@ -1,0 +1,64 @@
+{
+  "kind": "collectionType",
+  "collectionName": "compositions",
+  "info": {
+    "singularName": "composition",
+    "pluralName": "compositions",
+    "displayName": "compositions"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "slug": {
+      "type": "string"
+    },
+    "tier": {
+      "type": "enumeration",
+      "enum": [
+        "S Tier",
+        "A Tier",
+        "B Tier",
+        "C Tier"
+      ]
+    },
+    "author": {
+      "type": "string"
+    },
+    "cover": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos",
+        "audios"
+      ]
+    },
+    "tags": {
+      "type": "string"
+    },
+    "description": {
+      "type": "blocks"
+    },
+    "gameplayMode": {
+      "type": "text"
+    },
+    "compCode": {
+      "type": "string"
+    },
+    "board": {
+      "type": "json"
+    },
+    "coreItems": {
+      "type": "json"
+    },
+    "augments": {
+      "type": "json"
+    }
+  }
+}

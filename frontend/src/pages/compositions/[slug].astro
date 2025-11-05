@@ -2,7 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import TFTBoardFromData from "../../components/TFTBoardFromData.astro";
 import TraitsDisplay from "../../components/TraitsDisplay.astro";
-import { getCompositions, getComposition } from "../../lib/directus";
+import { getCompositions, getComposition } from "../../lib/strapi";
 import ItemWithImage from "../../components/ItemWithImage.astro";
 import AugmentGrid from "../../components/AugmentGrid.astro";
 import dayjs from "dayjs";
@@ -10,24 +10,24 @@ import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
 import es from "dayjs/locale/es";
 import {
-  getChampionImage,
-  getChampionNames,
-  getItemImage,
-  getItemNames,
+    getChampionImage,
+    getChampionNames,
+    getItemImage,
+    getItemNames,
 } from "../../utils/assets.ts";
 dayjs.locale(es);
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
 export async function getStaticPaths() {
-  const { data: compositions } = await getCompositions();
+    const { data: compositions } = await getCompositions();
 
-  return compositions
-    ? compositions.map((composition: any) => ({
-        params: { slug: composition.slug },
-        props: { composition },
-      }))
-    : [];
+    return compositions
+        ? compositions.map((composition: any) => ({
+              params: { slug: composition.slug },
+              props: { composition },
+          }))
+        : [];
 }
 
 const { composition } = Astro.props;
@@ -35,266 +35,322 @@ const { slug } = Astro.params;
 
 // Fallback para SSR si no se encontró en getStaticPaths
 if (!composition && slug) {
-  const { data: fetchedComposition, error } = await getComposition(
-    slug as string
-  );
-  if (error || !fetchedComposition) {
-    return Astro.redirect("/404");
-  }
-  Astro.props.composition = fetchedComposition;
+    const { data: fetchedComposition, error } = await getComposition(
+        slug as string,
+    );
+    if (error || !fetchedComposition) {
+        return Astro.redirect("/404");
+    }
+    Astro.props.composition = fetchedComposition;
 }
 
 const currentComposition = Astro.props.composition;
 
 if (!currentComposition) {
-  return Astro.redirect("/404");
+    return Astro.redirect("/404");
 }
 
 const lastModified = dayjs(
-  currentComposition.date_updated || currentComposition.date_created
+    currentComposition.updatedAt || currentComposition.createdAt,
 )
-  .utc()
-  .fromNow();
+    .utc()
+    .fromNow();
 
 // Parsear board si es un string JSON
 let boardData = currentComposition.board;
 if (typeof boardData === "string") {
-  try {
-    boardData = JSON.parse(boardData);
-  } catch (e) {
-    console.error("Error parsing board JSON:", e);
-    boardData = null;
-  }
+    try {
+        boardData = JSON.parse(boardData);
+    } catch (e) {
+        console.error("Error parsing board JSON:", e);
+        boardData = null;
+    }
 }
 
 // Parsear coreItems si es un string JSON
 let coreItemsData = currentComposition.coreItems;
 if (typeof coreItemsData === "string") {
-  try {
-    coreItemsData = JSON.parse(coreItemsData);
-  } catch (e) {
-    console.error("Error parsing coreItems JSON:", e);
-    coreItemsData = [];
-  }
+    try {
+        coreItemsData = JSON.parse(coreItemsData);
+    } catch (e) {
+        console.error("Error parsing coreItems JSON:", e);
+        coreItemsData = [];
+    }
 }
 
 // Parsear augments si es un string JSON
 let augmentsData = currentComposition.augments;
 if (typeof augmentsData === "string") {
-  try {
-    augmentsData = JSON.parse(augmentsData);
-  } catch (e) {
-    console.error("Error parsing augments JSON:", e);
-    augmentsData = [];
-  }
+    try {
+        augmentsData = JSON.parse(augmentsData);
+    } catch (e) {
+        console.error("Error parsing augments JSON:", e);
+        augmentsData = [];
+    }
+}
+
+// Convert augments to objects if they are strings
+if (
+    Array.isArray(augmentsData) &&
+    augmentsData.length > 0 &&
+    typeof augmentsData[0] === "string"
+) {
+    augmentsData = augmentsData.map((name: string) => ({
+        name,
+        description: "",
+        icon: "",
+    }));
 }
 
 // Extraer lista de campeones del board
 const championsList = boardData?.champions
-  ? boardData.champions.map((champ: any) => champ.name)
-  : [];
+    ? boardData.champions.map((champ: any) => champ.name)
+    : [];
 
-export function parseImages(description: string): string {
-  let result = description;
-  const allKeywords = getItemNames().concat(getChampionNames());
-  for (const matchName of allKeywords) {
-    result = result.replace(
-      new RegExp(`${matchName}`, "gi"),
-      `<b>${matchName}</b> <img src="${getChampionNames().includes(matchName) ? getChampionImage(matchName) : getItemImage(matchName)}" alt="${matchName}" class="rounded-full aspect-square h-7 inline align-middle border-2 border-primary object-fill drop-shadow-md"/>`
-    );
-  }
-  return result;
+export function parseImages(description: any): string {
+    let result: string;
+    if (typeof description === "string") {
+        result = description;
+    } else if (Array.isArray(description)) {
+        result = description
+            .map((block) => {
+                if (block.children && Array.isArray(block.children)) {
+                    return block.children
+                        .map((child) => child.text || "")
+                        .join("");
+                }
+                return "";
+            })
+            .join("\n");
+    } else {
+        result = "";
+    }
+    const allKeywords = getItemNames().concat(getChampionNames());
+    for (const matchName of allKeywords) {
+        result = result.replace(
+            new RegExp(`${matchName}`, "gi"),
+            `<b>${matchName}</b> <img src="${getChampionNames().includes(matchName) ? getChampionImage(matchName) : getItemImage(matchName)}" alt="${matchName}" class="rounded-full aspect-square h-7 inline align-middle border-2 border-primary object-fill drop-shadow-md"/>`,
+        );
+    }
+    return result;
 }
 ---
 
 <Layout title={`${currentComposition.tier} - ${currentComposition.title}`}>
-  <main class="flex-grow container mx-auto px-2 sm:px-4 lg:px-6 py-6 md:py-8">
-    <div class="max-w-6xl mx-auto">
-      <div class="mb-6">
-        <div
-          class="flex flex-col md:flex-row md:items-center md:justify-between gap-3"
-        >
-          <div>
-            <h1 class="text-3xl md:text-4xl font-bold text-white">
-              <span class="text-primary">{currentComposition.tier}</span> - {
-                currentComposition.title
-              }
-            </h1>
-            <p class="text-sm text-slate-400 mt-2">
-              Actualizado {lastModified} por
-              <a class="font-medium text-primary hover:underline" href="#"
-                >{currentComposition.author}</a
-              >
-            </p>
-          </div>
-          <button
-            id="copy-btn"
-            data-code={currentComposition.compCode}
-            class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95"
-          >
-            <span class="material-symbols-outlined" id="copy-icon"
-              >content_copy</span
-            >
-            <span id="copy-text">Copiar enlace</span>
-          </button>
-        </div>
-        <div class="mt-4 flex flex-wrap gap-2">
-          {
-            currentComposition.tags &&
-              currentComposition.tags.map((tag: string) => (
-                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary">
-                  {tag}
-                </span>
-              ))
-          }
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-        <div class="lg:col-span-2">
-          <h2 class="text-2xl font-bold text-white mb-4">Composición</h2>
-
-          <!-- Traits Display -->
-          {
-            championsList.length > 0 && (
-              <div class="mb-6">
-                <TraitsDisplay champions={championsList} />
-              </div>
-            )
-          }
-
-          {
-            boardData ? (
-              <div class="tft-board-wrapper relative bg-slate-800/20 rounded-xl p-4 border border-slate-800">
-                <TFTBoardFromData boardSize="large" boardData={boardData} />
-              </div>
-            ) : (
-              <div class="relative bg-slate-800/20 rounded-xl p-4 border border-slate-800 text-center">
-                <p class="text-slate-400">Board no configurado aún</p>
-              </div>
-            )
-          }
-
-          <div class="mt-6 space-y-5">
-            <div>
-              <h3 class="text-xl font-bold text-white mb-3">Cuándo jugarla</h3>
-              <p class="text-sm text-slate-300 leading-relaxed">
-                <Fragment
-                  set:html={parseImages(currentComposition.description)}
-                />
-              </p>
-            </div>
-            <div>
-              <h3 class="text-xl font-bold text-white mb-3">Modo de juego</h3>
-              <p class="text-sm text-slate-300 leading-relaxed">
-                <Fragment
-                  set:html={parseImages(currentComposition.gameplayMode)}
-                />
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div class="space-y-6">
-          <!-- Core Items -->
-          {
-            coreItemsData &&
-              Array.isArray(coreItemsData) &&
-              coreItemsData.length > 0 && (
-                <div>
-                  <h2 class="text-2xl font-bold text-white mb-4">Core Items</h2>
-                  <div class="space-y-3">
-                    {coreItemsData.map((item: any) => (
-                      <div class="p-4 rounded-lg bg-slate-800/50 border border-slate-800">
-                        <ItemWithImage
-                          itemName={item.name}
-                          description={item.description}
-                          size="medium"
-                        />
-                      </div>
-                    ))}
-                  </div>
+    <main class="flex-grow container mx-auto px-2 sm:px-4 lg:px-6 py-6 md:py-8">
+        <div class="max-w-6xl mx-auto">
+            <div class="mb-6">
+                <div
+                    class="flex flex-col md:flex-row md:items-center md:justify-between gap-3"
+                >
+                    <div>
+                        <h1 class="text-3xl md:text-4xl font-bold text-white">
+                            <span class="text-primary"
+                                >{currentComposition.tier}</span
+                            > - {currentComposition.title}
+                        </h1>
+                        <p class="text-sm text-slate-400 mt-2">
+                            Actualizado {lastModified} por
+                            <a
+                                class="font-medium text-primary hover:underline"
+                                href="#">{currentComposition.author}</a
+                            >
+                        </p>
+                    </div>
+                    <button
+                        id="copy-btn"
+                        data-code={currentComposition.compCode}
+                        class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-lg shadow-primary/30 hover:bg-primary/90 transition-all active:scale-95"
+                    >
+                        <span class="material-symbols-outlined" id="copy-icon"
+                            >content_copy</span
+                        >
+                        <span id="copy-text">Copiar enlace</span>
+                    </button>
                 </div>
-              )
-          }
-
-          <!-- Recommended Augments -->
-          {
-            augmentsData &&
-              Array.isArray(augmentsData) &&
-              augmentsData.length > 0 && (
-                <div>
-                  <h2 class="text-2xl font-bold text-white mb-4">
-                    Recommended Augments
-                  </h2>
-                  <AugmentGrid augments={augmentsData} />
+                <div class="mt-4 flex flex-wrap gap-2">
+                    {
+                        currentComposition.tags &&
+                            (Array.isArray(currentComposition.tags)
+                                ? currentComposition.tags
+                                : typeof currentComposition.tags === "string"
+                                  ? currentComposition.tags
+                                        .split(",")
+                                        .map((t) => t.trim())
+                                  : []
+                            ).map((tag: string) => (
+                                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-primary/10 text-primary">
+                                    {tag}
+                                </span>
+                            ))
+                    }
                 </div>
-              )
-          }
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+                <div class="lg:col-span-2">
+                    <h2 class="text-2xl font-bold text-white mb-4">
+                        Composición
+                    </h2>
+
+                    <!-- Traits Display -->
+                    {
+                        championsList.length > 0 && (
+                            <div class="mb-6">
+                                <TraitsDisplay champions={championsList} />
+                            </div>
+                        )
+                    }
+
+                    {
+                        boardData ? (
+                            <div class="tft-board-wrapper relative bg-slate-800/20 rounded-xl p-4 border border-slate-800">
+                                <TFTBoardFromData
+                                    boardSize="large"
+                                    boardData={boardData}
+                                />
+                            </div>
+                        ) : (
+                            <div class="relative bg-slate-800/20 rounded-xl p-4 border border-slate-800 text-center">
+                                <p class="text-slate-400">
+                                    Board no configurado aún
+                                </p>
+                            </div>
+                        )
+                    }
+
+                    <div class="mt-6 space-y-5">
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-3">
+                                Cuándo jugarla
+                            </h3>
+                            <p class="text-sm text-slate-300 leading-relaxed">
+                                <Fragment
+                                    set:html={parseImages(
+                                        currentComposition.description,
+                                    )}
+                                />
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white mb-3">
+                                Modo de juego
+                            </h3>
+                            <p class="text-sm text-slate-300 leading-relaxed">
+                                <Fragment
+                                    set:html={parseImages(
+                                        currentComposition.gameplayMode,
+                                    )}
+                                />
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Core Items -->
+                    {
+                        coreItemsData &&
+                            Array.isArray(coreItemsData) &&
+                            coreItemsData.length > 0 && (
+                                <div>
+                                    <h2 class="text-2xl font-bold text-white mb-4">
+                                        Core Items
+                                    </h2>
+                                    <div class="space-y-3">
+                                        {coreItemsData.map((item: any) => (
+                                            <div class="p-4 rounded-lg bg-slate-800/50 border border-slate-800">
+                                                <ItemWithImage
+                                                    itemName={item.name}
+                                                    description={
+                                                        item.description
+                                                    }
+                                                    size="medium"
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )
+                    }
+
+                    <!-- Recommended Augments -->
+                    {
+                        augmentsData &&
+                            Array.isArray(augmentsData) &&
+                            augmentsData.length > 0 && (
+                                <div>
+                                    <h2 class="text-2xl font-bold text-white mb-4">
+                                        Recommended Augments
+                                    </h2>
+                                    <AugmentGrid augments={augmentsData} />
+                                </div>
+                            )
+                    }
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </main>
+    </main>
 </Layout>
 
 <style>
-  /* Controlar z-index del board para que los tooltips puedan estar encima */
-  .tft-board-wrapper {
-    isolation: isolate;
-    z-index: 1;
-  }
+    /* Controlar z-index del board para que los tooltips puedan estar encima */
+    .tft-board-wrapper {
+        isolation: isolate;
+        z-index: 1;
+    }
 
-  @keyframes copied {
-    0% {
-      transform: scale(1);
+    @keyframes copied {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+        100% {
+            transform: scale(1);
+        }
     }
-    50% {
-      transform: scale(1.1);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
 
-  .animate-copied {
-    animation: copied 0.3s ease-in-out;
-  }
+    .animate-copied {
+        animation: copied 0.3s ease-in-out;
+    }
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const copyBtn = document.getElementById("copy-btn");
-    const copyIcon = document.getElementById("copy-icon");
-    const copyText = document.getElementById("copy-text");
+    document.addEventListener("DOMContentLoaded", () => {
+        const copyBtn = document.getElementById("copy-btn");
+        const copyIcon = document.getElementById("copy-icon");
+        const copyText = document.getElementById("copy-text");
 
-    if (copyBtn && copyIcon && copyText) {
-      copyBtn.addEventListener("click", async () => {
-        const codeComp = copyBtn.getAttribute("data-code");
+        if (copyBtn && copyIcon && copyText) {
+            copyBtn.addEventListener("click", async () => {
+                const codeComp = copyBtn.getAttribute("data-code");
 
-        try {
-          await navigator.clipboard.writeText(codeComp || "");
+                try {
+                    await navigator.clipboard.writeText(codeComp || "");
 
-          // Add animation class
-          copyBtn.classList.add("animate-copied");
+                    // Add animation class
+                    copyBtn.classList.add("animate-copied");
 
-          // Change icon and text temporarily
-          copyIcon.textContent = "check";
-          copyText.textContent = "¡Copiado!";
+                    // Change icon and text temporarily
+                    copyIcon.textContent = "check";
+                    copyText.textContent = "¡Copiado!";
 
-          // Remove animation class after animation completes
-          setTimeout(() => {
-            copyBtn.classList.remove("animate-copied");
-          }, 300);
+                    // Remove animation class after animation completes
+                    setTimeout(() => {
+                        copyBtn.classList.remove("animate-copied");
+                    }, 300);
 
-          // Revert back to original after 2 seconds
-          setTimeout(() => {
-            copyIcon.textContent = "content_copy";
-            copyText.textContent = "Copiar enlace";
-          }, 2000);
-        } catch (err) {
-          console.error("Failed to copy:", err);
+                    // Revert back to original after 2 seconds
+                    setTimeout(() => {
+                        copyIcon.textContent = "content_copy";
+                        copyText.textContent = "Copiar enlace";
+                    }, 2000);
+                } catch (err) {
+                    console.error("Failed to copy:", err);
+                }
+            });
         }
-      });
-    }
-  });
+    });
 </script>

@@ -1,8 +1,8 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import { getChampionImage, championAssets } from '../../utils/assets';
-import { getCompositions } from '../../lib/directus';
-import { Image } from 'astro:assets';
+import Layout from "../../layouts/Layout.astro";
+import { getChampionImage, championAssets } from "../../utils/assets";
+import { getCompositions } from "../../lib/strapi";
+import { Image } from "astro:assets";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -11,155 +11,206 @@ dayjs.locale(es);
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
-// Obtener composiciones desde Directus
+// Obtener composiciones desde Strapi
 const { data: compositions, error } = await getCompositions();
 
 // Group compositions by tier
-const compositionsByTier = compositions ? compositions.reduce((acc, comp) => {
-  const tier = comp.tier;
-  if (!acc[tier]) {
-    acc[tier] = [];
-  }
-  acc[tier].push(comp);
-  return acc;
-}, {} as Record<string, typeof compositions>) : {};
+const compositionsByTier = compositions
+    ? compositions.reduce(
+          (acc, comp) => {
+              const tier = comp.tier;
+              if (!acc[tier]) {
+                  acc[tier] = [];
+              }
+              acc[tier].push(comp);
+              return acc;
+          },
+          {} as Record<string, typeof compositions>,
+      )
+    : {};
 
 // Define tier order
-const tierOrder = ['S Tier', 'A Tier', 'B Tier', 'C Tier'];
+const tierOrder = ["S Tier", "A Tier", "B Tier", "C Tier"];
 
 // Function to format tags for display
 function formatTags(tags: any): { text: string; style: string }[] {
-  let tagArray: string[] = [];
-  
-  if (typeof tags === 'string') {
-    tagArray = tags.split(',').map(tag => tag.trim());
-  } else if (Array.isArray(tags)) {
-    tagArray = tags;
-  } else {
-    return [];
-  }
-  
-  return tagArray.slice(0, 2).map(tag => {
-    // Determine tag style based on content
-    let style = 'text-primary bg-primary/20';
-    
-    if (tag.toLowerCase().includes('fast')) {
-      style = 'bg-blue-500/20 text-blue-400';
-    } else if (tag.toLowerCase().includes('reroll')) {
-      style = 'bg-green-500/20 text-green-400';
-    } else if (tag.toLowerCase().includes('aggressive')) {
-      style = 'bg-red-500/20 text-red-400';
-    } else if (tag.toLowerCase().includes('defensive')) {
-      style = 'bg-yellow-500/20 text-yellow-400';
+    let tagArray: string[] = [];
+
+    if (typeof tags === "string") {
+        tagArray = tags.split(",").map((tag) => tag.trim());
+    } else if (Array.isArray(tags)) {
+        tagArray = tags;
+    } else {
+        return [];
     }
-    
-    return { text: tag, style };
-  });
+
+    return tagArray.slice(0, 2).map((tag) => {
+        // Determine tag style based on content
+        let style = "text-primary bg-primary/20";
+
+        if (tag.toLowerCase().includes("fast")) {
+            style = "bg-blue-500/20 text-blue-400";
+        } else if (tag.toLowerCase().includes("reroll")) {
+            style = "bg-green-500/20 text-green-400";
+        } else if (tag.toLowerCase().includes("aggressive")) {
+            style = "bg-red-500/20 text-red-400";
+        } else if (tag.toLowerCase().includes("defensive")) {
+            style = "bg-yellow-500/20 text-yellow-400";
+        }
+
+        return { text: tag, style };
+    });
 }
 
 function getUpdateTime(composition: any) {
-    return dayjs(composition.date_updated || composition.date_created).utc().fromNow();
+    return dayjs(composition.updatedAt || composition.createdAt)
+        .utc()
+        .fromNow();
 }
 ---
 
 <Layout title="TFT Compositions">
-  <div class="bg-background-dark font-display text-gray-200">
-    <div class="flex h-auto min-h-screen w-full flex-col">
-      <main class="flex-1">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-          <h1 class="text-4xl font-bold tracking-tight text-white">TFT Compositions by AKAWonder</h1>
-          
-          {error && (
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-8">
-              <p>Error al cargar las composiciones desde Directus. Por favor, verifica la configuración.</p>
-              <p class="text-sm mt-2">Asegúrate de que:</p>
-              <ul class="text-sm mt-1 ml-4 list-disc">
-                <li>La colección 'compositions' existe en Directus</li>
-                <li>Los permisos públicos están habilitados para esa colección</li>
-                <li>O tienes un token válido configurado</li>
-              </ul>
-            </div>
-          )}
+    <div class="bg-background-dark font-display text-gray-200">
+        <div class="flex h-auto min-h-screen w-full flex-col">
+            <main class="flex-1">
+                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+                    <h1 class="text-4xl font-bold tracking-tight text-white">
+                        TFT Compositions by AKAWonder
+                    </h1>
 
-          {compositions && tierOrder.map(tier => {
-            const tieredComps = compositionsByTier[tier] || [];
-            if (tieredComps.length === 0) return null;
-            
-            return (
-              <div class="mt-12">
-                <div class="flex items-baseline gap-4">
-                  <h2 class="text-3xl font-bold text-white">{tier}</h2>
-                  <div class="h-px flex-1 bg-primary/30"></div>
-                </div>
-                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-                  {tieredComps.map((comp: any) => (
-                    <a 
-                      href={`/compositions/${comp.slug}`}
-                      class="group relative flex cursor-pointer flex-col overflow-hidden rounded-lg bg-black/10 shadow-lg transition-all hover:scale-105"
-                    >
-                      <div class="aspect-[16/9] w-full overflow-hidden relative">
-                        {comp.cover ? (
-                          <img 
-                            src={`${import.meta.env.DIRECTUS_URL}/assets/${comp.cover}?width=480&height=270&quality=80&format=webp&fit=cover`}
-                            alt={comp.title} 
-                            class="h-full w-full object-cover object-center" 
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        ) : (
-                          <Image
-                            src={championAssets.Aatrox}
-                            alt={comp.title}
-                            class="h-full w-full object-cover object-center"
-                            width={480}
-                            height={270}
-                            quality={80}
-                            loading="lazy"
-                            decoding="async"
-                          />
-                        )}
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
-                      </div>
-                      <div class="p-4">
-                        <h3 class="text-lg font-bold text-white">{comp.title}</h3>
-                        <div class="mt-2 flex flex-wrap gap-2">
-                          {formatTags(comp.tags).map((tag: any) => (
-                            <span class={`rounded px-2 py-1 text-xs font-medium ${tag.style}`}>
-                              {tag.text}
-                            </span>
-                          ))}
-                        </div>
-                        <p class="mt-2 text-sm text-gray-400">Actualizado {getUpdateTime(comp)}</p>
-                      </div>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+                    {
+                        error && (
+                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-8">
+                                <p>
+                                    Error al cargar las composiciones desde
+                                    Strapi. Por favor, verifica la
+                                    configuración.
+                                </p>
+                                <p class="text-sm mt-2">Asegúrate de que:</p>
+                                <ul class="text-sm mt-1 ml-4 list-disc">
+                                    <li>
+                                        El content type 'compositions' existe en
+                                        Strapi
+                                    </li>
+                                    <li>
+                                        Los permisos públicos están habilitados
+                                        para ese content type
+                                    </li>
+                                    <li>
+                                        O tienes un token válido configurado
+                                    </li>
+                                </ul>
+                            </div>
+                        )
+                    }
 
-          {compositions && compositions.length === 0 && (
-            <div class="text-center py-12">
-              <p class="text-xl text-gray-400">No hay composiciones disponibles en este momento.</p>
-            </div>
-          )}
+                    {
+                        compositions &&
+                            tierOrder.map((tier) => {
+                                const tieredComps =
+                                    compositionsByTier[tier] || [];
+                                if (tieredComps.length === 0) return null;
+
+                                return (
+                                    <div class="mt-12">
+                                        <div class="flex items-baseline gap-4">
+                                            <h2 class="text-3xl font-bold text-white">
+                                                {tier}
+                                            </h2>
+                                            <div class="h-px flex-1 bg-primary/30" />
+                                        </div>
+                                        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+                                            {tieredComps.map((comp: any) => (
+                                                <a
+                                                    href={`/compositions/${comp.slug}`}
+                                                    class="group relative flex cursor-pointer flex-col overflow-hidden rounded-lg bg-black/10 shadow-lg transition-all hover:scale-105"
+                                                >
+                                                    <div class="aspect-[16/9] w-full overflow-hidden relative">
+                                                        {comp.cover ? (
+                                                            <img
+                                                                src={comp.cover}
+                                                                alt={comp.title}
+                                                                class="h-full w-full object-cover object-center"
+                                                                loading="lazy"
+                                                                decoding="async"
+                                                            />
+                                                        ) : (
+                                                            <Image
+                                                                src={
+                                                                    championAssets.Aatrox
+                                                                }
+                                                                alt={comp.title}
+                                                                class="h-full w-full object-cover object-center"
+                                                                width={480}
+                                                                height={270}
+                                                                quality={80}
+                                                                loading="lazy"
+                                                                decoding="async"
+                                                            />
+                                                        )}
+                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                                                    </div>
+                                                    <div class="p-4">
+                                                        <h3 class="text-lg font-bold text-white">
+                                                            {comp.title}
+                                                        </h3>
+                                                        <div class="mt-2 flex flex-wrap gap-2">
+                                                            {formatTags(
+                                                                comp.tags,
+                                                            ).map(
+                                                                (tag: any) => (
+                                                                    <span
+                                                                        class={`rounded px-2 py-1 text-xs font-medium ${tag.style}`}
+                                                                    >
+                                                                        {
+                                                                            tag.text
+                                                                        }
+                                                                    </span>
+                                                                ),
+                                                            )}
+                                                        </div>
+                                                        <p class="mt-2 text-sm text-gray-400">
+                                                            Actualizado{" "}
+                                                            {getUpdateTime(
+                                                                comp,
+                                                            )}
+                                                        </p>
+                                                    </div>
+                                                </a>
+                                            ))}
+                                        </div>
+                                    </div>
+                                );
+                            })
+                    }
+
+                    {
+                        compositions && compositions.length === 0 && (
+                            <div class="text-center py-12">
+                                <p class="text-xl text-gray-400">
+                                    No hay composiciones disponibles en este
+                                    momento.
+                                </p>
+                            </div>
+                        )
+                    }
+                </div>
+            </main>
         </div>
-      </main>
     </div>
-  </div>
 </Layout>
 
 <style>
-  /* Custom CSS variables matching your design */
-  :root {
-    --primary: #5211d4;
-    --background-light: #f6f6f8;
-    --background-dark: #161022;
-  }
-  
-  .dark {
-    --primary: #5211d4;
-    --background-light: #f6f6f8;
-    --background-dark: #161022;
-  }
+    /* Custom CSS variables matching your design */
+    :root {
+        --primary: #5211d4;
+        --background-light: #f6f6f8;
+        --background-dark: #161022;
+    }
+
+    .dark {
+        --primary: #5211d4;
+        --background-light: #f6f6f8;
+        --background-dark: #161022;
+    }
 </style>
