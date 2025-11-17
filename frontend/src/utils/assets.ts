@@ -1,73 +1,108 @@
 // ============================================================================
-// CHAMPIONS ASSETS - Importaciones centralizadas
+// CHAMPIONS ASSETS - SET 16 (Lore & Legends)
 // ============================================================================
 
-// Importar todos los assets de campeones
-import AatroxImg from "../assets/Champions/Aatrox.png";
-import AhriImg from "../assets/Champions/Ahri.png";
-import AkaliImg from "../assets/Champions/Akali.png";
-import AsheImg from "../assets/Champions/Ashe.png";
-import BraumImg from "../assets/Champions/Braum.png";
-import CaitlynImg from "../assets/Champions/Caitlyn.png";
-import DariusImg from "../assets/Champions/Darius.png";
-import DrMundoImg from "../assets/Champions/Dr Mundo.png";
-import EzrealImg from "../assets/Champions/Ezreal.png";
-import GangplankImg from "../assets/Champions/Gangplank.png";
-import GarenImg from "../assets/Champions/Garen.png";
-import GnarImg from "../assets/Champions/Gnar.png";
-import GwenImg from "../assets/Champions/Gwen.png";
-import JannaImg from "../assets/Champions/Janna.png";
-import JarvanIVImg from "../assets/Champions/JarvanIV.png";
-import JayceImg from "../assets/Champions/Jayce.png";
-import JhinImg from "../assets/Champions/Jhin.png";
-import JinxImg from "../assets/Champions/Jinx.png";
-import KaiSaImg from "../assets/Champions/KaiSa.png";
-import KalistaImg from "../assets/Champions/Kalista.png";
-import KarmaImg from "../assets/Champions/Karma.png";
-import KatarinaImg from "../assets/Champions/Katarina.png";
-import KayleImg from "../assets/Champions/Kayle.png";
-import KennenImg from "../assets/Champions/Kennen.png";
-import KobukoImg from "../assets/Champions/Kobuko.png";
-import KogMawImg from "../assets/Champions/KogMaw.png";
-import KSanteImg from "../assets/Champions/KSante.png";
-import LeeSinImg from "../assets/Champions/Lee Sin.png";
-import LeonaImg from "../assets/Champions/Leona.png";
-import LucianImg from "../assets/Champions/Lucian.png";
-import LuluImg from "../assets/Champions/Lulu.png";
-import LuxImg from "../assets/Champions/Lux.png";
-import MalphiteImg from "../assets/Champions/Malphite.png";
-import MalzaharImg from "../assets/Champions/Malzahar.png";
-import NaafiriImg from "../assets/Champions/Naafiri.png";
-import NeekoImg from "../assets/Champions/Neeko.png";
-import PoppyImg from "../assets/Champions/Poppy.png";
-import RakanImg from "../assets/Champions/Rakan.png";
-import RammusImg from "../assets/Champions/Rammus.png";
-import RellImg from "../assets/Champions/Rell.png";
-import RyzeImg from "../assets/Champions/Ryze.png";
-import SamiraImg from "../assets/Champions/Samira.png";
-import SennaImg from "../assets/Champions/Senna.png";
-import SeraphineImg from "../assets/Champions/Seraphine.png";
-import SettImg from "../assets/Champions/Sett.png";
-import ShenImg from "../assets/Champions/Shen.png";
-import SivirImg from "../assets/Champions/Sivir.png";
-import SmolderImg from "../assets/Champions/Smolder.png";
-import SwainImg from "../assets/Champions/Swain.png";
-import SyndraImg from "../assets/Champions/Syndra.png";
-import TheMightyMechImg from "../assets/Champions/The Mighty Mech.png";
-import TwistedFateImg from "../assets/Champions/Twisted Fate.png";
-import UdyrImg from "../assets/Champions/Udyr.png";
-import VarusImg from "../assets/Champions/Varus.png";
-import ViImg from "../assets/Champions/Vi.png";
-import ViegoImg from "../assets/Champions/Viego.png";
-import VolibearImg from "../assets/Champions/Volibear.png";
-import XayahImg from "../assets/Champions/Xayah.png";
-import XinZhaoImg from "../assets/Champions/Xin Zhao.png";
-import YasuoImg from "../assets/Champions/Yasuo.png";
-import YoneImg from "../assets/Champions/Yone.png";
-import YuumiImg from "../assets/Champions/Yuumi.png";
-import ZacImg from "../assets/Champions/Zac.png";
-import ZiggsImg from "../assets/Champions/Ziggs.png";
-import ZyraImg from "../assets/Champions/Zyra.png";
+// Import all champion assets for Set 16
+import AatroxImg from "../assets/Champions/Aatrox.jpg";
+import AhriImg from "../assets/Champions/Ahri.jpg";
+import AmbessaImg from "../assets/Champions/Ambessa.jpg";
+import AniviaImg from "../assets/Champions/Anivia.jpg";
+import AnnieImg from "../assets/Champions/Annie.jpg";
+import ApheliosImg from "../assets/Champions/Aphelios.jpg";
+import AsheImg from "../assets/Champions/Ashe.jpg";
+import AurelionSolImg from "../assets/Champions/AurelionSol.jpg";
+import AzirImg from "../assets/Champions/Azir.jpg";
+import BardImg from "../assets/Champions/Bard.jpg";
+import BaronNashorImg from "../assets/Champions/Baron Nashor.jpg";
+import BelVethImg from "../assets/Champions/Bel_Veth.jpg";
+import BlitzcrankImg from "../assets/Champions/Blitzcrank.jpg";
+import BraumImg from "../assets/Champions/Braum.jpg";
+import BriarImg from "../assets/Champions/Briar.jpg";
+import BrockImg from "../assets/Champions/Brock.jpg";
+import CaitlynImg from "../assets/Champions/Caitlyn.jpg";
+import ChoGathImg from "../assets/Champions/ChoGath.jpg";
+import DariusImg from "../assets/Champions/Darius.jpg";
+import DianaImg from "../assets/Champions/Diana.jpg";
+import DravenImg from "../assets/Champions/Draven.jpg";
+import DrMundoImg from "../assets/Champions/DrMundo.jpg";
+import EkkoImg from "../assets/Champions/Ekko.jpg";
+import FiddlesticksImg from "../assets/Champions/Fiddlesticks.jpg";
+import FizzImg from "../assets/Champions/Fizz.jpg";
+import GalioImg from "../assets/Champions/Galio.jpg";
+import GangplankImg from "../assets/Champions/Gangplank.jpg";
+import GarenImg from "../assets/Champions/Garen.jpg";
+import GravesImg from "../assets/Champions/Graves.jpg";
+import GwenImg from "../assets/Champions/Gwen.jpg";
+import IllaoiImg from "../assets/Champions/Illaoi.jpg";
+import JarvanIVImg from "../assets/Champions/JarvanIV.jpg";
+import JhinImg from "../assets/Champions/Jhin.jpg";
+import JinxImg from "../assets/Champions/Jinx.jpg";
+import KaiSaImg from "../assets/Champions/KaiSa.jpg";
+import KalistaImg from "../assets/Champions/Kalista.jpg";
+import KennenImg from "../assets/Champions/Kennen.jpg";
+import KindredImg from "../assets/Champions/Kindred.jpg";
+import KobukoImg from "../assets/Champions/Kobuko.jpg";
+import KogMawImg from "../assets/Champions/Kog_Maw.jpg";
+import LeBlancImg from "../assets/Champions/Leblanc.jpg";
+import LeonaImg from "../assets/Champions/Leona.jpg";
+import LissandraImg from "../assets/Champions/Lissandra.jpg";
+import LorisImg from "../assets/Champions/Loris.jpg";
+import LucianSennaImg from "../assets/Champions/LucianSenna.jpg";
+import LuluImg from "../assets/Champions/Lulu.jpg";
+import LuxImg from "../assets/Champions/Lux.jpg";
+import MalzaharImg from "../assets/Champions/Malzahar.jpg";
+import MelImg from "../assets/Champions/Mel.jpg";
+import MilioImg from "../assets/Champions/Milio.jpg";
+import MissFortuneImg from "../assets/Champions/MissFortune.jpg";
+import NasusImg from "../assets/Champions/Nasus.jpg";
+import NautilusImg from "../assets/Champions/Nautilus.jpg";
+import NeekoImg from "../assets/Champions/Neeko.jpg";
+import NidaleeImg from "../assets/Champions/Nidalee.jpg";
+import OriannaImg from "../assets/Champions/Orianna.jpg";
+import OrnnImg from "../assets/Champions/Ornn.jpg";
+import PoppyImg from "../assets/Champions/Poppy.jpg";
+import QiyanaImg from "../assets/Champions/Quiyana.jpg";
+import RekSaiImg from "../assets/Champions/RekSai.jpg";
+import RenektonImg from "../assets/Champions/Renekton.jpg";
+import RiftHeraldImg from "../assets/Champions/RiftHerald.jpg";
+import RumbleImg from "../assets/Champions/Rumble.jpg";
+import RyzeImg from "../assets/Champions/Ryze.jpg";
+import SejuaniImg from "../assets/Champions/Sejuani.jpg";
+import SeraphineImg from "../assets/Champions/Seraphine.jpg";
+import SettImg from "../assets/Champions/Sett.jpg";
+import ShenImg from "../assets/Champions/Shen.jpg";
+import ShyvanaImg from "../assets/Champions/Shyvana.jpg";
+import SingedImg from "../assets/Champions/Singed.jpg";
+import SionImg from "../assets/Champions/Sion.jpg";
+import SkarnerImg from "../assets/Champions/Skarner.jpg";
+import SonaImg from "../assets/Champions/Sona.jpg";
+import SwainImg from "../assets/Champions/Swain.jpg";
+import SylasImg from "../assets/Champions/Sylas.jpg";
+import TahmKenchImg from "../assets/Champions/TahmKench.jpg";
+import TaricImg from "../assets/Champions/Taric.jpg";
+import TeemoImg from "../assets/Champions/Teemo.jpg";
+import THexImg from "../assets/Champions/THex.jpg";
+import ThreshImg from "../assets/Champions/Thresh.jpg";
+import TristanaImg from "../assets/Champions/Tristana.jpg";
+import TryndamereImg from "../assets/Champions/Tryndamere.jpg";
+import TwistedFateImg from "../assets/Champions/TwistedFate.jpg";
+import VayneImg from "../assets/Champions/Vayne.jpg";
+import VeigarImg from "../assets/Champions/Veigar.jpg";
+import ViImg from "../assets/Champions/Vi.jpg";
+import ViegoImg from "../assets/Champions/Viego.jpg";
+import VolibearImg from "../assets/Champions/Volibear.jpg";
+import WarwickImg from "../assets/Champions/Warwick.jpg";
+import WukongImg from "../assets/Champions/Wukong.jpg";
+import XerathImg from "../assets/Champions/Xerath.jpg";
+import XinZhaoImg from "../assets/Champions/XinZhao.jpg";
+import YasuoImg from "../assets/Champions/Yasuo.jpg";
+import YoneImg from "../assets/Champions/Yone.jpg";
+import YorickImg from "../assets/Champions/Yorick.jpg";
+import YunaraImg from "../assets/Champions/Yunara.jpg";
+import ZaahenImg from "../assets/Champions/Zaahen.jpg";
+import ZiggsImg from "../assets/Champions/Ziggs.jpg";
+import ZileanImg from "../assets/Champions/Zilean.jpg";
+import ZoeImg from "../assets/Champions/Zoe.jpg";
 
 // ============================================================================
 // ITEMS ASSETS - Importaciones centralizadas
@@ -130,79 +165,122 @@ import WarmogsArmorImg from "../assets/items/combined/warmogs-armor.png";
 // OBJETOS DE EXPORTACIÓN
 // ============================================================================
 
-// Objeto con todos los campeones para fácil acceso
-export const championAssets = {
-  Aatrox: AatroxImg,
-  Ahri: AhriImg,
-  Akali: AkaliImg,
-  Ashe: AsheImg,
-  Braum: BraumImg,
-  Caitlyn: CaitlynImg,
-  Darius: DariusImg,
-  "Dr Mundo": DrMundoImg,
-  Ezreal: EzrealImg,
-  Gangplank: GangplankImg,
-  Garen: GarenImg,
-  Gnar: GnarImg,
-  Gwen: GwenImg,
-  Janna: JannaImg,
-  JarvanIV: JarvanIVImg,
-  Jayce: JayceImg,
-  Jhin: JhinImg,
-  Jinx: JinxImg,
-  KaiSa: KaiSaImg,
-  Kalista: KalistaImg,
-  Karma: KarmaImg,
-  Katarina: KatarinaImg,
-  Kayle: KayleImg,
-  Kennen: KennenImg,
-  Kobuko: KobukoImg,
-  KogMaw: KogMawImg,
-  KSante: KSanteImg,
-  "Lee Sin": LeeSinImg,
-  Leona: LeonaImg,
-  Lucian: LucianImg,
-  Lulu: LuluImg,
-  Lux: LuxImg,
-  Malphite: MalphiteImg,
-  Malzahar: MalzaharImg,
-  Naafiri: NaafiriImg,
-  Neeko: NeekoImg,
-  Poppy: PoppyImg,
-  Rakan: RakanImg,
-  Rammus: RammusImg,
-  Rell: RellImg,
-  Ryze: RyzeImg,
-  Samira: SamiraImg,
-  Senna: SennaImg,
-  Seraphine: SeraphineImg,
-  Sett: SettImg,
-  Shen: ShenImg,
-  Sivir: SivirImg,
-  Smolder: SmolderImg,
-  Swain: SwainImg,
-  Syndra: SyndraImg,
-  "The Mighty Mech": TheMightyMechImg,
+// Champion assets mapping for Set 16
+export const championAssets: Record<string, any> = {
+  "Aatrox": AatroxImg,
+  "Ahri": AhriImg,
+  "Ambessa": AmbessaImg,
+  "Anivia": AniviaImg,
+  "Annie": AnnieImg,
+  "Aphelios": ApheliosImg,
+  "Ashe": AsheImg,
+  "Aurelion Sol": AurelionSolImg,
+  "Azir": AzirImg,
+  "Bard": BardImg,
+  "Baron Nashor": BaronNashorImg,
+  "Bel'Veth": BelVethImg,
+  "Blitzcrank": BlitzcrankImg,
+  "Braum": BraumImg,
+  "Briar": BriarImg,
+  "Brock": BrockImg,
+  "Caitlyn": CaitlynImg,
+  "Cho'Gath": ChoGathImg,
+  "Darius": DariusImg,
+  "Diana": DianaImg,
+  "Draven": DravenImg,
+  "Dr. Mundo": DrMundoImg,
+  "Ekko": EkkoImg,
+  "Fiddlesticks": FiddlesticksImg,
+  "Fizz": FizzImg,
+  "Galio": GalioImg,
+  "Gangplank": GangplankImg,
+  "Garen": GarenImg,
+  "Graves": GravesImg,
+  "Gwen": GwenImg,
+  "Illaoi": IllaoiImg,
+  "Jarvan IV": JarvanIVImg,
+  "Jhin": JhinImg,
+  "Jinx": JinxImg,
+  "Kai'Sa": KaiSaImg,
+  "Kalista": KalistaImg,
+  "Kennen": KennenImg,
+  "Kindred": KindredImg,
+  "Kobuko & Yuumi": KobukoImg,
+  "Kog'Maw": KogMawImg,
+  "LeBlanc": LeBlancImg,
+  "Leona": LeonaImg,
+  "Lissandra": LissandraImg,
+  "Loris": LorisImg,
+  "Lucian & Senna": LucianSennaImg,
+  "Lulu": LuluImg,
+  "Lux": LuxImg,
+  "Malzahar": MalzaharImg,
+  "Mel": MelImg,
+  "Milio": MilioImg,
+  "Miss Fortune": MissFortuneImg,
+  "Nasus": NasusImg,
+  "Nautilus": NautilusImg,
+  "Neeko": NeekoImg,
+  "Nidalee": NidaleeImg,
+  "Orianna": OriannaImg,
+  "Ornn": OrnnImg,
+  "Poppy": PoppyImg,
+  "Qiyana": QiyanaImg,
+  "Rek'Sai": RekSaiImg,
+  "Renekton": RenektonImg,
+  "Rift Herald": RiftHeraldImg,
+  "Rumble": RumbleImg,
+  "Ryze": RyzeImg,
+  "Sejuani": SejuaniImg,
+  "Seraphine": SeraphineImg,
+  "Sett": SettImg,
+  "Shen": ShenImg,
+  "Shyvana": ShyvanaImg,
+  "Singed": SingedImg,
+  "Sion": SionImg,
+  "Skarner": SkarnerImg,
+  "Sona": SonaImg,
+  "Swain": SwainImg,
+  "Sylas": SylasImg,
+  "Tahm Kench": TahmKenchImg,
+  "Taric": TaricImg,
+  "Teemo": TeemoImg,
+  "T-Hex": THexImg,
+  "Thresh": ThreshImg,
+  "Tristana": TristanaImg,
+  "Tryndamere": TryndamereImg,
   "Twisted Fate": TwistedFateImg,
-  Udyr: UdyrImg,
-  Varus: VarusImg,
-  Vi: ViImg,
-  Viego: ViegoImg,
-  Volibear: VolibearImg,
-  Xayah: XayahImg,
+  "Vayne": VayneImg,
+  "Veigar": VeigarImg,
+  "Vi": ViImg,
+  "Viego": ViegoImg,
+  "Volibear": VolibearImg,
+  "Warwick": WarwickImg,
+  "Wukong": WukongImg,
+  "Xerath": XerathImg,
   "Xin Zhao": XinZhaoImg,
-  Yasuo: YasuoImg,
-  Yone: YoneImg,
-  Yuumi: YuumiImg,
-  Zac: ZacImg,
-  Ziggs: ZiggsImg,
-  Zyra: ZyraImg,
+  "Yasuo": YasuoImg,
+  "Yone": YoneImg,
+  "Yorick": YorickImg,
+  "Yunara": YunaraImg,
+  "Zaahen": ZaahenImg,
+  "Ziggs": ZiggsImg,
+  "Zilean": ZileanImg,
+  "Zoe": ZoeImg,
 };
 
-// Objeto con todos los items para fácil acceso
-export const itemAssets = {
-  // Items básicos
-  "BF Sword": BfSwordImg,
+// ============================================================================
+// HELPER FUNCTIONS
+// ============================================================================
+
+/**
+ * Obtiene la imagen de un campeón a partir de una ruta de archivo o nombre
+ * @param imagePath - Ruta como "/src/assets/Champions/Braum.png" o nombre como "Braum"
+ * @returns La URL de la imagen o una imagen por defecto
+ */
+export const itemAssets: Record<string, any> = {
+  // Basic items
+  "B.F. Sword": BfSwordImg,
   "Chain Vest": ChainVestImg,
   "Frying Pan": FryingPanImg,
   "Giant's Belt": GiantsBeltImg,
@@ -213,7 +291,7 @@ export const itemAssets = {
   "Spatula": SpatulaImg,
   "Tear of the Goddess": TearOfTheGoddessImg,
 
-  // Items combinados
+  // Combined items
   "Adaptive Helm": AdaptiveHelmImg,
   "Archangel's Staff": ArchangelsStaffImg,
   "Bloodthirster": BloodthirsterImg,
@@ -336,83 +414,119 @@ export function getItemNames(): string[] {
   return Object.keys(itemAssets);
 }
 
-// Champion rarity/cost mapping - Data from tactics.tools/info/units
-// Rarity colors: 5 (Legendaria/Amarillo), 4 (Rara/Morado), 3 (Poco común/Azul), 2 (Común/Verde), 1 (Muy común/Gris)
+// Champion rarity/cost mapping - TFT Set 16 (Lore & Legends)
+// Based on data from CSV file
 export const championRarity: Record<string, number> = {
-    // Cost 1 - Gris (14 campeones)
-    Aatrox: 1,
-    Ezreal: 1,
-    Garen: 1,
-    Gnar: 1,
-    Kalista: 1,
-    Kayle: 1,
-    Kennen: 1,
-    Lucian: 1,
-    Malphite: 1,
-    Naafiri: 1,
-    Rell: 1,
-    Sivir: 1,
-    Syndra: 1,
-    Zac: 1,
-    
-    // Cost 2 - Verde (13 campeones)
-    "Dr Mundo": 2,
-    Gangplank: 2,
-    Janna: 2,
-    Jhin: 2,
-    KaiSa: 2,
-    Katarina: 2,
-    Kobuko: 2,
-    Lux: 2,
-    Rakan: 2,
-    Shen: 2,
-    Vi: 2,
-    Xayah: 2,
-    "Xin Zhao": 2,
-    
-    // Cost 3 - Azul (13 campeones)
-    Ahri: 3,
-    Caitlyn: 3,
-    Darius: 3,
-    Jayce: 3,
-    Lulu: 3,
-    Malzahar: 3,
-    Neeko: 3,
-    Senna: 3,
-    Swain: 3,
-    Udyr: 3,
-    Viego: 3,
-    Yasuo: 3,
-    Ziggs: 3,
-    
-    // Cost 4 - Morado (13 campeones)
-    Akali: 4,
-    Ashe: 4,
-    JarvanIV: 4,
-    Jinx: 4,
-    KSante: 4,
-    Karma: 4,
-    Leona: 4,
-    Poppy: 4,
-    Ryze: 4,
-    Samira: 4,
-    Sett: 4,
-    Volibear: 4,
-    Yuumi: 4,
-    
-    // Cost 5 - Amarillo (8 campeones)
-    Braum: 5,
-    Gwen: 5,
-    "Lee Sin": 5,
-    Seraphine: 5,
-    "Twisted Fate": 5,
-    Varus: 5,
-    Yone: 5,
-    Zyra: 5,
-    
-    // Champions not in standard pool (special)
-    "The Mighty Mech": 6,
-    KogMaw: 6,
-    Rammus: 6,
-    Smolder: 6,
+  // Cost 1
+  "Anivia": 1,
+  "Blitzcrank": 1,
+  "Briar": 1,
+  "Caitlyn": 1,
+  "Jarvan IV": 1,
+  "Jhin": 1,
+  "Kog'Maw": 1,
+  "Lulu": 1,
+  "Qiyana": 1,
+  "Rumble": 1,
+  "Shen": 1,
+  "Sona": 1,
+  "Teemo": 1,
+  "Viego": 1,
+
+  // Cost 2
+  "Aphelios": 2,
+  "Ashe": 2,
+  "Bard": 2,
+  "Cho'Gath": 2,
+  "Ekko": 2,
+  "Graves": 2,
+  "Neeko": 2,
+  "Orianna": 2,
+  "Poppy": 2,
+  "Rek'Sai": 2,
+  "Tristana": 2,
+  "Tryndamere": 2,
+  "Twisted Fate": 2,
+  "Vi": 2,
+  "Xin Zhao": 2,
+  "Yasuo": 2,
+  "Yorick": 2,
+
+  // Cost 3
+  "Ahri": 3,
+  "Darius": 3,
+  "Dr. Mundo": 3,
+  "Draven": 3,
+  "Gangplank": 3,
+  "Gwen": 3,
+  "Jinx": 3,
+  "Kennen": 3,
+  "Kobuko & Yuumi": 3,
+  "LeBlanc": 3,
+  "Leona": 3,
+  "Loris": 3,
+  "Milio": 3,
+  "Nautilus": 3,
+  "Sejuani": 3,
+  "Vayne": 3,
+  "Zoe": 3,
+
+  // Cost 4
+  "Ambessa": 4,
+  "Bel'Veth": 4,
+  "Braum": 4,
+  "Diana": 4,
+  "Fizz": 4,
+  "Garen": 4,
+  "Kai'Sa": 4,
+  "Kalista": 4,
+  "Lissandra": 4,
+  "Lux": 4,
+  "Miss Fortune": 4,
+  "Nasus": 4,
+  "Nidalee": 4,
+  "Renekton": 4,
+  "Rift Herald": 4,
+  "Seraphine": 4,
+  "Singed": 4,
+  "Skarner": 4,
+  "Swain": 4,
+  "Veigar": 4,
+  "Warwick": 4,
+  "Wukong": 4,
+  "Yone": 4,
+  "Yunara": 4,
+
+  // Cost 5
+  "Aatrox": 5,
+  "Annie": 5,
+  "Azir": 5,
+  "Fiddlesticks": 5,
+  "Galio": 5,
+  "Kindred": 5,
+  "Mel": 5,
+  "Ornn": 5,
+  "Ryze": 5,
+  "Sett": 5,
+  "Shyvana": 5,
+  "Tahm Kench": 5,
+  "Taric": 5,
+  "Thresh": 5,
+  "Volibear": 5,
+  "Xerath": 5,
+  "Ziggs": 5,
+  "Zilean": 5,
+
+  // Cost 6 (Special/Event units)
+  "T-Hex": 6,
+  "Lucian & Senna": 5,  // Soulbound unit
+
+  // Cost 7 (Legendary)
+  "Aurelion Sol": 7,
+  "Baron Nashor": 7,
+  "Brock": 7,
+  "Sylas": 7,
+  "Zaahen": 7,
 };
+
+

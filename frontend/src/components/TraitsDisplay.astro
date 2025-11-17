@@ -1,5 +1,5 @@
 ---
-import { calculateActiveTraits, type Trait, type TraitTier } from '../utils/traits';
+import { calculateActiveTraits, type Trait, type TraitTier, type ActiveTrait } from '../utils/traits';
 import { Image } from 'astro:assets';
 import { getChampionImageMeta } from '../utils/assets';
 
@@ -60,15 +60,15 @@ function getTierBgClass(tierIndex: number, totalTiers: number): string {
   ) : (
     <div class="traits-container">
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-        {activeTraits.map(({ trait, activeCount, activeTier, tierIndex }) => (
-          <div 
+        {activeTraits.map(({ trait, count, activeTier, tierIndex }) => (
+          <div
             class={`trait-card relative rounded-lg p-3 ${getTierBgClass(tierIndex, trait.tiers.length)} ${getTierColor(tierIndex, trait.tiers.length)}`}
             data-trait-name={trait.name}
             data-trait-description={trait.description}
             data-trait-icon={trait.icon.src}
             data-trait-tiers={JSON.stringify(trait.tiers)}
             data-trait-tier-index={tierIndex}
-            data-active-count={activeCount}
+            data-active-count={count}
             data-trait-champions={JSON.stringify(trait.champions)}
             data-all-champions={JSON.stringify(champions)}
           >
@@ -82,18 +82,18 @@ function getTierBgClass(tierIndex: number, totalTiers: number): string {
                   class="w-10 h-10 rounded-md trait-icon-white"
                 />
                 <span class="absolute -bottom-1 -right-1 bg-slate-900 border-2 border-current rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                  {activeCount}
+                  {count}
                 </span>
               </div>
               <div class="flex-1 min-w-0">
                 <p class="font-semibold text-white text-sm truncate">{trait.name}</p>
-                <p class="text-xs text-slate-300 opacity-80">{trait.type === 'origin' ? 'Origin' : 'Class'}</p>
+                <p class="text-xs text-slate-300 opacity-80">{trait.type === 'origin' ? 'Origin' : trait.type === 'class' ? 'Class' : 'Unique'}</p>
               </div>
             </div>
             
             <!-- Pre-renderizar imágenes de champions para este trait (ocultas) -->
             <div class="champion-images-cache" style="display: none;">
-              {trait.champions.map((championName) => {
+              {trait.champions.map((championName: string) => {
                 try {
                   const championImg = getChampionImageMeta(championName);
                   if (championImg) {

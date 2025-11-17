@@ -1,0 +1,598 @@
+{
+  "compositions": [
+    {
+      "id": 1,
+      "title": "Freljord Bruisers - Volibear Carry",
+      "slug": "freljord-bruisers-volibear",
+      "tier": "S",
+      "author": "TFT Set 16 Guide",
+      "tags": ["Freljord", "Bruiser", "Reroll"],
+      "description": "Composición de reroll centrada en Volibear como carry principal. Aprovecha el sistema de Chill de Freljord para controlar enemigos mientras los Bruisers absorben daño y curan con sus habilidades. Volibear se transforma con The Relentless Storm ganando vida y velocidad de ataque masiva.",
+      "gameplayMode": "Standard",
+      "compCode": "freljord-bruiser-voli",
+      "status": "published",
+      "createdAt": "2025-11-17T18:00:00.000Z",
+      "updatedAt": "2025-11-17T18:00:00.000Z",
+      "board": {
+        "champions": [
+          {
+            "name": "Volibear",
+            "position": { "row": 2, "col": 2 },
+            "items": ["Titan's Resolve", "Warmog's Armor", "Sunfire Cape"],
+            "stars": 3
+          },
+          {
+            "name": "Braum",
+            "position": { "row": 1, "col": 1 },
+            "items": ["Bramble Vest", "Dragon's Claw", "Gargoyle Stoneplate"],
+            "stars": 2
+          },
+          {
+            "name": "Sejuani",
+            "position": { "row": 1, "col": 3 },
+            "items": ["Adaptive Helm"],
+            "stars": 2
+          },
+          {
+            "name": "Ornn",
+            "position": { "row": 2, "col": 4 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Anivia",
+            "position": { "row": 3, "col": 1 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Tryndamere",
+            "position": { "row": 3, "col": 3 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Lissandra",
+            "position": { "row": 0, "col": 2 },
+            "items": ["Morellonomicon"],
+            "stars": 2
+          },
+          {
+            "name": "Ashe",
+            "position": { "row": 0, "col": 4 },
+            "items": [],
+            "stars": 2
+          }
+        ]
+      },
+      "coreItems": [
+        {
+          "name": "Titan's Resolve",
+          "description": "Essential para Volibear - proporciona AD, AP y resistencias mientras pelea"
+        },
+        {
+          "name": "Warmog's Armor",
+          "description": "Máxima vida para aprovechar el trait Bruiser y Freljord"
+        },
+        {
+          "name": "Sunfire Cape",
+          "description": "Daño AoE que sinergiza con Freljord Chill"
+        },
+        {
+          "name": "Bramble Vest",
+          "description": "Para Braum - refleja daño y protege al equipo"
+        }
+      ],
+      "augments": [
+        {
+          "name": "Bruiser Crest",
+          "description": "Añade el trait Bruiser a un campeón, aumentando la curación del equipo",
+          "icon": "bruiser-crest.png"
+        },
+        {
+          "name": "Metabolic Accelerator",
+          "description": "Los Bruisers curan 15% más, perfecto para esta comp",
+          "icon": "metabolic-accelerator.png"
+        },
+        {
+          "name": "Cold Front",
+          "description": "Aumenta el poder del Chill de Freljord",
+          "icon": "cold-front.png"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Bilgewater Gunslinger Flex",
+      "slug": "bilgewater-gunslinger-flex",
+      "tier": "S+",
+      "author": "TFT Set 16 Guide",
+      "tags": ["Bilgewater", "Gunslinger", "Flexible", "Fast 8"],
+      "description": "Composición flexible de Bilgewater aprovechando la mecánica única de convertir componentes en ítems completos durante combate. Miss Fortune y Graves como carries principales. Juega alrededor de nivel 8 para encontrar tus 5-costs. Los componentes se equipan estratégicamente para maximizar el poder en combate.",
+      "gameplayMode": "Standard",
+      "compCode": "bilgewater-gunslinger-mf",
+      "status": "published",
+      "createdAt": "2025-11-17T18:15:00.000Z",
+      "updatedAt": "2025-11-17T18:15:00.000Z",
+      "board": {
+        "champions": [
+          {
+            "name": "Miss Fortune",
+            "position": { "row": 3, "col": 2 },
+            "items": ["Giant Slayer", "Last Whisper", "Infinity Edge"],
+            "stars": 2
+          },
+          {
+            "name": "Graves",
+            "position": { "row": 2, "col": 3 },
+            "items": ["Guinsoo's Rageblade", "Titan's Resolve", "Bloodthirster"],
+            "stars": 2
+          },
+          {
+            "name": "Twisted Fate",
+            "position": { "row": 1, "col": 4 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Gangplank",
+            "position": { "row": 2, "col": 1 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Tahm Kench",
+            "position": { "row": 1, "col": 1 },
+            "items": ["Gargoyle Stoneplate"],
+            "stars": 2
+          },
+          {
+            "name": "Nautilus",
+            "position": { "row": 1, "col": 2 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Fizz",
+            "position": { "row": 0, "col": 3 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Illaoi",
+            "position": { "row": 3, "col": 1 },
+            "items": [],
+            "stars": 2
+          }
+        ]
+      },
+      "coreItems": [
+        {
+          "name": "Giant Slayer",
+          "description": "Core en Miss Fortune para eliminar frontlines tanques"
+        },
+        {
+          "name": "Last Whisper",
+          "description": "Penetración de armadura esencial para Gunslingers"
+        },
+        {
+          "name": "Guinsoo's Rageblade",
+          "description": "Escala el AS de Graves con sus ataques en cono"
+        },
+        {
+          "name": "Components",
+          "description": "Equipa componentes sueltos en unidades Bilgewater - se convertirán en ítems completos durante combate"
+        }
+      ],
+      "augments": [
+        {
+          "name": "Pirate's Treasure",
+          "description": "Bilgewater específico - mejora la conversión de componentes",
+          "icon": "pirates-treasure.png"
+        },
+        {
+          "name": "Gunslinger Crest",
+          "description": "Añade Gunslinger a un carry adicional",
+          "icon": "gunslinger-crest.png"
+        },
+        {
+          "name": "Component Grab Bag",
+          "description": "Componentes extra aprovechan la mecánica de Bilgewater",
+          "icon": "component-grab-bag.png"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Void Reroll - Bel'Veth Hypercarry",
+      "slug": "void-reroll-belveth",
+      "tier": "A",
+      "author": "TFT Set 16 Guide",
+      "tags": ["Void", "Reroll", "Hypercarry", "Void Rift"],
+      "description": "Composición agresiva de reroll jugando alrededor del Void Rift. Bel'Veth como hypercarry se transforma ganando stats masivos. Una vez en el Void Rift (bajo 40 HP), las unidades Void ejecutan enemigos bajo 25% HP. Juega agresivamente para perder vida controladamente y entrar al Rift.",
+      "gameplayMode": "Standard",
+      "compCode": "void-reroll-belveth",
+      "status": "published",
+      "createdAt": "2025-11-17T18:30:00.000Z",
+      "updatedAt": "2025-11-17T18:30:00.000Z",
+      "board": {
+        "champions": [
+          {
+            "name": "Bel'Veth",
+            "position": { "row": 2, "col": 2 },
+            "items": ["Guinsoo's Rageblade", "Titan's Resolve", "Edge of Night"],
+            "stars": 3
+          },
+          {
+            "name": "Cho'Gath",
+            "position": { "row": 1, "col": 1 },
+            "items": ["Warmog's Armor", "Gargoyle Stoneplate"],
+            "stars": 3
+          },
+          {
+            "name": "Rek'Sai",
+            "position": { "row": 2, "col": 1 },
+            "items": [],
+            "stars": 3
+          },
+          {
+            "name": "Kog'Maw",
+            "position": { "row": 3, "col": 2 },
+            "items": [],
+            "stars": 3
+          },
+          {
+            "name": "Malzahar",
+            "position": { "row": 3, "col": 3 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Kai'Sa",
+            "position": { "row": 0, "col": 3 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Baron Nashor",
+            "position": { "row": 1, "col": 3 },
+            "items": ["Sunfire Cape"],
+            "stars": 1
+          }
+        ]
+      },
+      "coreItems": [
+        {
+          "name": "Guinsoo's Rageblade",
+          "description": "Essential para Bel'Veth - escala su AS con takedowns"
+        },
+        {
+          "name": "Titan's Resolve",
+          "description": "Stacks rápido con su alto AS y le da durabilidad"
+        },
+        {
+          "name": "Edge of Night",
+          "description": "Protege a Bel'Veth de CC al entrar en combate"
+        },
+        {
+          "name": "Warmog's Armor",
+          "description": "Cho'Gath tanquea mientras bajas a Void Rift HP"
+        }
+      ],
+      "augments": [
+        {
+          "name": "Void Invasion",
+          "description": "Entra al Void Rift a mayor HP (60 en vez de 40)",
+          "icon": "void-invasion.png"
+        },
+        {
+          "name": "Slayer Crest",
+          "description": "Añade Slayer a Bel'Veth para más AS en takedowns",
+          "icon": "slayer-crest.png"
+        },
+        {
+          "name": "Cybernetic Implants",
+          "description": "Stats extra por cada ítem equipado",
+          "icon": "cybernetic-implants.png"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Demacia Defenders - Galio Carry",
+      "slug": "demacia-defenders-galio",
+      "tier": "A",
+      "author": "TFT Set 16 Guide",
+      "tags": ["Demacia", "Defender", "Tanky", "Frontline"],
+      "description": "Composición ultra tanque con Demacia proporcionando armadura y MR masivos más shields al inicio de combate. Galio se vuelve Heroico después de 4 combates ganando 600 HP, 75 Armor/MR, 60 AD y 60 AP. Los Defenders ganan resistencias y las comparten con aliados cercanos. Composición de slow roll.",
+      "gameplayMode": "Standard",
+      "compCode": "demacia-defenders-galio",
+      "status": "published",
+      "createdAt": "2025-11-17T18:45:00.000Z",
+      "updatedAt": "2025-11-17T18:45:00.000Z",
+      "board": {
+        "champions": [
+          {
+            "name": "Galio",
+            "position": { "row": 2, "col": 2 },
+            "items": ["Warmog's Armor", "Gargoyle Stoneplate", "Sunfire Cape"],
+            "stars": 2
+          },
+          {
+            "name": "Garen",
+            "position": { "row": 1, "col": 2 },
+            "items": ["Bramble Vest", "Dragon's Claw", "Ionic Spark"],
+            "stars": 2
+          },
+          {
+            "name": "Jarvan IV",
+            "position": { "row": 1, "col": 1 },
+            "items": [],
+            "stars": 3
+          },
+          {
+            "name": "Poppy",
+            "position": { "row": 1, "col": 3 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Lux",
+            "position": { "row": 3, "col": 2 },
+            "items": ["Morellonomicon", "Jeweled Gauntlet"],
+            "stars": 2
+          },
+          {
+            "name": "Sona",
+            "position": { "row": 3, "col": 1 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Vayne",
+            "position": { "row": 3, "col": 3 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Xin Zhao",
+            "position": { "row": 0, "col": 2 },
+            "items": [],
+            "stars": 2
+          }
+        ]
+      },
+      "coreItems": [
+        {
+          "name": "Warmog's Armor",
+          "description": "Vida masiva para Galio cuando se vuelve Heroico"
+        },
+        {
+          "name": "Gargoyle Stoneplate",
+          "description": "Sinergia perfecta con Demacia - multiplica resistencias"
+        },
+        {
+          "name": "Sunfire Cape",
+          "description": "Daño AoE mientras Galio tanquea el frontline"
+        },
+        {
+          "name": "Bramble Vest",
+          "description": "Garen refleja daño y protege con Defender"
+        }
+      ],
+      "augments": [
+        {
+          "name": "Defender Heart",
+          "description": "Ganar +1 Defender, mejora los shields compartidos",
+          "icon": "defender-heart.png"
+        },
+        {
+          "name": "Heroic Presence",
+          "description": "Galio se vuelve Heroico más rápido (3 combates en vez de 4)",
+          "icon": "heroic-presence.png"
+        },
+        {
+          "name": "Stand United",
+          "description": "Demacia específico - mejora los shields iniciales",
+          "icon": "stand-united.png"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Ionia Slayers - Yone/Yasuo Backline Access",
+      "slug": "ionia-slayers-yone",
+      "tier": "S",
+      "author": "TFT Set 16 Guide",
+      "tags": ["Ionia", "Slayer", "Assassin", "Fast 8"],
+      "description": "Composición flexible de Ionia con Yone y Yasuo como carries principales aprovechando el trait Blade Brothers. Ionia proporciona AS masivo que se amplifica después del primer cast. Los Slayers ganan AS que se triplica con takedowns. Yone y Yasuo trabajan juntos - Yasuo asiste los casts de Yone haciendo daño adicional.",
+      "gameplayMode": "Standard",
+      "compCode": "ionia-slayers-yone",
+      "status": "published",
+      "createdAt": "2025-11-17T19:00:00.000Z",
+      "updatedAt": "2025-11-17T19:00:00.000Z",
+      "board": {
+        "champions": [
+          {
+            "name": "Yone",
+            "position": { "row": 2, "col": 3 },
+            "items": ["Infinity Edge", "Last Whisper", "Bloodthirster"],
+            "stars": 2
+          },
+          {
+            "name": "Yasuo",
+            "position": { "row": 2, "col": 1 },
+            "items": ["Hand of Justice", "Guinsoo's Rageblade"],
+            "stars": 2
+          },
+          {
+            "name": "Sett",
+            "position": { "row": 1, "col": 2 },
+            "items": ["Gargoyle Stoneplate"],
+            "stars": 2
+          },
+          {
+            "name": "Wukong",
+            "position": { "row": 1, "col": 3 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Shen",
+            "position": { "row": 1, "col": 1 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Kennen",
+            "position": { "row": 0, "col": 2 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Ahri",
+            "position": { "row": 3, "col": 2 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Xin Zhao",
+            "position": { "row": 0, "col": 4 },
+            "items": [],
+            "stars": 2
+          }
+        ]
+      },
+      "coreItems": [
+        {
+          "name": "Infinity Edge",
+          "description": "Core en Yone - maximiza su daño físico y mágico"
+        },
+        {
+          "name": "Last Whisper",
+          "description": "Penetración de armadura para eliminar backline"
+        },
+        {
+          "name": "Bloodthirster",
+          "description": "Sustain para Yone mientras salta al backline"
+        },
+        {
+          "name": "Guinsoo's Rageblade",
+          "description": "Yasuo escala con el AS de Ionia y Slayer"
+        }
+      ],
+      "augments": [
+        {
+          "name": "Blade Brothers II",
+          "description": "Mejora la sinergia entre Yasuo y Yone",
+          "icon": "blade-brothers.png"
+        },
+        {
+          "name": "Slayer Crest",
+          "description": "Añade Slayer a un carry adicional",
+          "icon": "slayer-crest.png"
+        },
+        {
+          "name": "Way of the Ionian",
+          "description": "Ionia específico - aumenta el AS bonus",
+          "icon": "way-of-the-ionian.png"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Legendary Board - 5 Cost Flex",
+      "slug": "legendary-board-flex",
+      "tier": "S+",
+      "author": "TFT Set 16 Guide",
+      "tags": ["Legendary", "Cost 7", "Late Game", "Level 9"],
+      "description": "Composición de final de juego jugando múltiples 5-costs y potencialmente 7-costs legendarios. Requiere economía fuerte para llegar a nivel 9. Aurelion Sol es una unidad de 3 hexes que gana poder con Stardust. Sylas roba habilidades enemigas. Ziggs y Zilean proporcionan control y daño AoE masivo.",
+      "gameplayMode": "Standard",
+      "compCode": "legendary-board-flex",
+      "status": "published",
+      "createdAt": "2025-11-17T19:15:00.000Z",
+      "updatedAt": "2025-11-17T19:15:00.000Z",
+      "board": {
+        "champions": [
+          {
+            "name": "Aurelion Sol",
+            "position": { "row": 2, "col": 1 },
+            "items": ["Rabadon's Deathcap", "Archangel's Staff", "Jeweled Gauntlet"],
+            "stars": 2
+          },
+          {
+            "name": "Zilean",
+            "position": { "row": 3, "col": 3 },
+            "items": ["Morellonomicon", "Blue Buff"],
+            "stars": 2
+          },
+          {
+            "name": "Ziggs",
+            "position": { "row": 0, "col": 4 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Sylas",
+            "position": { "row": 1, "col": 2 },
+            "items": ["Gargoyle Stoneplate", "Warmog's Armor"],
+            "stars": 1
+          },
+          {
+            "name": "Thresh",
+            "position": { "row": 1, "col": 4 },
+            "items": ["Evenshroud"],
+            "stars": 2
+          },
+          {
+            "name": "Ornn",
+            "position": { "row": 0, "col": 1 },
+            "items": [],
+            "stars": 2
+          },
+          {
+            "name": "Fiddlesticks",
+            "position": { "row": 3, "col": 1 },
+            "items": [],
+            "stars": 2
+          }
+        ]
+      },
+      "coreItems": [
+        {
+          "name": "Rabadon's Deathcap",
+          "description": "Maximiza el AP de Aurelion Sol para sus explosiones estelares"
+        },
+        {
+          "name": "Archangel's Staff",
+          "description": "Maná y AP - Aurelion Sol necesita castear para ganar Stardust"
+        },
+        {
+          "name": "Jeweled Gauntlet",
+          "description": "Crits mágicos devastadores con el alto AP de ASol"
+        },
+        {
+          "name": "Morellonomicon",
+          "description": "Zilean aplica burn con sus bombas de tiempo"
+        }
+      ],
+      "augments": [
+        {
+          "name": "Level Up!",
+          "description": "Llega a nivel 9 más rápido para encontrar legendarios"
+        },
+        {
+          "name": "Celestial Blessing III",
+          "description": "Heal masivo al entrar en combate - protege tu board caro",
+          "icon": "celestial-blessing.png"
+        },
+        {
+          "name": "Star Forger Crown",
+          "description": "Aurelion Sol específico - gana Stardust más rápido",
+          "icon": "star-forger-crown.png"
+        }
+      ]
+    }
+  ]
+}
+
