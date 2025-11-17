@@ -1,12 +1,17 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { getChampionImage, championAssets } from "../../utils/assets";
+import Card from "../../components/ui/Card.astro";
+import Badge from "../../components/ui/Badge.astro";
+import Section from "../../components/ui/Section.astro";
+import Container from "../../components/ui/Container.astro";
+import { championAssets } from "../../utils/assets";
 import { getCompositions } from "../../lib/strapi";
 import { Image } from "astro:assets";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import relativeTime from "dayjs/plugin/relativeTime";
 import es from "dayjs/locale/es";
+
 dayjs.locale(es);
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -32,34 +37,61 @@ const compositionsByTier = compositions
 // Define tier order
 const tierOrder = ["S Tier", "A Tier", "B Tier", "C Tier"];
 
-// Function to format tags for display
-function formatTags(tags: any): { text: string; style: string }[] {
-    let tagArray: string[] = [];
-
-    if (typeof tags === "string") {
-        tagArray = tags.split(",").map((tag) => tag.trim());
-    } else if (Array.isArray(tags)) {
-        tagArray = tags;
-    } else {
-        return [];
+// Mapear tier a variante de badge
+function getTierBadgeVariant(tier: string) {
+    switch (tier) {
+        case "S Tier":
+            return "primary";
+        case "A Tier":
+            return "success";
+        case "B Tier":
+            return "warning";
+        case "C Tier":
+            return "default";
+        default:
+            return "default";
     }
+}
 
-    return tagArray.slice(0, 2).map((tag) => {
-        // Determine tag style based on content
-        let style = "text-primary bg-primary/20";
+// Mapear tier de card
+function getCardTier(tier: string): "gold" | "silver" | "bronze" | null {
+    switch (tier) {
+        case "S Tier":
+            return "gold";
+        case "A Tier":
+            return "silver";
+        case "B Tier":
+            return "bronze";
+        default:
+            return null;
+    }
+}
 
-        if (tag.toLowerCase().includes("fast")) {
-            style = "bg-blue-500/20 text-blue-400";
-        } else if (tag.toLowerCase().includes("reroll")) {
-            style = "bg-green-500/20 text-green-400";
-        } else if (tag.toLowerCase().includes("aggressive")) {
-            style = "bg-red-500/20 text-red-400";
-        } else if (tag.toLowerCase().includes("defensive")) {
-            style = "bg-yellow-500/20 text-yellow-400";
-        }
+// Function to get badge variant based on tag
+function getTagVariant(
+    tag: string,
+): "fast" | "reroll" | "aggressive" | "defensive" | "primary" {
+    const lowerTag = tag.toLowerCase();
+    if (lowerTag.includes("fast")) return "fast";
+    if (lowerTag.includes("reroll")) return "reroll";
+    if (lowerTag.includes("aggressive") || lowerTag.includes("agresivo"))
+        return "aggressive";
+    if (lowerTag.includes("defensive") || lowerTag.includes("defensivo"))
+        return "defensive";
+    return "primary";
+}
 
-        return { text: tag, style };
-    });
+// Function to format tags
+function formatTags(tags: any): string[] {
+    if (typeof tags === "string") {
+        return tags
+            .split(",")
+            .map((tag) => tag.trim())
+            .slice(0, 3);
+    } else if (Array.isArray(tags)) {
+        return tags.slice(0, 3);
+    }
+    return [];
 }
 
 function getUpdateTime(composition: any) {
@@ -69,148 +101,210 @@ function getUpdateTime(composition: any) {
 }
 ---
 
-<Layout title="TFT Compositions">
-    <div class="bg-background-dark font-display text-gray-200">
-        <div class="flex h-auto min-h-screen w-full flex-col">
-            <main class="flex-1">
-                <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
-                    <h1 class="text-4xl font-bold tracking-tight text-white">
-                        TFT Compositions by AKAWonder
-                    </h1>
-
-                    {
-                        error && (
-                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-8">
-                                <p>
-                                    Error al cargar las composiciones desde
-                                    Strapi. Por favor, verifica la
+<Layout title="TFT Compositions by AKAWonder">
+    <div class="bg-background-dark min-h-screen">
+        <Container maxWidth="xl">
+            <!-- Hero Section -->
+            <Section
+                title="TFT Compositions"
+                subtitle="Las mejores composiciones de AKAWonder actualizadas para el meta actual"
+                variant="gradient"
+                spacing="xl"
+                divider={true}
+                dividerPosition="bottom"
+            >
+                {
+                    error && (
+                        <Card
+                            variant="outlined"
+                            padding="lg"
+                            className="border-red-500/50 bg-red-500/10"
+                        >
+                            <div class="text-red-400">
+                                <h3 class="text-lg font-bold mb-2">
+                                    <i class="fa-solid fa-exclamation-triangle mr-2" />
+                                    Error al cargar las composiciones
+                                </h3>
+                                <p class="mb-3">
+                                    No se pudieron cargar las composiciones
+                                    desde Strapi. Por favor, verifica la
                                     configuración.
                                 </p>
-                                <p class="text-sm mt-2">Asegúrate de que:</p>
-                                <ul class="text-sm mt-1 ml-4 list-disc">
-                                    <li>
-                                        El content type 'compositions' existe en
-                                        Strapi
-                                    </li>
-                                    <li>
-                                        Los permisos públicos están habilitados
-                                        para ese content type
-                                    </li>
-                                    <li>
-                                        O tienes un token válido configurado
-                                    </li>
-                                </ul>
+                                <div class="text-sm space-y-1">
+                                    <p class="font-semibold">
+                                        Asegúrate de que:
+                                    </p>
+                                    <ul class="ml-4 list-disc space-y-1 text-red-300">
+                                        <li>
+                                            El content type 'compositions'
+                                            existe en Strapi
+                                        </li>
+                                        <li>
+                                            Los permisos públicos están
+                                            habilitados para ese content type
+                                        </li>
+                                        <li>
+                                            O tienes un token válido configurado
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        )
-                    }
+                        </Card>
+                    )
+                }
+            </Section>
 
-                    {
-                        compositions &&
-                            tierOrder.map((tier) => {
-                                const tieredComps =
-                                    compositionsByTier[tier] || [];
-                                if (tieredComps.length === 0) return null;
+            <!-- Compositions by Tier -->
+            {
+                compositions &&
+                    tierOrder.map((tier) => {
+                        const tieredComps = compositionsByTier[tier] || [];
+                        if (tieredComps.length === 0) return null;
 
-                                return (
-                                    <div class="mt-12">
-                                        <div class="flex items-baseline gap-4">
-                                            <h2 class="text-3xl font-bold text-white">
-                                                {tier}
-                                            </h2>
-                                            <div class="h-px flex-1 bg-primary/30" />
-                                        </div>
-                                        <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-                                            {tieredComps.map((comp: any) => (
-                                                <a
-                                                    href={`/compositions/${comp.slug}`}
-                                                    class="group relative flex cursor-pointer flex-col overflow-hidden rounded-lg bg-black/10 shadow-lg transition-all hover:scale-105"
-                                                >
-                                                    <div class="aspect-[16/9] w-full overflow-hidden relative">
-                                                        {comp.cover ? (
-                                                            <img
-                                                                src={comp.cover}
-                                                                alt={comp.title}
-                                                                class="h-full w-full object-cover object-center"
-                                                                loading="lazy"
-                                                                decoding="async"
-                                                            />
-                                                        ) : (
-                                                            <Image
-                                                                src={
-                                                                    championAssets.Aatrox
-                                                                }
-                                                                alt={comp.title}
-                                                                class="h-full w-full object-cover object-center"
-                                                                width={480}
-                                                                height={270}
-                                                                quality={80}
-                                                                loading="lazy"
-                                                                decoding="async"
-                                                            />
+                        return (
+                            <Section
+                                title={tier}
+                                spacing="lg"
+                                variant="default"
+                                id={tier.toLowerCase().replace(" ", "-")}
+                            >
+                                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
+                                    {tieredComps.map((comp: any) => (
+                                        <Card
+                                            as="a"
+                                            href={`/compositions/${comp.slug}`}
+                                            variant="gradient"
+                                            hover={true}
+                                            rounded="xl"
+                                            shadow="lg"
+                                            padding="none"
+                                            tier={getCardTier(tier)}
+                                            className="group"
+                                        >
+                                            {/* Cover Image */}
+                                            <div class="aspect-[16/9] w-full overflow-hidden rounded-t-xl relative">
+                                                {comp.cover ? (
+                                                    <img
+                                                        src={comp.cover}
+                                                        alt={comp.title}
+                                                        class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-110"
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
+                                                ) : (
+                                                    <Image
+                                                        src={
+                                                            championAssets.Aatrox
+                                                        }
+                                                        alt={comp.title}
+                                                        class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-110"
+                                                        width={480}
+                                                        height={270}
+                                                        quality={80}
+                                                        loading="lazy"
+                                                        decoding="async"
+                                                    />
+                                                )}
+                                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+                                                {/* Tier Badge Overlay */}
+                                                <div class="absolute top-3 left-3">
+                                                    <Badge
+                                                        variant={getTierBadgeVariant(
+                                                            tier,
                                                         )}
-                                                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                                                    </div>
-                                                    <div class="p-4">
-                                                        <h3 class="text-lg font-bold text-white">
-                                                            {comp.title}
-                                                        </h3>
-                                                        <div class="mt-2 flex flex-wrap gap-2">
-                                                            {formatTags(
-                                                                comp.tags,
-                                                            ).map(
-                                                                (tag: any) => (
-                                                                    <span
-                                                                        class={`rounded px-2 py-1 text-xs font-medium ${tag.style}`}
-                                                                    >
-                                                                        {
-                                                                            tag.text
-                                                                        }
-                                                                    </span>
-                                                                ),
-                                                            )}
-                                                        </div>
-                                                        <p class="mt-2 text-sm text-gray-400">
-                                                            Actualizado{" "}
-                                                            {getUpdateTime(
-                                                                comp,
-                                                            )}
-                                                        </p>
-                                                    </div>
-                                                </a>
-                                            ))}
-                                        </div>
-                                    </div>
-                                );
-                            })
-                    }
+                                                        icon="star"
+                                                        size="sm"
+                                                    >
+                                                        {tier}
+                                                    </Badge>
+                                                </div>
+                                            </div>
 
-                    {
-                        compositions && compositions.length === 0 && (
-                            <div class="text-center py-12">
-                                <p class="text-xl text-gray-400">
+                                            {/* Content */}
+                                            <div class="p-4">
+                                                <h3 class="text-lg font-bold text-white mb-3 line-clamp-2 min-h-[3.5rem]">
+                                                    {comp.title}
+                                                </h3>
+
+                                                {/* Tags */}
+                                                {comp.tags && (
+                                                    <div class="flex flex-wrap gap-2 mb-3">
+                                                        {formatTags(
+                                                            comp.tags,
+                                                        ).map((tag: string) => (
+                                                            <Badge
+                                                                variant={getTagVariant(
+                                                                    tag,
+                                                                )}
+                                                                size="xs"
+                                                            >
+                                                                {tag}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* Update Time */}
+                                                <div class="flex items-center gap-2 text-sm text-slate-400">
+                                                    <i class="fa-solid fa-clock text-xs" />
+                                                    <span>
+                                                        Actualizado{" "}
+                                                        {getUpdateTime(comp)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </Card>
+                                    ))}
+                                </div>
+                            </Section>
+                        );
+                    })
+            }
+
+            <!-- Empty State -->
+            {
+                compositions && compositions.length === 0 && (
+                    <Section spacing="xl">
+                        <Card
+                            variant="glass"
+                            padding="xl"
+                            className="text-center"
+                        >
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="text-6xl opacity-50">
+                                    <i class="fa-solid fa-folder-open" />
+                                </div>
+                                <h3 class="text-2xl font-bold text-white">
+                                    No hay composiciones disponibles
+                                </h3>
+                                <p class="text-slate-400 max-w-md">
                                     No hay composiciones disponibles en este
-                                    momento.
+                                    momento. Vuelve más tarde para ver las
+                                    últimas estrategias.
                                 </p>
                             </div>
-                        )
-                    }
-                </div>
-            </main>
-        </div>
+                        </Card>
+                    </Section>
+                )
+            }
+        </Container>
     </div>
 </Layout>
 
 <style>
-    /* Custom CSS variables matching your design */
-    :root {
-        --primary: #5211d4;
-        --background-light: #f6f6f8;
-        --background-dark: #161022;
+    /* Animación suave para las cards */
+    @media (prefers-reduced-motion: no-preference) {
+        .group {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
     }
 
-    .dark {
-        --primary: #5211d4;
-        --background-light: #f6f6f8;
-        --background-dark: #161022;
+    /* Line clamp para títulos */
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 </style>
