@@ -1,0 +1,132 @@
+---
+/**
+ * Badge Component - Componente de insignia/etiqueta reutilizable
+ *
+ * @param variant - Estilo del badge: 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info'
+ * @param size - Tamaño del badge: 'xs' | 'sm' | 'md' | 'lg'
+ * @param rounded - Si el badge debe ser redondeado: boolean
+ * @param outlined - Si el badge debe tener solo borde: boolean
+ * @param icon - Nombre del icono (opcional)
+ * @param className - Clases adicionales
+ */
+
+export interface Props {
+    variant?: 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info' | 'fast' | 'reroll' | 'aggressive' | 'defensive';
+    size?: 'xs' | 'sm' | 'md' | 'lg';
+    rounded?: boolean;
+    outlined?: boolean;
+    icon?: string;
+    className?: string;
+}
+
+const {
+    variant = 'default',
+    size = 'sm',
+    rounded = false,
+    outlined = false,
+    icon,
+    className = '',
+} = Astro.props;
+
+// Estilos base según variante
+const variantClasses = {
+    default: outlined
+        ? 'border-2 border-slate-500 text-slate-300 bg-transparent hover:bg-slate-500/10'
+        : 'bg-slate-500/20 text-slate-300 border border-slate-500/30',
+    primary: outlined
+        ? 'border-2 border-primary text-primary bg-transparent hover:bg-primary/10'
+        : 'bg-primary/20 text-primary border border-primary/30',
+    success: outlined
+        ? 'border-2 border-green-500 text-green-400 bg-transparent hover:bg-green-500/10'
+        : 'bg-green-500/20 text-green-400 border border-green-500/30',
+    warning: outlined
+        ? 'border-2 border-yellow-500 text-yellow-400 bg-transparent hover:bg-yellow-500/10'
+        : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30',
+    error: outlined
+        ? 'border-2 border-red-500 text-red-400 bg-transparent hover:bg-red-500/10'
+        : 'bg-red-500/20 text-red-400 border border-red-500/30',
+    info: outlined
+        ? 'border-2 border-blue-500 text-blue-400 bg-transparent hover:bg-blue-500/10'
+        : 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+    fast: outlined
+        ? 'border-2 border-blue-500 text-blue-400 bg-transparent hover:bg-blue-500/10'
+        : 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+    reroll: outlined
+        ? 'border-2 border-green-500 text-green-400 bg-transparent hover:bg-green-500/10'
+        : 'bg-green-500/20 text-green-400 border border-green-500/30',
+    aggressive: outlined
+        ? 'border-2 border-red-500 text-red-400 bg-transparent hover:bg-red-500/10'
+        : 'bg-red-500/20 text-red-400 border border-red-500/30',
+    defensive: outlined
+        ? 'border-2 border-yellow-500 text-yellow-400 bg-transparent hover:bg-yellow-500/10'
+        : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30',
+};
+
+// Tamaños
+const sizeClasses = {
+    xs: 'text-[0.625rem] px-1.5 py-0.5 gap-1',
+    sm: 'text-xs px-2 py-1 gap-1',
+    md: 'text-sm px-3 py-1.5 gap-1.5',
+    lg: 'text-base px-4 py-2 gap-2',
+};
+
+// Tamaño de iconos según el tamaño del badge
+const iconSizeClasses = {
+    xs: 'text-xs',
+    sm: 'text-sm',
+    md: 'text-base',
+    lg: 'text-lg',
+};
+
+// Border radius
+const roundedClass = rounded ? 'rounded-full' : 'rounded';
+
+// Combinar todas las clases
+const classes = [
+    'inline-flex items-center justify-center',
+    'font-semibold',
+    'transition-all duration-200',
+    'whitespace-nowrap',
+    variantClasses[variant],
+    sizeClasses[size],
+    roundedClass,
+    className,
+].filter(Boolean).join(' ');
+---
+
+<span class={classes}>
+    {icon && (
+        <i class={`fa-solid fa-${icon} ${iconSizeClasses[size]}`}></i>
+    )}
+    <slot />
+</span>
+
+<style>
+    span {
+        backdrop-filter: blur(4px);
+    }
+
+    /* Animación de aparición */
+    @media (prefers-reduced-motion: no-preference) {
+        span {
+            animation: badgeFadeIn 0.2s ease-out;
+        }
+    }
+
+    @keyframes badgeFadeIn {
+        from {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    /* Efecto hover sutil */
+    span:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.1);
+    }
+</style>

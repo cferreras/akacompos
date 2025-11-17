@@ -1,0 +1,337 @@
+---
+/**
+ * Tooltip Component - Componente de tooltip reutilizable
+ *
+ * @param content - Contenido del tooltip (string o HTML)
+ * @param position - Posición del tooltip: 'top' | 'bottom' | 'left' | 'right' | 'auto'
+ * @param delay - Retraso antes de mostrar (ms)
+ * @param maxWidth - Ancho máximo del tooltip
+ * @param className - Clases adicionales para el contenedor
+ * @param tooltipClassName - Clases adicionales para el tooltip
+ */
+
+export interface Props {
+    content: string;
+    position?: 'top' | 'bottom' | 'left' | 'right' | 'auto';
+    delay?: number;
+    maxWidth?: string;
+    className?: string;
+    tooltipClassName?: string;
+}
+
+const {
+    content,
+    position = 'auto',
+    delay = 150,
+    maxWidth = '20rem',
+    className = '',
+    tooltipClassName = '',
+} = Astro.props;
+
+const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class={`tooltip-wrapper ${className}`} data-tooltip-wrapper>
+    <div class="tooltip-trigger" data-tooltip-trigger>
+        <slot />
+    </div>
+
+    <div
+        id={tooltipId}
+        class={`tooltip-content ${tooltipClassName}`}
+        data-tooltip-content
+        data-position={position}
+        data-delay={delay}
+        style={`max-width: ${maxWidth};`}
+        role="tooltip"
+        aria-hidden="true"
+    >
+        <div class="tooltip-inner">
+            <Fragment set:html={content} />
+        </div>
+        <div class="tooltip-arrow" data-tooltip-arrow></div>
+    </div>
+</div>
+
+<script>
+    interface TooltipState {
+        isVisible: boolean;
+        timeoutId: number | null;
+        updatePositionFrame: number | null;
+    }
+
+    class TooltipManager {
+        private wrapper: HTMLElement;
+        private trigger: HTMLElement;
+        private tooltip: HTMLElement;
+        private arrow: HTMLElement;
+        private state: TooltipState;
+        private position: string;
+        private delay: number;
+
+        constructor(wrapper: HTMLElement) {
+            this.wrapper = wrapper;
+            this.trigger = wrapper.querySelector('[data-tooltip-trigger]') as HTMLElement;
+            this.tooltip = wrapper.querySelector('[data-tooltip-content]') as HTMLElement;
+            this.arrow = wrapper.querySelector('[data-tooltip-arrow]') as HTMLElement;
+            this.position = this.tooltip.dataset.position || 'auto';
+            this.delay = parseInt(this.tooltip.dataset.delay || '150');
+
+            this.state = {
+                isVisible: false,
+                timeoutId: null,
+                updatePositionFrame: null,
+            };
+
+            this.init();
+        }
+
+        private init() {
+            this.trigger.addEventListener('mouseenter', () => this.show());
+            this.trigger.addEventListener('mouseleave', () => this.hide());
+            this.trigger.addEventListener('focus', () => this.show());
+            this.trigger.addEventListener('blur', () => this.hide());
+
+            // Touch support
+            this.trigger.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.toggle();
+            }, { passive: false });
+        }
+
+        private show() {
+            if (this.state.timeoutId) {
+                clearTimeout(this.state.timeoutId);
+            }
+
+            this.state.timeoutId = window.setTimeout(() => {
+                this.state.isVisible = true;
+                this.tooltip.style.opacity = '0';
+                this.tooltip.style.visibility = 'visible';
+                this.tooltip.setAttribute('aria-hidden', 'false');
+
+                requestAnimationFrame(() => {
+                    this.updatePosition();
+                    requestAnimationFrame(() => {
+                        this.tooltip.style.opacity = '1';
+                    });
+                });
+
+                // Actualizar posición continuamente mientras está visible
+                this.startPositionUpdates();
+            }, this.delay);
+        }
+
+        private hide() {
+            if (this.state.timeoutId) {
+                clearTimeout(this.state.timeoutId);
+                this.state.timeoutId = null;
+            }
+
+            this.stopPositionUpdates();
+
+            this.tooltip.style.opacity = '0';
+
+            setTimeout(() => {
+                if (!this.state.isVisible) return;
+                this.state.isVisible = false;
+                this.tooltip.style.visibility = 'hidden';
+                this.tooltip.setAttribute('aria-hidden', 'true');
+            }, 150);
+        }
+
+        private toggle() {
+            if (this.state.isVisible) {
+                this.hide();
+            } else {
+                this.show();
+            }
+        }
+
+        private startPositionUpdates() {
+            const update = () => {
+                if (this.state.isVisible) {
+                    this.updatePosition();
+                    this.state.updatePositionFrame = requestAnimationFrame(update);
+                }
+            };
+            update();
+        }
+
+        private stopPositionUpdates() {
+            if (this.state.updatePositionFrame) {
+                cancelAnimationFrame(this.state.updatePositionFrame);
+                this.state.updatePositionFrame = null;
+            }
+        }
+
+        private updatePosition() {
+            const triggerRect = this.trigger.getBoundingClientRect();
+            const tooltipRect = this.tooltip.getBoundingClientRect();
+            const arrowSize = 6;
+            const offset = 8;
+
+            let finalPosition = this.position;
+
+            // Auto-detect best position
+            if (this.position === 'auto') {
+                const spaceTop = triggerRect.top;
+                const spaceBottom = window.innerHeight - triggerRect.bottom;
+                const spaceLeft = triggerRect.left;
+                const spaceRight = window.innerWidth - triggerRect.right;
+
+                if (spaceTop > tooltipRect.height + offset) {
+                    finalPosition = 'top';
+                } else if (spaceBottom > tooltipRect.height + offset) {
+                    finalPosition = 'bottom';
+                } else if (spaceRight > tooltipRect.width + offset) {
+                    finalPosition = 'right';
+                } else if (spaceLeft > tooltipRect.width + offset) {
+                    finalPosition = 'left';
+                } else {
+                    finalPosition = 'top';
+                }
+            }
+
+            let top = 0;
+            let left = 0;
+            let arrowTop = '';
+            let arrowLeft = '';
+            let arrowTransform = '';
+
+            switch (finalPosition) {
+                case 'top':
+                    top = triggerRect.top - tooltipRect.height - offset;
+                    left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+                    arrowTop = '100%';
+                    arrowLeft = '50%';
+                    arrowTransform = 'translateX(-50%) rotate(45deg)';
+                    break;
+                case 'bottom':
+                    top = triggerRect.bottom + offset;
+                    left = triggerRect.left + (triggerRect.width / 2) - (tooltipRect.width / 2);
+                    arrowTop = `-${arrowSize}px`;
+                    arrowLeft = '50%';
+                    arrowTransform = 'translateX(-50%) rotate(45deg)';
+                    break;
+                case 'left':
+                    top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
+                    left = triggerRect.left - tooltipRect.width - offset;
+                    arrowTop = '50%';
+                    arrowLeft = '100%';
+                    arrowTransform = 'translateY(-50%) rotate(45deg)';
+                    break;
+                case 'right':
+                    top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
+                    left = triggerRect.right + offset;
+                    arrowTop = '50%';
+                    arrowLeft = `-${arrowSize}px`;
+                    arrowTransform = 'translateY(-50%) rotate(45deg)';
+                    break;
+            }
+
+            // Ajustar si se sale de la pantalla horizontalmente
+            const margin = 10;
+            if (left < margin) {
+                left = margin;
+            } else if (left + tooltipRect.width > window.innerWidth - margin) {
+                left = window.innerWidth - tooltipRect.width - margin;
+            }
+
+            // Ajustar si se sale de la pantalla verticalmente
+            if (top < margin) {
+                top = margin;
+            } else if (top + tooltipRect.height > window.innerHeight - margin) {
+                top = window.innerHeight - tooltipRect.height - margin;
+            }
+
+            this.tooltip.style.top = `${top}px`;
+            this.tooltip.style.left = `${left}px`;
+
+            this.arrow.style.top = arrowTop;
+            this.arrow.style.left = arrowLeft;
+            this.arrow.style.transform = arrowTransform;
+        }
+
+        destroy() {
+            this.stopPositionUpdates();
+            if (this.state.timeoutId) {
+                clearTimeout(this.state.timeoutId);
+            }
+        }
+    }
+
+    // Initialize all tooltips
+    document.addEventListener('DOMContentLoaded', () => {
+        const tooltipWrappers = document.querySelectorAll('[data-tooltip-wrapper]');
+        const tooltipManagers: TooltipManager[] = [];
+
+        tooltipWrappers.forEach((wrapper) => {
+            tooltipManagers.push(new TooltipManager(wrapper as HTMLElement));
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            tooltipManagers.forEach(manager => manager.destroy());
+        });
+    });
+</script>
+
+<style>
+    .tooltip-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip-trigger {
+        display: inline-block;
+    }
+
+    .tooltip-content {
+        position: fixed;
+        z-index: var(--z-tooltip);
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--transition-fast) ease-in-out;
+    }
+
+    .tooltip-inner {
+        background: linear-gradient(
+            135deg,
+            rgba(15, 23, 42, 0.98),
+            rgba(30, 41, 59, 0.98)
+        );
+        border: 2px solid rgba(148, 163, 184, 0.5);
+        border-radius: var(--radius-lg);
+        padding: 0.5rem 0.75rem;
+        box-shadow:
+            0 8px 32px rgba(0, 0, 0, 0.8),
+            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(16px);
+        color: rgb(var(--color-text-primary));
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+
+    .tooltip-arrow {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        background: linear-gradient(
+            135deg,
+            rgba(15, 23, 42, 0.98),
+            rgba(30, 41, 59, 0.98)
+        );
+        border-left: 2px solid rgba(148, 163, 184, 0.5);
+        border-top: 2px solid rgba(148, 163, 184, 0.5);
+        z-index: -1;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 767px) {
+        .tooltip-content {
+            max-width: calc(100vw - 2rem) !important;
+        }
+    }
+</style>

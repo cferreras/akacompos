@@ -1,0 +1,204 @@
+---
+/**
+ * Section Component - Componente de sección reutilizable
+ *
+ * @param title - Título de la sección
+ * @param subtitle - Subtítulo de la sección
+ * @param id - ID para navegación por anclaje
+ * @param variant - Estilo de la sección: 'default' | 'gradient' | 'glass' | 'bordered'
+ * @param spacing - Espaciado vertical: 'none' | 'sm' | 'md' | 'lg' | 'xl'
+ * @param divider - Mostrar línea divisoria: boolean
+ * @param dividerPosition - Posición del divisor: 'top' | 'bottom' | 'both'
+ * @param className - Clases adicionales
+ */
+
+export interface Props {
+    title?: string;
+    subtitle?: string;
+    id?: string;
+    variant?: 'default' | 'gradient' | 'glass' | 'bordered';
+    spacing?: 'none' | 'sm' | 'md' | 'lg' | 'xl';
+    divider?: boolean;
+    dividerPosition?: 'top' | 'bottom' | 'both';
+    className?: string;
+}
+
+const {
+    title,
+    subtitle,
+    id,
+    variant = 'default',
+    spacing = 'lg',
+    divider = false,
+    dividerPosition = 'bottom',
+    className = '',
+} = Astro.props;
+
+// Estilos base según variante
+const variantClasses = {
+    default: '',
+    gradient: 'bg-gradient-to-b from-transparent via-primary/5 to-transparent',
+    glass: 'bg-surface-dark/30 backdrop-blur-glass border-y border-slate-700/50',
+    bordered: 'border-y-2 border-slate-700',
+};
+
+// Espaciado
+const spacingClasses = {
+    none: 'py-0',
+    sm: 'py-4 sm:py-6',
+    md: 'py-6 sm:py-8 lg:py-12',
+    lg: 'py-8 sm:py-12 lg:py-16',
+    xl: 'py-12 sm:py-16 lg:py-24',
+};
+
+// Mostrar divisor superior
+const showTopDivider = divider && (dividerPosition === 'top' || dividerPosition === 'both');
+
+// Mostrar divisor inferior
+const showBottomDivider = divider && (dividerPosition === 'bottom' || dividerPosition === 'both');
+
+// Combinar todas las clases
+const classes = [
+    'section-wrapper',
+    'relative',
+    variantClasses[variant],
+    spacingClasses[spacing],
+    className,
+].filter(Boolean).join(' ');
+---
+
+<section class={classes} id={id}>
+    {showTopDivider && (
+        <div class="section-divider section-divider-top">
+            <div class="divider-line"></div>
+        </div>
+    )}
+
+    {(title || subtitle) && (
+        <div class="section-header">
+            {title && (
+                <div class="flex items-baseline gap-4 mb-6">
+                    <h2 class="section-title text-3xl sm:text-4xl font-bold text-white">
+                        {title}
+                    </h2>
+                    <div class="h-px flex-1 bg-gradient-to-r from-primary/30 to-transparent"></div>
+                </div>
+            )}
+            {subtitle && (
+                <p class="section-subtitle text-base sm:text-lg text-slate-400 mb-8 max-w-3xl">
+                    {subtitle}
+                </p>
+            )}
+        </div>
+    )}
+
+    <div class="section-content">
+        <slot />
+    </div>
+
+    {showBottomDivider && (
+        <div class="section-divider section-divider-bottom">
+            <div class="divider-line"></div>
+        </div>
+    )}
+</section>
+
+<style>
+    .section-wrapper {
+        position: relative;
+    }
+
+    .section-header {
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .section-title {
+        background: linear-gradient(
+            135deg,
+            rgb(var(--color-text-primary)),
+            rgb(var(--color-primary))
+        );
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1.2;
+        letter-spacing: -0.02em;
+    }
+
+    .section-subtitle {
+        line-height: 1.6;
+    }
+
+    .section-divider {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 1px;
+        overflow: hidden;
+    }
+
+    .section-divider-top {
+        top: 0;
+    }
+
+    .section-divider-bottom {
+        bottom: 0;
+    }
+
+    .divider-line {
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent 0%,
+            rgb(var(--color-primary-dark)) 20%,
+            rgb(var(--color-primary)) 50%,
+            rgb(var(--color-primary-dark)) 80%,
+            transparent 100%
+        );
+        opacity: 0.5;
+    }
+
+    /* Animación de aparición */
+    @media (prefers-reduced-motion: no-preference) {
+        .section-wrapper {
+            animation: sectionFadeIn 0.6s ease-out;
+        }
+    }
+
+    @keyframes sectionFadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(1rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Efecto parallax sutil en el título */
+    @media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+        .section-title {
+            transition: transform 0.3s ease-out;
+        }
+
+        .section-wrapper:hover .section-title {
+            transform: translateX(0.5rem);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+        .section-header {
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .section-subtitle {
+            font-size: 0.875rem;
+        }
+    }
+</style>
