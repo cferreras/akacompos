@@ -1,123 +1,198 @@
 ---
-import {allAugments} from "../utils/augments.ts";
-import { Image } from 'astro:assets';
+import { allAugments } from "../utils/augments.ts";
+import { Image } from "astro:assets";
 
 interface Props {
-    augments: Array<string | {
-        name: string;
-        description: string;
-        icon?: string;
-    }>;
+    augments: Array<
+        | string
+        | {
+              name: string;
+              description: string;
+              icon?: string;
+          }
+    >;
 }
 
-const {augments} = Astro.props;
+const { augments } = Astro.props;
 
-// Handle both array of strings (IDs) and array of objects
-const augmentsWithImages = augments?.map((aug) => {
-    // If it's a string, it's an augment ID
-    if (typeof aug === 'string') {
-        const foundAugment = allAugments.find((dbAug) => dbAug.id === aug);
-        if (foundAugment) {
-            return {
-                name: foundAugment.name,
-                description: foundAugment.description,
-                image: foundAugment.image,
-                tier: foundAugment.tier,
-            };
-        }
-        return null;
-    }
-    
-    // If it's an object, try to match by name similarity
-    if (aug && aug.name) {
-        const normalizedName = aug.name.toLowerCase().replace(/[^a-z0-9]+/g, "");
-        const foundAugment = allAugments.find((dbAug) => {
-            const dbNormalizedName = dbAug.name.toLowerCase().replace(/[^a-z0-9]+/g, "");
-            return dbNormalizedName === normalizedName ||
-                dbNormalizedName.includes(normalizedName) ||
-                normalizedName.includes(dbNormalizedName);
-        });
+// Handle both array of strings (IDs/names) and array of objects
+const augmentsWithImages =
+    augments
+        ?.map((aug) => {
+            // If it's a string, it could be an augment ID or name
+            if (typeof aug === "string") {
+                // First try to find by ID
+                let foundAugment = allAugments.find(
+                    (dbAug) => dbAug.id === aug,
+                );
 
-        return {
-            ...aug,
-            image: foundAugment?.image,
-            tier: foundAugment?.tier || "gold",
-        };
-    }
-    
-    return null;
-}).filter((aug): aug is NonNullable<typeof aug> => aug && aug.image) || []; // SOLO mostrar aumentos con imagen real
+                // If not found by ID, try to find by name
+                if (!foundAugment) {
+                    foundAugment = allAugments.find(
+                        (dbAug) => dbAug.name === aug,
+                    );
+                }
+
+                if (foundAugment) {
+                    return {
+                        name: foundAugment.name,
+                        description: foundAugment.description,
+                        image: foundAugment.image,
+                        tier: foundAugment.tier,
+                        hasImage: true,
+                    };
+                }
+                // Debug: log when augment is not found
+                console.warn(`Augment not found: ${aug}`);
+                return null;
+            }
+
+            // If it's an object, try to match by name similarity
+            if (aug && aug.name) {
+                const normalizedName = aug.name
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "");
+                const foundAugment = allAugments.find((dbAug) => {
+                    const dbNormalizedName = dbAug.name
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, "");
+                    return (
+                        dbNormalizedName === normalizedName ||
+                        dbNormalizedName.includes(normalizedName) ||
+                        normalizedName.includes(dbNormalizedName)
+                    );
+                });
+
+                if (foundAugment) {
+                    return {
+                        name: foundAugment.name,
+                        description: foundAugment.description,
+                        image: foundAugment.image,
+                        tier: foundAugment.tier,
+                        hasImage: true,
+                    };
+                }
+
+                // Fallback if not found in database
+                return {
+                    ...aug,
+                    image: undefined,
+                    tier: "gold",
+                    hasImage: false,
+                };
+            }
+
+            return null;
+        })
+        .filter((aug): aug is NonNullable<typeof aug> => aug !== null) || [];
 ---
-<div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4">
-    {augmentsWithImages.map((augment) => (
+
+<div
+    class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 md:gap-4"
+>
+    {
+        augmentsWithImages.map((augment) => (
             <div class="augment-card group relative">
                 <div class="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-800/50 border-2 border-slate-800 transition-all hover:bg-slate-800 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 cursor-pointer">
                     {/* Augment Image */}
-                    <div class={`aspect-square rounded-lg overflow-hidden transition-all ${
-                        augment.tier === 'silver' ? 'ring-2 ring-slate-400 shadow-lg shadow-slate-400/30' :
-                            augment.tier === 'gold' ? 'ring-2 ring-amber-400 shadow-lg shadow-amber-400/30' :
-                                augment.tier === 'prismatic' ? 'ring-2 ring-purple-400 shadow-lg shadow-purple-400/30' :
-                                    'ring-2 ring-slate-600 shadow-lg shadow-slate-600/30'
-                    }`}>
-                        <Image
+                    <div
+                        class={`aspect-square rounded-lg overflow-hidden transition-all ${
+                            augment.tier === "silver"
+                                ? "ring-2 ring-slate-400 shadow-lg shadow-slate-400/30"
+                                : augment.tier === "gold"
+                                  ? "ring-2 ring-amber-400 shadow-lg shadow-amber-400/30"
+                                  : augment.tier === "prismatic"
+                                    ? "ring-2 ring-purple-400 shadow-lg shadow-purple-400/30"
+                                    : "ring-2 ring-slate-600 shadow-lg shadow-slate-600/30"
+                        }`}
+                    >
+                        {augment.hasImage ? (
+                            <Image
                                 src={augment.image}
                                 alt={augment.name}
-                                class="w-full h-full object-cover"
+                                class="w-full h-full object-contain p-2"
                                 width={120}
                                 height={120}
                                 quality={85}
                                 loading="lazy"
                                 decoding="async"
-                        />
+                            />
+                        ) : (
+                            <div class="w-full h-full bg-slate-700 flex items-center justify-center p-2">
+                                <span class="text-slate-200 text-[8px] font-semibold text-center leading-tight break-words">
+                                    {augment.name}
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Augment Name */}
                     <p class="text-xs md:text-sm xl:text-xs font-semibold text-slate-200 text-center line-clamp-2 min-h-[2.5rem] flex items-center">
                         {augment.name}
                     </p>
-
                 </div>
 
                 {/* Tooltip on hover */}
                 <div class="augment-tooltip absolute bottom-full mb-2 p-3 rounded-lg bg-slate-900/95 backdrop-blur-sm border-2 border-primary shadow-2xl shadow-primary/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
                     <div class="flex items-start gap-3 mb-2">
-                        <div class={`flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden ${
-                            augment.tier === 'silver' ? 'ring-2 ring-slate-400' :
-                                augment.tier === 'gold' ? 'ring-2 ring-amber-400' :
-                                    augment.tier === 'prismatic' ? 'ring-2 ring-purple-400' :
-                                        'ring-2 ring-slate-600'
-                        }`}>
-                            <Image
+                        <div
+                            class={`flex-shrink-0 w-12 h-12 rounded-lg overflow-hidden ${
+                                augment.tier === "silver"
+                                    ? "ring-2 ring-slate-400"
+                                    : augment.tier === "gold"
+                                      ? "ring-2 ring-amber-400"
+                                      : augment.tier === "prismatic"
+                                        ? "ring-2 ring-purple-400"
+                                        : "ring-2 ring-slate-600"
+                            }`}
+                        >
+                            {augment.hasImage ? (
+                                <Image
                                     src={augment.image}
                                     alt={augment.name}
-                                    class="w-full h-full object-cover"
+                                    class="w-full h-full object-contain p-1"
                                     width={48}
                                     height={48}
                                     quality={85}
                                     loading="eager"
                                     decoding="async"
-                            />
+                                />
+                            ) : (
+                                <div class="w-full h-full bg-slate-700 flex items-center justify-center p-1">
+                                    <span class="text-slate-200 text-[7px] font-semibold text-center leading-tight break-words">
+                                        {augment.name}
+                                    </span>
+                                </div>
+                            )}
                         </div>
                         <div class="flex-1">
-                            <h4 class="text-sm font-bold text-white leading-tight">{augment.name}</h4>
-                            <span class={`text-xs font-semibold capitalize ${
-                                augment.tier === 'silver' ? 'text-slate-400' :
-                                    augment.tier === 'gold' ? 'text-amber-400' :
-                                        augment.tier === 'prismatic' ? 'text-purple-400' :
-                                            'text-slate-600'
-                            }`}>
-              {augment.tier}
-            </span>
+                            <h4 class="text-sm font-bold text-white leading-tight">
+                                {augment.name}
+                            </h4>
+                            <span
+                                class={`text-xs font-semibold capitalize ${
+                                    augment.tier === "silver"
+                                        ? "text-slate-400"
+                                        : augment.tier === "gold"
+                                          ? "text-amber-400"
+                                          : augment.tier === "prismatic"
+                                            ? "text-purple-400"
+                                            : "text-slate-600"
+                                }`}
+                            >
+                                {augment.tier}
+                            </span>
                         </div>
                     </div>
                     <p class="text-xs text-slate-300 leading-relaxed">
                         {augment.description}
                     </p>
                     {/* Tooltip arrow */}
-                    <div class="tooltip-arrow"></div>
+                    <div class="tooltip-arrow" />
                 </div>
             </div>
-    ))}
+        ))
+    }
 </div>
 
 <style>
@@ -130,8 +205,9 @@ const augmentsWithImages = augments?.map((aug) => {
         transform: translateX(-50%);
         width: min(90vw, 22rem);
         max-width: 22rem;
-        transition: opacity 150ms ease-in-out,
-        visibility 150ms ease-in-out;
+        transition:
+            opacity 150ms ease-in-out,
+            visibility 150ms ease-in-out;
     }
 
     /* Tooltip arrow */

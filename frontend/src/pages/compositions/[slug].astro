@@ -89,18 +89,8 @@ if (typeof augmentsData === "string") {
     }
 }
 
-// Convert augments to objects if they are strings
-if (
-    Array.isArray(augmentsData) &&
-    augmentsData.length > 0 &&
-    typeof augmentsData[0] === "string"
-) {
-    augmentsData = augmentsData.map((name: string) => ({
-        name,
-        description: "",
-        icon: "",
-    }));
-}
+// Augments can be strings (IDs) or objects
+// Leave them as-is, AugmentGrid will handle both formats
 
 // Extraer lista de campeones del board
 const championsList = boardData?.champions

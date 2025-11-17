@@ -22,3 +22,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# embargoed files
+[EMBARGO_ Nov 16 at 10AM PT] TFT - Lore & Legends Press Kit/*
