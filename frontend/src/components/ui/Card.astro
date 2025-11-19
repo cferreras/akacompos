@@ -89,7 +89,7 @@ const tierClasses = tier
 
 // Efectos hover
 const hoverClasses = hover
-    ? "transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-primary/20 hover:brightness-110 cursor-pointer"
+    ? "transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-primary/20 hover:brightness-110 cursor-pointer group"
     : "";
 
 // Combinar todas las clases
@@ -113,7 +113,11 @@ const elementProps = {
 };
 ---
 
-<Tag {...elementProps}>
+<Tag {...elementProps} data-animate="true">
+    {/* Glass reflection effect for gradient/glass variants */}
+    {(variant === "gradient" || variant === "glass") && (
+        <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+    )}
     <slot />
 </Tag>
 
@@ -124,20 +128,20 @@ const elementProps = {
     :global(.tier-gold),
     :global(.tier-prismatic),
     :global(.tier-amber) {
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(12px);
     }
 
     /* Animación de entrada opcional */
     @media (prefers-reduced-motion: no-preference) {
         [data-animate="true"] {
-            animation: cardFadeIn 0.3s ease-out;
+            animation: cardFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
         }
     }
 
     @keyframes cardFadeIn {
         from {
             opacity: 0;
-            transform: translateY(0.5rem);
+            transform: translateY(1rem);
         }
         to {
             opacity: 1;

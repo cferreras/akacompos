@@ -11,7 +11,7 @@
  */
 
 export interface Props {
-    variant?: 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info' | 'fast' | 'reroll' | 'aggressive' | 'defensive';
+    variant?: 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info' | 'fast' | 'reroll' | 'aggressive' | 'defensive' | 'prismatic';
     size?: 'xs' | 'sm' | 'md' | 'lg';
     rounded?: boolean;
     outlined?: boolean;
@@ -48,6 +48,9 @@ const variantClasses = {
     info: outlined
         ? 'border-2 border-blue-500 text-blue-400 bg-transparent hover:bg-blue-500/10'
         : 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+    prismatic: outlined
+        ? 'border-2 border-purple-400 text-purple-300 bg-transparent hover:bg-purple-500/10'
+        : 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-200 border border-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.2)]',
     fast: outlined
         ? 'border-2 border-blue-500 text-blue-400 bg-transparent hover:bg-blue-500/10'
         : 'bg-blue-500/20 text-blue-400 border border-blue-500/30',

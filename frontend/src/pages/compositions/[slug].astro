@@ -176,7 +176,7 @@ export function parseImages(description: any): string {
 ---
 
 <Layout title={`${currentComposition.tier} - ${currentComposition.title}`}>
-    <div class="bg-background-dark min-h-screen">
+
         <!-- Header Section -->
         <Section
             variant="gradient"
@@ -220,15 +220,23 @@ export function parseImages(description: any): string {
                         </div>
                     </div>
                     <div>
-                        <Button
-                            id="copy-btn"
-                            variant="primary"
-                            size="lg"
-                            icon="copy"
-                            iconPosition="left"
-                        >
-                            <span id="copy-text">Copiar enlace</span>
-                        </Button>
+                    <div>
+                        {
+                            currentComposition.compCode && (
+                                <Button
+                                    id="copy-btn"
+                                    variant="primary"
+                                    size="lg"
+                                    icon="copy"
+                                    iconPosition="left"
+                                    data-comp-code={currentComposition.compCode}
+                                >
+                                    <span id="copy-text">Copiar Código</span>
+                                </Button>
+                            )
+                        }
+                    </div>
+                </div>
                     </div>
                 </div>
 
@@ -398,7 +406,7 @@ export function parseImages(description: any): string {
                 </div>
             </Container>
         </Section>
-    </div>
+
 </Layout>
 
 <style>
@@ -442,15 +450,19 @@ export function parseImages(description: any): string {
             "copy-btn",
         ) as HTMLButtonElement;
         const copyText = document.getElementById("copy-text");
-        const compositionTitle =
-            document.querySelector("h1")?.textContent || "";
 
         if (copyBtn && copyText) {
             copyBtn.addEventListener("click", async () => {
-                const currentUrl = window.location.href;
+                const compCode = copyBtn.getAttribute("data-comp-code");
+
+                if (!compCode) {
+                    console.error("No comp code found");
+                    alert("No se encontró el código de la composición.");
+                    return;
+                }
 
                 try {
-                    await navigator.clipboard.writeText(currentUrl);
+                    await navigator.clipboard.writeText(compCode);
 
                     // Add animation class
                     copyBtn.classList.add("animate-copied");
@@ -474,13 +486,13 @@ export function parseImages(description: any): string {
                             icon.classList.remove("fa-check");
                             icon.classList.add("fa-copy");
                         }
-                        copyText.textContent = "Copiar enlace";
+                        copyText.textContent = "Copiar Código";
                     }, 2000);
                 } catch (err) {
                     console.error("Failed to copy:", err);
                     copyText.textContent = "Error al copiar";
                     setTimeout(() => {
-                        copyText.textContent = "Copiar enlace";
+                        copyText.textContent = "Copiar Código";
                     }, 2000);
                 }
             });

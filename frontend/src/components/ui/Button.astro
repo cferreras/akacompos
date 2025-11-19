@@ -44,6 +44,7 @@ const {
     target,
     type = "button",
     className = "",
+    ...rest
 } = Astro.props;
 
 // Estilos base según variante
@@ -107,6 +108,7 @@ const elementProps = {
     class: classes,
     ...(Tag === "button" ? { type, disabled: disabled || loading } : {}),
     ...(Tag === "a" && href ? { href, target } : {}),
+    ...rest,
 };
 ---
 

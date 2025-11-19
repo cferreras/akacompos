@@ -1,10 +1,15 @@
 ---
 import Button from "./ui/Button.astro";
 import Container from "./ui/Container.astro";
+
+const pathname = Astro.url.pathname;
+const isHome = pathname === "/";
+const isCompositions = pathname.startsWith("/compositions");
 ---
 
 <header
-    class="sticky top-0 z-[100] bg-background-dark/80 backdrop-blur-strong border-b border-slate-800 shadow-lg"
+    class="sticky top-0 z-[100] bg-background-dark/80 backdrop-blur-strong border-b border-slate-800/50 shadow-lg transition-all duration-300"
+    id="main-header"
 >
     <Container maxWidth="xl" paddingY="none">
         <nav class="flex items-center justify-between h-16 p-4 sm:p-6 lg:p-8">
@@ -15,23 +20,33 @@ import Container from "./ui/Container.astro";
                     class="flex items-center gap-2 text-lg font-bold transition-all hover:scale-105 group"
                 >
                     <span
-                        class="text-primary font-black text-xl bg-gradient-to-r from-primary to-purple-400 bg-clip-text text-transparent"
+                        class="text-primary font-black text-xl bg-gradient-to-r from-primary-light via-primary to-purple-500 bg-clip-text text-transparent animate-gradient-x"
                     >
                         AKACompos
                     </span>
                 </a>
 
                 <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center gap-6">
+                <div class="hidden md:flex items-center gap-8">
                     <a
                         href="/"
-                        class="nav-link text-sm font-medium text-slate-300 hover:text-primary transition-colors relative"
+                        class:list={[
+                            "nav-link text-sm font-medium transition-colors relative py-1",
+                            isHome
+                                ? "text-primary"
+                                : "text-slate-300 hover:text-primary",
+                        ]}
                     >
                         Inicio
                     </a>
                     <a
                         href="/compositions"
-                        class="nav-link text-sm font-medium text-primary transition-colors relative"
+                        class:list={[
+                            "nav-link text-sm font-medium transition-colors relative py-1",
+                            isCompositions
+                                ? "text-primary"
+                                : "text-slate-300 hover:text-primary",
+                        ]}
                     >
                         Composiciones
                     </a>
@@ -47,9 +62,9 @@ import Container from "./ui/Container.astro";
                     target="_blank"
                     variant="ghost"
                     size="sm"
-                    icon="twitch"
-                    className="hidden sm:inline-flex"
+                    className="hidden sm:inline-flex hover:bg-purple-500/10 hover:text-purple-400"
                 >
+                    <i class="fa-brands fa-twitch"></i>
                     <span class="hidden lg:inline">Twitch</span>
                 </Button>
 
@@ -66,10 +81,10 @@ import Container from "./ui/Container.astro";
                 <!-- Mobile Menu Button -->
                 <button
                     id="mobile-menu-button"
-                    class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all"
+                    class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all focus:outline-none focus:ring-2 focus:ring-primary/50"
                     aria-label="Menú"
                 >
-                    <i id="menu-icon" class="fa-solid fa-bars text-xl"></i>
+                    <i id="menu-icon" class="fa-solid fa-bars text-xl transition-transform duration-300"></i>
                 </button>
             </div>
         </nav>
@@ -77,22 +92,32 @@ import Container from "./ui/Container.astro";
         <!-- Mobile Menu -->
         <div
             id="mobile-menu"
-            class="md:hidden overflow-hidden transition-all duration-300 ease-in-out"
+            class="md:hidden overflow-hidden transition-all duration-300 ease-in-out opacity-0 invisible"
             style="max-height: 0;"
         >
-            <div class="py-4 space-y-2 border-t border-slate-800">
+            <div class="py-4 space-y-2 border-t border-slate-800/50 bg-background-dark/95 backdrop-blur-xl rounded-b-2xl mb-4 mx-2 px-2 shadow-xl border border-slate-800/50">
                 <a
                     href="/"
-                    class="block px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-slate-700/50 transition-all"
+                    class:list={[
+                        "block px-4 py-3 rounded-xl text-sm font-medium transition-all flex items-center gap-3",
+                        isHome
+                            ? "bg-primary/10 text-primary"
+                            : "text-slate-300 hover:text-white hover:bg-slate-700/50",
+                    ]}
                 >
-                    <i class="fa-solid fa-home w-5 text-center mr-2"></i>
+                    <i class="fa-solid fa-home w-5 text-center"></i>
                     Inicio
                 </a>
                 <a
                     href="/compositions"
-                    class="block px-4 py-2 rounded-lg text-sm font-medium text-primary hover:bg-primary/10 transition-all"
+                    class:list={[
+                        "block px-4 py-3 rounded-xl text-sm font-medium transition-all flex items-center gap-3",
+                        isCompositions
+                            ? "bg-primary/10 text-primary"
+                            : "text-slate-300 hover:text-white hover:bg-slate-700/50",
+                    ]}
                 >
-                    <i class="fa-solid fa-chess w-5 text-center mr-2"></i>
+                    <i class="fa-solid fa-chess w-5 text-center"></i>
                     Composiciones
                 </a>
             </div>
@@ -105,7 +130,19 @@ import Container from "./ui/Container.astro";
         const menuButton = document.getElementById("mobile-menu-button");
         const mobileMenu = document.getElementById("mobile-menu");
         const menuIcon = document.getElementById("menu-icon");
+        const header = document.getElementById("main-header");
         let isOpen = false;
+
+        // Scroll effect
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 10) {
+                header?.classList.add("shadow-primary/10", "border-slate-800");
+                header?.classList.remove("border-slate-800/50");
+            } else {
+                header?.classList.remove("shadow-primary/10", "border-slate-800");
+                header?.classList.add("border-slate-800/50");
+            }
+        });
 
         if (menuButton && mobileMenu && menuIcon) {
             menuButton.addEventListener("click", () => {
@@ -113,11 +150,13 @@ import Container from "./ui/Container.astro";
 
                 if (isOpen) {
                     mobileMenu.style.maxHeight = mobileMenu.scrollHeight + "px";
+                    mobileMenu.classList.remove("opacity-0", "invisible");
                     menuIcon.classList.remove("fa-bars");
-                    menuIcon.classList.add("fa-times");
+                    menuIcon.classList.add("fa-times", "rotate-90");
                 } else {
                     mobileMenu.style.maxHeight = "0";
-                    menuIcon.classList.remove("fa-times");
+                    mobileMenu.classList.add("opacity-0", "invisible");
+                    menuIcon.classList.remove("fa-times", "rotate-90");
                     menuIcon.classList.add("fa-bars");
                 }
             });
@@ -131,7 +170,8 @@ import Container from "./ui/Container.astro";
                 ) {
                     isOpen = false;
                     mobileMenu.style.maxHeight = "0";
-                    menuIcon.classList.remove("fa-times");
+                    mobileMenu.classList.add("opacity-0", "invisible");
+                    menuIcon.classList.remove("fa-times", "rotate-90");
                     menuIcon.classList.add("fa-bars");
                 }
             });
@@ -142,7 +182,8 @@ import Container from "./ui/Container.astro";
                 link.addEventListener("click", () => {
                     isOpen = false;
                     mobileMenu.style.maxHeight = "0";
-                    menuIcon.classList.remove("fa-times");
+                    mobileMenu.classList.add("opacity-0", "invisible");
+                    menuIcon.classList.remove("fa-times", "rotate-90");
                     menuIcon.classList.add("fa-bars");
                 });
             });
@@ -155,28 +196,33 @@ import Container from "./ui/Container.astro";
     .nav-link::after {
         content: "";
         position: absolute;
-        bottom: -0.5rem;
+        bottom: 0;
         left: 0;
         right: 0;
         height: 2px;
-        background: rgb(var(--color-primary));
+        background: linear-gradient(90deg, transparent, rgb(var(--color-primary)), transparent);
         transform: scaleX(0);
         transition: transform var(--transition-base);
+        opacity: 0;
     }
 
-    .nav-link:hover::after,
-    .nav-link.active::after {
+    .nav-link:hover::after {
         transform: scaleX(1);
+        opacity: 0.5;
     }
-
-    /* Current page indicator */
-    a[href="/compositions"].nav-link::after {
+    
+    .nav-link.text-primary::after {
         transform: scaleX(1);
+        opacity: 1;
     }
 
     /* Smooth transitions */
     #mobile-menu {
-        transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .rotate-90 {
+        transform: rotate(90deg);
     }
 
     /* Logo animation */
@@ -187,6 +233,23 @@ import Container from "./ui/Container.astro";
 
         a[href="/"]:hover {
             transform: scale(1.05);
+        }
+        
+        .animate-gradient-x {
+            background-size: 200% 200%;
+            animation: gradient-x 3s ease infinite;
+        }
+        
+        @keyframes gradient-x {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
     }
 </style>
