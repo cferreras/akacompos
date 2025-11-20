@@ -3,10 +3,23 @@ import Container from "./ui/Container.astro";
 import { execSync } from "child_process";
 
 let version = "unknown";
-try {
-    version = execSync("git rev-parse --short HEAD").toString().trim();
-} catch (error) {
-    console.error("Failed to get git commit hash:", error);
+
+// Try to get version from environment variables first (common in CI/CD)
+const envVersion =
+    process.env.NIXPACKS_GIT_SHA ||
+    process.env.GIT_COMMIT ||
+    process.env.PUBLIC_GIT_SHA ||
+    process.env.VERCEL_GIT_COMMIT_SHA ||
+    process.env.CF_PAGES_COMMIT_SHA;
+
+if (envVersion) {
+    version = envVersion.substring(0, 7);
+} else {
+    try {
+        version = execSync("git rev-parse --short HEAD").toString().trim();
+    } catch (error) {
+        console.error("Failed to get git commit hash:", error);
+    }
 }
 ---
 
