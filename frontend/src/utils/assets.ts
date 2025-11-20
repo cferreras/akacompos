@@ -334,8 +334,103 @@ export const itemAssets: Record<string, any> = {
 };
 
 // ============================================================================
-// FUNCIONES HELPER
+// HELPER FUNCTIONS
 // ============================================================================
+
+/**
+ * Normalizes a name by trimming whitespace and handling common formatting issues.
+ */
+function normalizeName(name: string): string {
+  if (!name) return "";
+  return name.trim();
+}
+
+/**
+ * Map of synonyms/variations to the correct asset key.
+ */
+const synonymMap: Record<string, string> = {
+  // Champions
+  "Dr Mundo": "Dr. Mundo",
+  "JarvanIV": "Jarvan IV",
+  "KogMaw": "Kog'Maw",
+  "RekSai": "Rek'Sai",
+  "TahmKench": "Tahm Kench",
+  "TwistedFate": "Twisted Fate",
+  "XinZhao": "Xin Zhao",
+  "MissFortune": "Miss Fortune",
+  "AurelionSol": "Aurelion Sol",
+  "BaronNashor": "Baron Nashor",
+  "LeeSin": "Lee Sin",
+  "MasterYi": "Master Yi",
+  "Wukong": "Wukong",
+  "MonkeyKing": "Wukong",
+  "KaiSa": "Kai'Sa",
+  "BelVeth": "Bel'Veth",
+  "ChoGath": "Cho'Gath",
+  "KhaZix": "Kha'Zix",
+  "VelKoz": "Vel'Koz",
+  "RenataGlasc": "Renata Glasc",
+  
+  // Items
+  "B.F.Sword": "B.F. Sword",
+  "BF Sword": "B.F. Sword",
+  "ChainVest": "Chain Vest",
+  "GiantsBelt": "Giant's Belt",
+  "NeedlesslyLargeRod": "Needlessly Large Rod",
+  "NegatronCloak": "Negatron Cloak",
+  "RecurveBow": "Recurve Bow",
+  "SparringGloves": "Sparring Gloves",
+  "TearOfTheGoddess": "Tear of the Goddess",
+  "ArchangelsStaff": "Archangel's Staff",
+  "BlueBuff": "Blue Buff",
+  "BrambleVest": "Bramble Vest",
+  "DragonsClaw": "Dragon's Claw",
+  "EdgeOfNight": "Edge of Night",
+  "GuinsoosRageblade": "Guinsoo's Rageblade",
+  "HandOfJustice": "Hand of Justice",
+  "HextechGunblade": "Hextech Gunblade",
+  "InfinityEdge": "Infinity Edge",
+  "IonicSpark": "Ionic Spark",
+  "JeweledGauntlet": "Jeweled Gauntlet",
+  "LastWhisper": "Last Whisper",
+  "NashorsTooth": "Nashor's Tooth",
+  "RabadonsDeathcap": "Rabadon's Deathcap",
+  "RedBuff": "Red Buff",
+  "SpearOfShojin": "Spear of Shojin",
+  "SpiritVisage": "Spirit Visage",
+  "SteraksGage": "Sterak's Gage",
+  "SunfireCape": "Sunfire Cape",
+  "TacticiansCrown": "Tactician's Crown",
+  "ThiefsGloves": "Thief's Gloves",
+  "TitansResolve": "Titan's Resolve",
+  "WarmogsArmor": "Warmog's Armor",
+};
+
+/**
+ * Resolves a name to its correct key using normalization and synonym map.
+ */
+function resolveKey(name: string, assets: Record<string, any>): string {
+  const normalized = normalizeName(name);
+  
+  // 1. Direct match
+  if (normalized in assets) return normalized;
+  
+  // 2. Synonym match
+  if (normalized in synonymMap) {
+    const mapped = synonymMap[normalized];
+    if (mapped in assets) return mapped;
+  }
+  
+  // 3. Try removing non-alphanumeric characters (simplified match)
+  // This helps with cases like "Kai'Sa" vs "KaiSa" if not in map
+  const simplified = normalized.replace(/[^a-zA-Z0-9]/g, "");
+  const assetKeys = Object.keys(assets);
+  const foundKey = assetKeys.find(key => key.replace(/[^a-zA-Z0-9]/g, "") === simplified);
+  
+  if (foundKey) return foundKey;
+  
+  return normalized; // Return original if no match found
+}
 
 /**
  * Obtiene la imagen de un campeón a partir de una ruta de archivo o nombre
@@ -345,7 +440,9 @@ export const itemAssets: Record<string, any> = {
 export function getChampionImage(imagePath: string): string {
   // Si es una ruta completa, extraer el nombre del campeón
   const match = imagePath.match(/\/([^\/]+)\.png$/);
-  const championName = match ? match[1] : imagePath;
+  let championName = match ? match[1] : imagePath;
+  
+  championName = resolveKey(championName, championAssets);
   
   return championAssets[championName as keyof typeof championAssets]?.src || imagePath;
 }
@@ -357,7 +454,9 @@ export function getChampionImage(imagePath: string): string {
  */
 export function getChampionImageMeta(imagePath: string) {
   const match = imagePath.match(/\/([^\/]+)\.png$/);
-  const championName = match ? match[1] : imagePath;
+  let championName = match ? match[1] : imagePath;
+  
+  championName = resolveKey(championName, championAssets);
   
   return championAssets[championName as keyof typeof championAssets];
 }
@@ -368,7 +467,8 @@ export function getChampionImageMeta(imagePath: string) {
  * @returns La URL de la imagen o una imagen por defecto
  */
 export function getItemImage(itemName: string): string {
-  return itemAssets[itemName as keyof typeof itemAssets]?.src || "";
+  const resolvedName = resolveKey(itemName, itemAssets);
+  return itemAssets[resolvedName as keyof typeof itemAssets]?.src || "";
 }
 
 /**
@@ -377,7 +477,8 @@ export function getItemImage(itemName: string): string {
  * @returns ImageMetadata para usar con el componente Image de Astro
  */
 export function getItemImageMeta(itemName: string) {
-  return itemAssets[itemName as keyof typeof itemAssets];
+  const resolvedName = resolveKey(itemName, itemAssets);
+  return itemAssets[resolvedName as keyof typeof itemAssets];
 }
 
 /**
@@ -386,7 +487,8 @@ export function getItemImageMeta(itemName: string) {
  * @returns True si el campeón existe
  */
 export function hasChampion(championName: string): boolean {
-  return championName in championAssets;
+  const resolvedName = resolveKey(championName, championAssets);
+  return resolvedName in championAssets;
 }
 
 /**
@@ -395,7 +497,8 @@ export function hasChampion(championName: string): boolean {
  * @returns True si el item existe
  */
 export function hasItem(itemName: string): boolean {
-  return itemName in itemAssets;
+  const resolvedName = resolveKey(itemName, itemAssets);
+  return resolvedName in itemAssets;
 }
 
 /**

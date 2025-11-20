@@ -1,5 +1,5 @@
 ---
-import { allAugments } from "../utils/augments.ts";
+import { getAugment } from "../utils/augments.ts";
 import { Image } from "astro:assets";
 import Tooltip from "./ui/Tooltip.astro";
 
@@ -20,20 +20,9 @@ const { augments } = Astro.props;
 const augmentsWithImages =
     augments
         ?.map((aug) => {
-            // ... (mapping logic remains the same)
             // If it's a string, it could be an augment ID or name
             if (typeof aug === "string") {
-                // First try to find by ID
-                let foundAugment = allAugments.find(
-                    (dbAug) => dbAug.id === aug,
-                );
-
-                // If not found by ID, try to find by name
-                if (!foundAugment) {
-                    foundAugment = allAugments.find(
-                        (dbAug) => dbAug.name === aug,
-                    );
-                }
+                const foundAugment = getAugment(aug);
 
                 if (foundAugment) {
                     return {
@@ -51,19 +40,7 @@ const augmentsWithImages =
 
             // If it's an object, try to match by name similarity
             if (aug && aug.name) {
-                const normalizedName = aug.name
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, "");
-                const foundAugment = allAugments.find((dbAug) => {
-                    const dbNormalizedName = dbAug.name
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, "");
-                    return (
-                        dbNormalizedName === normalizedName ||
-                        dbNormalizedName.includes(normalizedName) ||
-                        normalizedName.includes(dbNormalizedName)
-                    );
-                });
+                const foundAugment = getAugment(aug.name);
 
                 if (foundAugment) {
                     return {
