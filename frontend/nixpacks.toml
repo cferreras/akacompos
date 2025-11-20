@@ -5,5 +5,11 @@
 NIXPACKS_NODE_VERSION = "20"
 NODE_ENV = "production"
 
+[phases.build]
+cmds = [
+  'export COMMIT_SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")',
+  'pnpm run build'
+]
+
 [start]
 cmd = "npx serve dist -l 3000"
