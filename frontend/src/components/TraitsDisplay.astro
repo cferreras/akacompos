@@ -61,10 +61,39 @@ const activeTraits = calculateActiveTraits(champions);
                                     </div>
                                 ))}
                             </div>
+                            
+                            <div class="pt-2 mt-1 border-t border-slate-700/50">
+                                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-2">Campeones</p>
+                                <div class="flex flex-wrap gap-1.5">
+                                    {trait.champions.map(champName => {
+                                        const isActive = champions.includes(champName);
+                                        const champImage = getChampionImageMeta(champName);
+                                        if (!champImage) return null;
+                                        
+                                        return (
+                                            <div class={`relative transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-30 grayscale"}`}>
+                                                <Image
+                                                    src={champImage}
+                                                    alt={champName}
+                                                    width={32}
+                                                    height={32}
+                                                    class={`w-8 h-8 rounded border-2 ${isActive ? "border-primary" : "border-slate-600"}`}
+                                                    title={champName}
+                                                />
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
                         </div>
 
                         <div
-                            class="trait-card relative rounded-lg p-3 bg-slate-800/50 border-2 border-slate-800 flex items-center gap-2 hover:bg-slate-800 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 transition-all duration-200 cursor-pointer w-full"
+                            class={`trait-card relative rounded-lg p-3 border-2 flex items-center gap-2 transition-all duration-200 cursor-pointer w-full
+                                ${activeTier 
+                                    ? "bg-slate-800 border-primary/40 hover:bg-slate-700 hover:border-primary hover:shadow-lg hover:shadow-primary/10" 
+                                    : "bg-slate-900/40 border-slate-800 opacity-70 hover:opacity-100 hover:bg-slate-800 hover:border-slate-700"
+                                }
+                            `}
                         >
                             <div class="relative flex-shrink-0">
                                 <Image
@@ -72,9 +101,14 @@ const activeTraits = calculateActiveTraits(champions);
                                     alt={trait.name}
                                     width={40}
                                     height={40}
-                                    class="w-10 h-10 rounded-md brightness-0 invert"
+                                    class={`w-10 h-10 rounded-md brightness-0 invert ${!activeTier && "opacity-60"}`}
                                 />
-                                <span class="absolute -bottom-1 -right-1 bg-slate-900 border-2 border-current rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold text-white">
+                                <span class={`absolute -bottom-1 -right-1 border-2 border-current rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold
+                                    ${activeTier 
+                                        ? "bg-slate-900 text-white border-slate-900" 
+                                        : "bg-slate-800 text-slate-400 border-slate-800"
+                                    }
+                                `}>
                                     {count}
                                 </span>
                             </div>
