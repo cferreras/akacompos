@@ -7,7 +7,9 @@ NODE_ENV = "production"
 
 [phases.build]
 cmds = [
-  'export COMMIT_SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")',
+  'COMMIT_SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")',
+  'export COMMIT_SHA',
+  'echo "Building with commit: $COMMIT_SHA"',
   'pnpm run build'
 ]
 
