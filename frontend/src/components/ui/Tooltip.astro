@@ -17,6 +17,7 @@ export interface Props {
     maxWidth?: string;
     className?: string;
     tooltipClassName?: string;
+    triggerClassName?: string;
 }
 
 const {
@@ -26,13 +27,14 @@ const {
     maxWidth = '20rem',
     className = '',
     tooltipClassName = '',
+    triggerClassName = '',
 } = Astro.props;
 
 const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
 ---
 
 <div class={`tooltip-wrapper ${className}`} data-tooltip-wrapper>
-    <div class="tooltip-trigger" data-tooltip-trigger aria-describedby={tooltipId}>
+    <div class={`tooltip-trigger ${triggerClassName}`} data-tooltip-trigger aria-describedby={tooltipId}>
         <slot />
     </div>
 

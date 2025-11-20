@@ -999,3 +999,80 @@ export function searchAugmentsByName(query: string): Augment[] {
     aug.name.toLowerCase().includes(lowerQuery),
   );
 }
+
+/**
+ * Map of synonyms/variations to the correct augment ID or name.
+ */
+const augmentSynonymMap: Record<string, string> = {
+  "Band of Thieves II": "Band of Thieves II",
+  "Band of Thieves 2": "Band of Thieves II",
+  "Band of Thieves II+": "Band of Thieves II+",
+  "Band of Thieves 2 Plus": "Band of Thieves II+",
+  "Band of Thieves II++": "Band of Thieves II++",
+  "Band of Thieves 2 Plus Plus": "Band of Thieves II++",
+  "Caretaker's Ally": "Caretaker's Ally",
+  "Caretakers Ally": "Caretaker's Ally",
+  "Draven's Axe": "Draven's Axe",
+  "Dravens Axe": "Draven's Axe",
+  "Gargoyle Stoneplate": "Solo Plate", // Augment name is "Solo Plate", item is Gargoyle Stoneplate
+  "Gargoyle's Stoneplate": "Solo Plate",
+  "Guinsoo's Rageblade": "Speedy Double Kill", // Augment name is "Speedy Double Kill", item is Guinsoo's Rageblade
+  "Guinsoos Rageblade": "Speedy Double Kill",
+  "Harrying": "Harrying", // Check if Harrying! exists
+  "Phreaky Friday": "Phreaky Friday", // Check if Phreaky Friday! exists
+  "The Golden Egg": "The Golden Egg",
+  "Golden Egg": "The Golden Egg",
+  "Three's Company": "Three's Company",
+  "Threes Company": "Three's Company",
+  "Twin Terror I": "Twin Terror I",
+  "Twin Terror 1": "Twin Terror I",
+  "Twin Terror II": "Twin Terror II",
+  "Twin Terror 2": "Twin Terror II",
+  "Two Healthy": "Two Healthy",
+  "Too Healthy": "Two Healthy",
+  "What The Forge": "What The Forge",
+  "What the Forge": "What The Forge",
+};
+
+/**
+ * Retrieves an augment by ID or name, handling synonyms and normalization.
+ */
+export function getAugment(identifier: string): Augment | undefined {
+  if (!identifier) return undefined;
+
+  // 1. Try direct ID match
+  let augment = allAugments.find((aug) => aug.id === identifier);
+  if (augment) return augment;
+
+  // 2. Try direct Name match
+  augment = allAugments.find((aug) => aug.name === identifier);
+  if (augment) return augment;
+
+  // 3. Normalize and check synonyms
+  const normalized = identifier.trim();
+
+  // Check synonym map
+  if (normalized in augmentSynonymMap) {
+    const mapped = augmentSynonymMap[normalized];
+    augment = allAugments.find((aug) => aug.name === mapped || aug.id === mapped);
+    if (augment) return augment;
+  }
+
+  // 4. Fuzzy match (remove non-alphanumeric and case insensitive)
+  const simplifiedInput = normalized.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+  augment = allAugments.find((aug) => {
+    const simplifiedName = aug.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    return simplifiedName === simplifiedInput;
+  });
+
+  if (augment) return augment;
+
+  // 5. Partial match (if input is part of name or vice versa) - Use with caution
+  augment = allAugments.find((aug) => {
+    const simplifiedName = aug.name.toLowerCase().replace(/[^a-z0-9]/g, "");
+    return simplifiedName.includes(simplifiedInput) || simplifiedInput.includes(simplifiedName);
+  });
+
+  return augment;
+}

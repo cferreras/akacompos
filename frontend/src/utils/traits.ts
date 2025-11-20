@@ -6,55 +6,56 @@
 // TRAIT ICONS IMPORTS - SET 16
 // ============================================================================
 // Origins
-import bilgewaterIcon from "../assets/Traits/Trait_Icon_16_Bilgewater.TFT_Set16.png";
-import demaciaIcon from "../assets/Traits/Trait_Icon_16_Demacia.TFT_Set16.png";
-import freljordIcon from "../assets/Traits/Trait_Icon_16_Freljord.TFT_Set16.png";
-import ioniaIcon from "../assets/Traits/Trait_Icon_16_Ionia.TFT_Set16.png";
+import bilgewaterIcon from "../assets/Traits/Trait_Icon_16_Bilgewater.svg";
+import demaciaIcon from "../assets/Traits/Trait_Icon_16_Demacia.svg";
+import freljordIcon from "../assets/Traits/Trait_Icon_16_Freljord.svg";
+import ioniaIcon from "../assets/Traits/Trait_Icon_16_Ionia.svg";
 import ixtalIcon from "../assets/Traits/Trait_Icon_16_Ixtal.TFT_Set16.png";
-import noxusIcon from "../assets/Traits/Trait_Icon_16_Noxus.TFT_Set16.png";
-import piltoverIcon from "../assets/Traits/Trait_Icon_16_Piltover.TFT_Set16.png";
-import shadowIslesIcon from "../assets/Traits/Trait_Icon_16_ShadowIsles.TFT_Set16.png";
-import shurimaIcon from "../assets/Traits/Trait_Icon_16_Shurima.TFT_Set16.png";
-import targonIcon from "../assets/Traits/Trait_Icon_16_Targon.TFT_Set16.png";
-import voidIcon from "../assets/Traits/Trait_Icon_16_Void.TFT_Set16.png";
-import yordleIcon from "../assets/Traits/Trait_Icon_16_Yordle.TFT_Set16.png";
-import zaunIcon from "../assets/Traits/Trait_Icon_16_Zaun.TFT_Set16.png";
+import noxusIcon from "../assets/Traits/Trait_Icon_16_Noxus.svg";
+import piltoverIcon from "../assets/Traits/Trait_Icon_16_Piltover.svg";
+import shadowIslesIcon from "../assets/Traits/Trait_Icon_16_ShadowIsles.svg";
+import shurimaIcon from "../assets/Traits/Trait_Icon_16_Shurima.svg";
+import targonIcon from "../assets/Traits/Trait_Icon_16_Targon.svg";
+import voidIcon from "../assets/Traits/Trait_Icon_16_Void.svg";
+import yordleIcon from "../assets/Traits/Trait_Icon_16_Yordle.svg";
+import zaunIcon from "../assets/Traits/Trait_Icon_16_Zaun.svg";
 
 // Classes
-import arcanistIcon from "../assets/Traits/Trait_Icon_16_Arcanist.TFT_Set16.png";
-import bruiserIcon from "../assets/Traits/Trait_Icon_16_Brawler.TFT_Set16.png";
-import defenderIcon from "../assets/Traits/Trait_Icon_16_Defender.TFT_Set16.png";
-import disruptorIcon from "../assets/Traits/Trait_Icon_16_Disruptor.TFT_Set16.png";
-import gunslingerIcon from "../assets/Traits/Trait_Icon_16_Gunslinger.TFT_Set16.png";
-import invokerIcon from "../assets/Traits/Trait_Icon_16_Invoker.TFT_Set16.png";
-import juggernautIcon from "../assets/Traits/Trait_Icon_16_Juggernaut.TFT_Set16.png";
-import longshotIcon from "../assets/Traits/Trait_Icon_16_Longshot.TFT_Set16.png";
-import quickstrikerIcon from "../assets/Traits/Trait_Icon_16_Quickstriker.TFT_Set16.png";
-import slayerIcon from "../assets/Traits/Trait_Icon_16_Slayer.TFT_Set16.png";
-import vanquisherIcon from "../assets/Traits/Trait_Icon_16_Vanquisher.TFT_Set16.png";
-import wardenIcon from "../assets/Traits/Trait_Icon_16_Warden.TFT_Set16.png";
+import arcanistIcon from "../assets/Traits/Trait_Icon_16_Arcanist.svg";
+import bruiserIcon from "../assets/Traits/Trait_Icon_16_Brawler.svg";
+import defenderIcon from "../assets/Traits/Trait_Icon_16_Defender.svg";
+import disruptorIcon from "../assets/Traits/Trait_Icon_16_Disruptor.svg";
+import gunslingerIcon from "../assets/Traits/Trait_Icon_16_Gunslinger.svg";
+import invokerIcon from "../assets/Traits/Trait_Icon_16_Invoker.svg";
+import juggernautIcon from "../assets/Traits/Trait_Icon_16_Juggernaut (1).svg";
+import longshotIcon from "../assets/Traits/Trait_Icon_16_Longshot (1).svg";
+import quickstrikerIcon from "../assets/Traits/Trait_Icon_16_Quickstriker.svg";
+import slayerIcon from "../assets/Traits/Trait_Icon_16_Slayer.svg";
+import vanquisherIcon from "../assets/Traits/Trait_Icon_16_Vanquisher.svg";
+import wardenIcon from "../assets/Traits/Trait_Icon_16_Warden.svg";
 
 // Unique Traits
-import ascendantIcon from "../assets/Traits/Trait_Icon_16_Ascendant.TFT_Set16.png";
-import assimilatorIcon from "../assets/Traits/Trait_Icon_16_Assimilator.TFT_Set16.png";
-import blacksmithIcon from "../assets/Traits/Trait_Icon_16_Blacksmith.TFT_Set4.5.png";
-import caretakerIcon from "../assets/Traits/Trait_Icon_16_Caretaker.TFT_Set16.png";
-import chainbreakerIcon from "../assets/Traits/Trait_Icon_16_Chainbreaker.TFT_Set16.png";
-import chronokeeperIcon from "../assets/Traits/Trait_Icon_16_Chronokeeper.TFT_Set16.png";
-import darkChildIcon from "../assets/Traits/Trait_Icon_16_DarkChild.TFT_Set16.png";
-import darkinIcon from "../assets/Traits/Trait_Icon_16_Darkin.TFT_Set16.png";
-import dragonbornIcon from "../assets/Traits/Trait_Icon_16_Dragonborn.TFT_Set16.png";
-import emperorIcon from "../assets/Traits/Trait_Icon_16_Emperor.TFT_Set16.png";
-import eternalIcon from "../assets/Traits/Trait_Icon_16_Eternal.TFT_Set16.png";
-import gluttonIcon from "../assets/Traits/Trait_Icon_16_Glutton.TFT_Set16.png";
-import harvesterIcon from "../assets/Traits/Trait_Icon_16_Harvester.TFT_Set16.png";
-import heroicIcon from "../assets/Traits/Trait_Icon_16_Heroic.TFT_Set16.png";
-import huntressIcon from "../assets/Traits/Trait_Icon_16_Huntress.TFT_Set16.png";
-import immortalIcon from "../assets/Traits/Trait_Icon_16_Immortal.TFT_Set16.png";
-import riftscourgeIcon from "../assets/Traits/Trait_Icon_16_Riftscourge.TFT_Set16.png";
-import runeMageIcon from "../assets/Traits/Trait_Icon_16_RuneMage.TFT_Set16.png";
-import soulboundIcon from "../assets/Traits/Trait_Icon_16_Soulbound.TFT_Set16.png";
-import worldEnderIcon from "../assets/Traits/Trait_Icon_16_WorldEnder.TFT_Set16.png";
+import ascendantIcon from "../assets/Traits/Trait_Icon_16_Ascendant.svg";
+import assimilatorIcon from "../assets/Traits/Trait_Icon_16_Assimilator.svg";
+import blacksmithIcon from "../assets/Traits/Trait_Icon_16_Blacksmith.svg";
+import caretakerIcon from "../assets/Traits/Trait_Icon_16_Caretaker.svg";
+import chainbreakerIcon from "../assets/Traits/Trait_Icon_16_Chainbreaker.svg";
+import chronokeeperIcon from "../assets/Traits/Trait_Icon_16_Chronokeeper.svg";
+import darkChildIcon from "../assets/Traits/Trait_Icon_16_DarkChild.svg";
+import darkinIcon from "../assets/Traits/Trait_Icon_16_Darkin.svg";
+import dragonbornIcon from "../assets/Traits/Trait_Icon_16_Dragonborn.svg";
+import emperorIcon from "../assets/Traits/Trait_Icon_16_Emperor.svg";
+import eternalIcon from "../assets/Traits/Trait_Icon_16_Eternal.svg";
+import gluttonIcon from "../assets/Traits/Trait_Icon_16_Glutton.svg";
+import harvesterIcon from "../assets/Traits/Trait_Icon_16_Harvester.svg";
+import heroicIcon from "../assets/Traits/Trait_Icon_16_Heroic.svg";
+import huntressIcon from "../assets/Traits/Trait_Icon_16_Huntress.svg";
+import immortalIcon from "../assets/Traits/Trait_Icon_16_Immortal.svg";
+import riftscourgeIcon from "../assets/Traits/Trait_Icon_16_Riftscourge.svg";
+import runeMageIcon from "../assets/Traits/Trait_Icon_16_RuneMage.svg";
+import soulboundIcon from "../assets/Traits/Trait_Icon_16_Soulbound.svg";
+import worldEnderIcon from "../assets/Traits/Trait_Icon_16_WorldEnder.svg";
+import theBossIcon from "../assets/Traits/Trait_Icon_16_Revival_TheBoss.svg";
 
 export type TraitType = "origin" | "class" | "unique";
 
@@ -661,7 +662,7 @@ export const uniqueTraits: Trait[] = [
       { count: 1, effect: "Sett's ability ignores 100% Armor" },
     ],
     champions: ["Sett"],
-    icon: targonIcon,
+    icon: theBossIcon,
   },
   {
     id: "worldender",
@@ -725,6 +726,8 @@ export interface ActiveTrait {
   tierIndex: number;
 }
 
+import { resolveChampionName } from "./assets";
+
 /**
  * Calculate active traits based on champion names
  * @param championNames - Array of champion names in the composition
@@ -735,8 +738,9 @@ export function calculateActiveTraits(championNames: string[]): ActiveTrait[] {
 
   // Count how many champions have each trait
   championNames.forEach((championName) => {
+    const resolvedName = resolveChampionName(championName);
     allTraits.forEach((trait) => {
-      if (trait.champions.includes(championName)) {
+      if (trait.champions.includes(resolvedName)) {
         traitCounts.set(trait.id, (traitCounts.get(trait.id) || 0) + 1);
       }
     });

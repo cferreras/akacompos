@@ -6,7 +6,7 @@ import {
     type ActiveTrait,
 } from "../utils/traits";
 import { Image } from "astro:assets";
-import { getChampionImageMeta } from "../utils/assets";
+import { getChampionImageMeta, resolveChampionName } from "../utils/assets";
 
 import Tooltip from "./ui/Tooltip.astro";
 
@@ -31,7 +31,7 @@ const activeTraits = calculateActiveTraits(champions);
         ) : (
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                 {activeTraits.map(({ trait, count, activeTier, tierIndex }) => (
-                    <Tooltip position="bottom" className="w-full" tooltipClassName="min-w-[240px] max-w-[280px]">
+                    <Tooltip position="bottom" className="w-full" triggerClassName="w-full" tooltipClassName="w-[280px]">
                         <div slot="content" class="flex flex-col gap-3">
                              <div class="flex items-center gap-3">
                                 <Image
@@ -66,7 +66,10 @@ const activeTraits = calculateActiveTraits(champions);
                                 <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-2">Campeones</p>
                                 <div class="flex flex-wrap gap-1.5">
                                     {trait.champions.map(champName => {
-                                        const isActive = champions.includes(champName);
+                                        // Resolve both names to ensure correct matching
+                                        const resolvedChampName = resolveChampionName(champName);
+                                        const isActive = champions.some(c => resolveChampionName(c) === resolvedChampName);
+                                        
                                         const champImage = getChampionImageMeta(champName);
                                         if (!champImage) return null;
                                         

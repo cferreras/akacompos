@@ -370,7 +370,7 @@ const synonymMap: Record<string, string> = {
   "KhaZix": "Kha'Zix",
   "VelKoz": "Vel'Koz",
   "RenataGlasc": "Renata Glasc",
-  
+
   // Items
   "B.F.Sword": "B.F. Sword",
   "BF Sword": "B.F. Sword",
@@ -411,25 +411,34 @@ const synonymMap: Record<string, string> = {
  */
 function resolveKey(name: string, assets: Record<string, any>): string {
   const normalized = normalizeName(name);
-  
+
   // 1. Direct match
   if (normalized in assets) return normalized;
-  
+
   // 2. Synonym match
   if (normalized in synonymMap) {
     const mapped = synonymMap[normalized];
     if (mapped in assets) return mapped;
   }
-  
+
   // 3. Try removing non-alphanumeric characters (simplified match)
   // This helps with cases like "Kai'Sa" vs "KaiSa" if not in map
   const simplified = normalized.replace(/[^a-zA-Z0-9]/g, "");
   const assetKeys = Object.keys(assets);
   const foundKey = assetKeys.find(key => key.replace(/[^a-zA-Z0-9]/g, "") === simplified);
-  
+
   if (foundKey) return foundKey;
-  
+
   return normalized; // Return original if no match found
+}
+
+/**
+ * Resolves a champion name to its canonical form using synonyms and normalization.
+ * @param name - The name to resolve
+ * @returns The canonical champion name
+ */
+export function resolveChampionName(name: string): string {
+  return resolveKey(name, championAssets);
 }
 
 /**
@@ -441,9 +450,9 @@ export function getChampionImage(imagePath: string): string {
   // Si es una ruta completa, extraer el nombre del campeón
   const match = imagePath.match(/\/([^\/]+)\.png$/);
   let championName = match ? match[1] : imagePath;
-  
+
   championName = resolveKey(championName, championAssets);
-  
+
   return championAssets[championName as keyof typeof championAssets]?.src || imagePath;
 }
 
@@ -455,9 +464,9 @@ export function getChampionImage(imagePath: string): string {
 export function getChampionImageMeta(imagePath: string) {
   const match = imagePath.match(/\/([^\/]+)\.png$/);
   let championName = match ? match[1] : imagePath;
-  
+
   championName = resolveKey(championName, championAssets);
-  
+
   return championAssets[championName as keyof typeof championAssets];
 }
 
