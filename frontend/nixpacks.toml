@@ -1,17 +1,14 @@
-# nixpacks.toml
-# Configuration file for Nixpacks deployment
+[phases.setup]
+nixPkgs = ['nodejs_20', 'pnpm', 'git']
 
-[variables]
-NIXPACKS_NODE_VERSION = "20"
-NODE_ENV = "production"
+[phases.install]
+cmds = ['pnpm install']
 
 [phases.build]
 cmds = [
-  'COMMIT_SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")',
-  'export COMMIT_SHA',
-  'echo "Building with commit: $COMMIT_SHA"',
+  'export COMMIT_SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")',
   'pnpm run build'
 ]
 
 [start]
-cmd = "npx serve dist -l 3000"
+cmd = 'pnpm start'

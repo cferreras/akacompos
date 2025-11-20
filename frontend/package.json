@@ -8,7 +8,6 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "prebuild": "node -e \"try { const { execSync } = require('child_process'); const hash = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim(); process.env.GIT_COMMIT_HASH = hash; console.log('Git commit hash:', hash); } catch (e) { console.log('Could not get git hash'); }\"",
     "build": "astro build",
     "preview": "astro preview",
     "start": "serve dist -l 3000",

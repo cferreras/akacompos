@@ -7,25 +7,14 @@ import { execSync } from 'child_process';
 
 // Plugin para inyectar el hash del commit como variable de entorno
 function gitCommitPlugin() {
-  // Intentar obtener el hash del commit desde múltiples fuentes
-  let commitHash = 
-    process.env.GIT_COMMIT_HASH ||      // Variable personalizada
-    process.env.COMMIT_SHA ||            // Dokploy/Generic
-    process.env.VERCEL_GIT_COMMIT_SHA || // Vercel
-    process.env.CI_COMMIT_SHA ||         // GitLab CI
-    process.env.GITHUB_SHA ||            // GitHub Actions
-    null;
+  let commitHash = process.env.COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA || 'unknown';
 
-  // Si hay variable de entorno, acortar a 7 caracteres
-  if (commitHash) {
-    commitHash = commitHash.substring(0, 7);
-  } else {
-    // Intentar obtener desde Git si no hay variables de entorno
+  // Intentar obtener desde Git si no hay variables de entorno
+  if (commitHash === 'unknown') {
     try {
       commitHash = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
     } catch (error) {
-      // En desarrollo o si no hay git disponible
-      commitHash = process.env.NODE_ENV === 'development' ? 'dev' : 'unknown';
+      // Silencioso si falla
     }
   }
 
