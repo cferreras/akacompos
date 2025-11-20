@@ -3,6 +3,33 @@ import { defineConfig } from "astro/config";
 
 import tailwindcss from "@tailwindcss/vite";
 import { remarkModifiedTime } from "./remark-modified-time.mjs";
+import { execSync } from 'child_process';
+
+// Plugin para inyectar el hash del commit como variable de entorno
+function gitCommitPlugin() {
+  let commitHash = process.env.COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA || 'unknown';
+
+  // Intentar obtener desde Git si no hay variables de entorno
+  if (commitHash === 'unknown') {
+    try {
+      commitHash = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
+    } catch (error) {
+      // Silencioso si falla
+    }
+  }
+
+  return {
+    name: 'git-commit-hash',
+    config() {
+      return {
+        define: {
+          'import.meta.env.GIT_COMMIT_HASH': JSON.stringify(commitHash),
+        }
+      };
+    }
+  };
+}
+
 
 // Cargar variables de entorno
 import { loadEnv } from "vite";
@@ -18,7 +45,7 @@ const strapiHostname = STRAPI_URL ? new URL(STRAPI_URL).hostname : "";
 // https://astro.build/config
 export default defineConfig({
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [tailwindcss(), gitCommitPlugin()],
     assetsInclude: [
       "**/*.png",
       "**/*.jpg",
@@ -37,11 +64,11 @@ export default defineConfig({
     domains: strapiHostname ? [strapiHostname] : [],
     remotePatterns: strapiHostname
       ? [
-          {
-            protocol: "https",
-            hostname: strapiHostname,
-          },
-        ]
+        {
+          protocol: "https",
+          hostname: strapiHostname,
+        },
+      ]
       : [],
   },
 });
