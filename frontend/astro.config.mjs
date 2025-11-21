@@ -1,5 +1,6 @@
 // @ts-check
 import { defineConfig } from "astro/config";
+import node from "@astrojs/node";
 
 import tailwindcss from "@tailwindcss/vite";
 import { remarkModifiedTime } from "./remark-modified-time.mjs";
@@ -54,11 +55,14 @@ export default defineConfig({
       "**/*.svg",
     ],
   },
+  adapter: node({
+    mode: 'standalone'
+  }),
   markdown: {
     remarkPlugins: [remarkModifiedTime],
   },
   // Static output for simple deployment with serve
-  output: "static",
+  output: "server",
   // Configuración de imágenes remotas
   image: {
     domains: strapiHostname ? [strapiHostname] : [],
