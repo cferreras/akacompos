@@ -11,4 +11,4 @@ cmds = [
 ]
 
 [start]
-cmd = 'pnpm start'
+cmd = 'node ./dist/server/entry.mjs'
