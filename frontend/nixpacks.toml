@@ -1,9 +1,22 @@
 [phases.setup]
 nixPkgs = ['nodejs_20', 'pnpm', 'git']
 cmds = [
-  # Capturar el commit hash desde el directorio padre (donde está .git)
-  # y guardarlo en un archivo antes de que nixpacks elimine .git
-  'git -C .. rev-parse --short HEAD > /tmp/commit_hash.txt 2>/dev/null || echo "unknown" > /tmp/commit_hash.txt'
+  # Intentar múltiples estrategias para obtener el commit hash
+  # 1. Intentar git directamente (por si Dokploy configura GIT_DIR)
+  # 2. Intentar desde el directorio padre
+  # 3. Si .git es un archivo (git worktree), leer el gitdir
+  '''
+  if git rev-parse --short HEAD > /tmp/commit_hash.txt 2>/dev/null; then
+    echo "Git hash captured from current directory"
+  elif git -C .. rev-parse --short HEAD > /tmp/commit_hash.txt 2>/dev/null; then
+    echo "Git hash captured from parent directory"
+  elif [ -f .git ]; then
+    GITDIR=$(cat .git | sed 's/gitdir: //')
+    git --git-dir="$GITDIR" rev-parse --short HEAD > /tmp/commit_hash.txt 2>/dev/null || echo "unknown" > /tmp/commit_hash.txt
+  else
+    echo "unknown" > /tmp/commit_hash.txt
+  fi
+  '''
 ]
 
 [phases.install]
@@ -13,6 +26,7 @@ cmds = ['pnpm install']
 cmds = [
   # Leer el commit hash del archivo temporal y exportarlo como variable de entorno
   'export COMMIT_SHA=$(cat /tmp/commit_hash.txt 2>/dev/null || echo "unknown")',
+  'echo "Building with commit: $COMMIT_SHA"',
   'pnpm run build'
 ]
 
