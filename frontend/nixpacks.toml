@@ -1,12 +1,18 @@
 [phases.setup]
 nixPkgs = ['nodejs_20', 'pnpm', 'git']
+cmds = [
+  # Capturar el commit hash desde el directorio padre (donde está .git)
+  # y guardarlo en un archivo antes de que nixpacks elimine .git
+  'git -C .. rev-parse --short HEAD > /tmp/commit_hash.txt 2>/dev/null || echo "unknown" > /tmp/commit_hash.txt'
+]
 
 [phases.install]
 cmds = ['pnpm install']
 
 [phases.build]
 cmds = [
-  'export COMMIT_SHA=$(git -C .. rev-parse --short HEAD 2>/dev/null || echo "unknown")',
+  # Leer el commit hash del archivo temporal y exportarlo como variable de entorno
+  'export COMMIT_SHA=$(cat /tmp/commit_hash.txt 2>/dev/null || echo "unknown")',
   'pnpm run build'
 ]
 
