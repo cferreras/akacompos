@@ -5,7 +5,7 @@ import {
     type TraitTier,
     type ActiveTrait,
 } from "../utils/traits";
-import { Image } from "astro:assets";
+
 import { getChampionImageMeta, resolveChampionName } from "../utils/assets";
 
 import Tooltip from "./ui/Tooltip.astro";
@@ -31,52 +31,80 @@ const activeTraits = calculateActiveTraits(champions);
         ) : (
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
                 {activeTraits.map(({ trait, count, activeTier, tierIndex }) => (
-                    <Tooltip position="bottom" className="w-full" triggerClassName="w-full" tooltipClassName="w-[280px]">
+                    <Tooltip
+                        position="bottom"
+                        className="w-full"
+                        triggerClassName="w-full"
+                        tooltipClassName="w-[280px]"
+                    >
                         <div slot="content" class="flex flex-col gap-3">
-                             <div class="flex items-center gap-3">
-                                <Image
-                                    src={trait.icon}
+                            <div class="flex items-center gap-3">
+                                <img
+                                    src={trait.icon.src || trait.icon}
                                     alt={trait.name}
                                     width={40}
                                     height={40}
                                     class="w-10 h-10 rounded-md brightness-0 invert"
                                 />
                                 <div>
-                                    <h4 class="font-bold text-white text-sm leading-tight">{trait.name}</h4>
+                                    <h4 class="font-bold text-white text-sm leading-tight">
+                                        {trait.name}
+                                    </h4>
                                     <span class="text-xs font-semibold text-primary">
                                         {count} activo{count !== 1 ? "s" : ""}
                                     </span>
                                 </div>
                             </div>
-                            <p class="text-xs text-slate-300 leading-relaxed">{trait.description}</p>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                {trait.description}
+                            </p>
                             <div class="flex flex-col gap-1.5">
                                 {trait.tiers.map((tier, idx) => (
-                                    <div class={`flex items-center gap-2 p-1.5 rounded ${idx === tierIndex ? "bg-amber-500/20 border border-amber-500/50 shadow-[0_0_12px_rgba(234,179,8,0.25)]" : "bg-slate-700/20"}`}>
-                                        <span class={`inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 rounded text-xs font-bold ${idx === tierIndex ? "bg-amber-500/30 text-amber-300" : "bg-slate-700/40 text-slate-300"}`}>
+                                    <div
+                                        class={`flex items-center gap-2 p-1.5 rounded ${idx === tierIndex ? "bg-amber-500/20 border border-amber-500/50 shadow-[0_0_12px_rgba(234,179,8,0.25)]" : "bg-slate-700/20"}`}
+                                    >
+                                        <span
+                                            class={`inline-flex items-center justify-center min-w-[1.5rem] h-6 px-1.5 rounded text-xs font-bold ${idx === tierIndex ? "bg-amber-500/30 text-amber-300" : "bg-slate-700/40 text-slate-300"}`}
+                                        >
                                             {tier.count}
                                         </span>
-                                        <span class={`text-xs flex-1 leading-tight ${idx === tierIndex ? "text-amber-100 font-medium" : "text-slate-300"}`}>
+                                        <span
+                                            class={`text-xs flex-1 leading-tight ${idx === tierIndex ? "text-amber-100 font-medium" : "text-slate-300"}`}
+                                        >
                                             {tier.effect}
                                         </span>
                                     </div>
                                 ))}
                             </div>
-                            
+
                             <div class="pt-2 mt-1 border-t border-slate-700/50">
-                                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-2">Campeones</p>
+                                <p class="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-2">
+                                    Campeones
+                                </p>
                                 <div class="flex flex-wrap gap-1.5">
-                                    {trait.champions.map(champName => {
+                                    {trait.champions.map((champName) => {
                                         // Resolve both names to ensure correct matching
-                                        const resolvedChampName = resolveChampionName(champName);
-                                        const isActive = champions.some(c => resolveChampionName(c) === resolvedChampName);
-                                        
-                                        const champImage = getChampionImageMeta(champName);
+                                        const resolvedChampName =
+                                            resolveChampionName(champName);
+                                        const isActive = champions.some(
+                                            (c) =>
+                                                resolveChampionName(c) ===
+                                                resolvedChampName,
+                                        );
+
+                                        const champImage =
+                                            getChampionImageMeta(champName);
                                         if (!champImage) return null;
-                                        
+
                                         return (
-                                            <div class={`relative transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-30 grayscale"}`}>
-                                                <Image
-                                                    src={champImage}
+                                            <div
+                                                class={`relative transition-opacity duration-200 ${isActive ? "opacity-100" : "opacity-30 grayscale"}`}
+                                            >
+                                                <img
+                                                    src={
+                                                        champImage.src ||
+                                                        champImage
+                                                    }
                                                     alt={champName}
                                                     width={32}
                                                     height={32}
@@ -92,26 +120,30 @@ const activeTraits = calculateActiveTraits(champions);
 
                         <div
                             class={`trait-card relative rounded-lg p-3 border-2 flex items-center gap-2 transition-all duration-200 cursor-pointer w-full
-                                ${activeTier 
-                                    ? "bg-slate-800 border-primary/40 hover:bg-slate-700 hover:border-primary hover:shadow-lg hover:shadow-primary/10" 
-                                    : "bg-slate-900/40 border-slate-800 opacity-70 hover:opacity-100 hover:bg-slate-800 hover:border-slate-700"
+                                ${
+                                    activeTier
+                                        ? "bg-slate-800 border-primary/40 hover:bg-slate-700 hover:border-primary hover:shadow-lg hover:shadow-primary/10"
+                                        : "bg-slate-900/40 border-slate-800 opacity-70 hover:opacity-100 hover:bg-slate-800 hover:border-slate-700"
                                 }
                             `}
                         >
                             <div class="relative flex-shrink-0">
-                                <Image
-                                    src={trait.icon}
+                                <img
+                                    src={trait.icon.src || trait.icon}
                                     alt={trait.name}
                                     width={40}
                                     height={40}
                                     class={`w-10 h-10 rounded-md brightness-0 invert ${!activeTier && "opacity-60"}`}
                                 />
-                                <span class={`absolute -bottom-1 -right-1 border-2 border-current rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold
-                                    ${activeTier 
-                                        ? "bg-slate-900 text-white border-slate-900" 
-                                        : "bg-slate-800 text-slate-400 border-slate-800"
+                                <span
+                                    class={`absolute -bottom-1 -right-1 border-2 border-current rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold
+                                    ${
+                                        activeTier
+                                            ? "bg-slate-900 text-white border-slate-900"
+                                            : "bg-slate-800 text-slate-400 border-slate-800"
                                     }
-                                `}>
+                                `}
+                                >
                                     {count}
                                 </span>
                             </div>

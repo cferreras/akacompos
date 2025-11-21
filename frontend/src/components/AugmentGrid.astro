@@ -1,6 +1,6 @@
 ---
 import { getAugment } from "../utils/augments.ts";
-import { Image } from "astro:assets";
+
 import Tooltip from "./ui/Tooltip.astro";
 
 interface Props {
@@ -69,7 +69,11 @@ const augmentsWithImages =
 <div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-3 gap-3 md:gap-4">
     {
         augmentsWithImages.map((augment) => (
-            <Tooltip position="top" className="w-full h-full" tooltipClassName="min-w-[220px]">
+            <Tooltip
+                position="top"
+                className="w-full h-full"
+                tooltipClassName="min-w-[220px]"
+            >
                 <div slot="content" class="flex flex-col gap-2">
                     <div class="flex items-start gap-3">
                         <div
@@ -84,13 +88,12 @@ const augmentsWithImages =
                             }`}
                         >
                             {augment.hasImage ? (
-                                <Image
-                                    src={augment.image}
+                                <img
+                                    src={augment.image.src || augment.image}
                                     alt={augment.name}
                                     class="w-full h-full object-contain p-1"
                                     width={40}
                                     height={40}
-                                    quality={85}
                                     loading="eager"
                                     decoding="async"
                                 />
@@ -127,9 +130,7 @@ const augmentsWithImages =
                 </div>
 
                 <div class="augment-card group relative h-full">
-                    <div
-                        class="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-800/50 border-2 border-slate-800 hover:bg-slate-800 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 cursor-pointer h-full transition-all duration-300"
-                    >
+                    <div class="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-800/50 border-2 border-slate-800 hover:bg-slate-800 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 cursor-pointer h-full transition-all duration-300">
                         {/* Augment Image */}
                         <div
                             class={`aspect-square rounded-lg overflow-hidden transition-all w-full ${
@@ -143,13 +144,12 @@ const augmentsWithImages =
                             }`}
                         >
                             {augment.hasImage ? (
-                                <Image
-                                    src={augment.image}
+                                <img
+                                    src={augment.image.src || augment.image}
                                     alt={augment.name}
                                     class="w-full h-full object-contain p-2"
                                     width={120}
                                     height={120}
-                                    quality={85}
                                     loading="lazy"
                                     decoding="async"
                                 />

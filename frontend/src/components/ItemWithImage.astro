@@ -1,63 +1,72 @@
 ---
 // Importar helper function from centralized assets
-import { itemAssets } from '../utils/assets';
-import { Image } from 'astro:assets';
+import { itemAssets } from "../utils/assets";
 
 export interface Props {
   itemName: string;
   description?: string;
-  size?: 'small' | 'medium' | 'large';
+  size?: "small" | "medium" | "large";
   showLabel?: boolean;
 }
 
-const { itemName, description, size = 'small', showLabel = true } = Astro.props;
+const { itemName, description, size = "small", showLabel = true } = Astro.props;
 
 const itemImage = itemAssets[itemName as keyof typeof itemAssets];
 const sizeClasses = {
-  small: 'w-6 h-6',
-  medium: 'w-10 h-10',
-  large: 'w-16 h-16'
+  small: "w-6 h-6",
+  medium: "w-10 h-10",
+  large: "w-16 h-16",
 };
 const sizePixels = {
   small: 24,
   medium: 40,
-  large: 64
+  large: 64,
 };
 ---
 
 <div class="item-with-image group">
   <div class="item-image-container">
-    {itemImage ? (
-      <Image 
-        src={itemImage} 
-        alt={itemName}
-        class={`item-image ${sizeClasses[size]}`}
-        width={sizePixels[size]}
-        height={sizePixels[size]}
-        quality={85}
-        loading="lazy"
-        decoding="async"
-      />
-    ) : (
-      <div class={`item-placeholder ${sizeClasses[size]}`}></div>
-    )}
-    {!showLabel && (
-      <div class="item-tooltip">
-        <span class="tooltip-text">{itemName}</span>
-        {description && <span class="tooltip-description">{description}</span>}
-      </div>
-    )}
-  </div>
-  {showLabel && (
-    <div class="item-info">
-      <span class="item-name">{itemName}</span>
-      {description && (
-        <div class="item-description-container" title="Click to expand/collapse">
-          <span class="item-description">{description}</span>
+    {
+      itemImage ? (
+        <img
+          src={itemImage.src || itemImage}
+          alt={itemName}
+          class={`item-image ${sizeClasses[size]}`}
+          width={sizePixels[size]}
+          height={sizePixels[size]}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div class={`item-placeholder ${sizeClasses[size]}`} />
+      )
+    }
+    {
+      !showLabel && (
+        <div class="item-tooltip">
+          <span class="tooltip-text">{itemName}</span>
+          {description && (
+            <span class="tooltip-description">{description}</span>
+          )}
         </div>
-      )}
-    </div>
-  )}
+      )
+    }
+  </div>
+  {
+    showLabel && (
+      <div class="item-info">
+        <span class="item-name">{itemName}</span>
+        {description && (
+          <div
+            class="item-description-container"
+            title="Click to expand/collapse"
+          >
+            <span class="item-description">{description}</span>
+          </div>
+        )}
+      </div>
+    )
+  }
 </div>
 
 <style>
@@ -78,14 +87,22 @@ const sizePixels = {
     object-fit: cover;
     border-radius: 8px;
     border: 2px solid var(--color-primary);
-    background: linear-gradient(135deg, rgba(22, 16, 34, 0.8) 0%, rgba(15, 15, 26, 0.9) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(22, 16, 34, 0.8) 0%,
+      rgba(15, 15, 26, 0.9) 100%
+    );
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   }
 
   .item-placeholder {
     border-radius: 8px;
     border: 2px solid var(--color-primary);
-    background: linear-gradient(135deg, rgba(22, 16, 34, 0.8) 0%, rgba(15, 15, 26, 0.9) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba(22, 16, 34, 0.8) 0%,
+      rgba(15, 15, 26, 0.9) 100%
+    );
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   }
 
@@ -146,7 +163,7 @@ const sizePixels = {
   }
 
   .item-tooltip::after {
-    content: '';
+    content: "";
     position: absolute;
     top: 100%;
     left: 50%;
@@ -189,23 +206,25 @@ const sizePixels = {
 
 <script>
   // Handle description expansion
-  document.addEventListener('astro:page-load', () => {
+  document.addEventListener("astro:page-load", () => {
     setupItemDescriptions();
   });
 
   // Also run on initial load in case view transitions aren't used or for first load
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     setupItemDescriptions();
   });
 
   function setupItemDescriptions() {
-    const descriptions = document.querySelectorAll('.item-description-container');
-    
-    descriptions.forEach(container => {
-      container.addEventListener('click', () => {
-        const text = container.querySelector('.item-description');
+    const descriptions = document.querySelectorAll(
+      ".item-description-container",
+    );
+
+    descriptions.forEach((container) => {
+      container.addEventListener("click", () => {
+        const text = container.querySelector(".item-description");
         if (text) {
-          text.classList.toggle('expanded');
+          text.classList.toggle("expanded");
         }
       });
     });

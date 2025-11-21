@@ -453,7 +453,10 @@ export function getChampionImage(imagePath: string): string {
 
   championName = resolveKey(championName, championAssets);
 
-  return championAssets[championName as keyof typeof championAssets]?.src || imagePath;
+  const asset = championAssets[championName as keyof typeof championAssets];
+  if (!asset) return imagePath;
+
+  return typeof asset === 'string' ? asset : asset.src || imagePath;
 }
 
 /**
@@ -477,7 +480,10 @@ export function getChampionImageMeta(imagePath: string) {
  */
 export function getItemImage(itemName: string): string {
   const resolvedName = resolveKey(itemName, itemAssets);
-  return itemAssets[resolvedName as keyof typeof itemAssets]?.src || "";
+  const asset = itemAssets[resolvedName as keyof typeof itemAssets];
+
+  if (!asset) return "";
+  return typeof asset === 'string' ? asset : asset.src || "";
 }
 
 /**
