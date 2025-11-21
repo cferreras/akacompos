@@ -13,9 +13,15 @@ function gitCommitPlugin() {
   // Intentar obtener desde Git si no hay variables de entorno
   if (commitHash === 'unknown') {
     try {
+      // Intentar desde el directorio local primero
       commitHash = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
     } catch (error) {
-      // Silencioso si falla
+      try {
+        // Si falla, intentar desde el directorio padre (para proyectos en subdirectorios)
+        commitHash = execSync('git -C .. rev-parse --short HEAD', { encoding: 'utf-8' }).trim();
+      } catch (error2) {
+        // Silencioso si ambos fallan
+      }
     }
   }
 

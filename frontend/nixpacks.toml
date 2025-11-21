@@ -6,7 +6,7 @@ cmds = ['pnpm install']
 
 [phases.build]
 cmds = [
-  'export COMMIT_SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "unknown")',
+  'export COMMIT_SHA=$(git -C .. rev-parse --short HEAD 2>/dev/null || echo "unknown")',
   'pnpm run build'
 ]
 
