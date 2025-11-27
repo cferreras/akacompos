@@ -8,7 +8,7 @@ const isCompositions = pathname.startsWith("/compositions");
 ---
 
 <header
-    class="sticky top-0 z-[100] bg-background-dark/80 backdrop-blur-strong border-b border-slate-800/50 shadow-lg transition-all duration-300"
+    class="sticky top-0 z-[100] bg-background-dark/60 backdrop-blur-md border-b border-slate-800/30 shadow-lg transition-all duration-500"
     id="main-header"
 >
     <Container maxWidth="xl" paddingY="none">
@@ -84,7 +84,10 @@ const isCompositions = pathname.startsWith("/compositions");
                     class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700/50 transition-all focus:outline-none focus:ring-2 focus:ring-primary/50"
                     aria-label="Menú"
                 >
-                    <i id="menu-icon" class="fa-solid fa-bars text-xl transition-transform duration-300"></i>
+                    <i
+                        id="menu-icon"
+                        class="fa-solid fa-bars text-xl transition-transform duration-300"
+                    ></i>
                 </button>
             </div>
         </nav>
@@ -95,7 +98,9 @@ const isCompositions = pathname.startsWith("/compositions");
             class="md:hidden overflow-hidden transition-all duration-300 ease-in-out opacity-0 invisible"
             style="max-height: 0;"
         >
-            <div class="py-4 space-y-2 border-t border-slate-800/50 bg-background-dark/95 backdrop-blur-xl rounded-b-2xl mb-4 mx-2 px-2 shadow-xl border border-slate-800/50">
+            <div
+                class="py-4 space-y-2 border-t border-slate-800/50 bg-background-dark/95 backdrop-blur-xl rounded-b-2xl mb-4 mx-2 px-2 shadow-xl border border-slate-800/50"
+            >
                 <a
                     href="/"
                     class:list={[
@@ -136,11 +141,29 @@ const isCompositions = pathname.startsWith("/compositions");
         // Scroll effect
         window.addEventListener("scroll", () => {
             if (window.scrollY > 10) {
-                header?.classList.add("shadow-primary/10", "border-slate-800");
-                header?.classList.remove("border-slate-800/50");
+                header?.classList.remove(
+                    "bg-background-dark/60",
+                    "backdrop-blur-md",
+                    "border-slate-800/30",
+                );
+                header?.classList.add(
+                    "bg-background-dark/95",
+                    "backdrop-blur-strong",
+                    "border-slate-800",
+                    "shadow-elevation-2",
+                );
             } else {
-                header?.classList.remove("shadow-primary/10", "border-slate-800");
-                header?.classList.add("border-slate-800/50");
+                header?.classList.remove(
+                    "bg-background-dark/95",
+                    "backdrop-blur-strong",
+                    "border-slate-800",
+                    "shadow-elevation-2",
+                );
+                header?.classList.add(
+                    "bg-background-dark/60",
+                    "backdrop-blur-md",
+                    "border-slate-800/30",
+                );
             }
         });
 
@@ -200,7 +223,12 @@ const isCompositions = pathname.startsWith("/compositions");
         left: 0;
         right: 0;
         height: 2px;
-        background: linear-gradient(90deg, transparent, rgb(var(--color-primary)), transparent);
+        background: linear-gradient(
+            90deg,
+            transparent,
+            rgb(var(--color-primary)),
+            transparent
+        );
         transform: scaleX(0);
         transition: transform var(--transition-base);
         opacity: 0;
@@ -210,7 +238,7 @@ const isCompositions = pathname.startsWith("/compositions");
         transform: scaleX(1);
         opacity: 0.5;
     }
-    
+
     .nav-link.text-primary::after {
         transform: scaleX(1);
         opacity: 1;
@@ -220,7 +248,7 @@ const isCompositions = pathname.startsWith("/compositions");
     #mobile-menu {
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    
+
     .rotate-90 {
         transform: rotate(90deg);
     }
@@ -234,12 +262,12 @@ const isCompositions = pathname.startsWith("/compositions");
         a[href="/"]:hover {
             transform: scale(1.05);
         }
-        
+
         .animate-gradient-x {
             background-size: 200% 200%;
             animation: gradient-x 3s ease infinite;
         }
-        
+
         @keyframes gradient-x {
             0% {
                 background-position: 0% 50%;
