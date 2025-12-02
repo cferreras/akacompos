@@ -17,7 +17,7 @@ export async function getLatestCommit(): Promise<string> {
 
     try {
         console.log('Fetching latest commit from GitHub API...');
-        const response = await fetch('https://api.github.com/repos/cferreras/akacompos/commits/main', {
+        const response = await fetch('https://api.github.com/repos/cferreras/akacompos/commits/master', {
             headers: {
                 'User-Agent': 'Astro-App',
                 'Accept': 'application/vnd.github.sha'
