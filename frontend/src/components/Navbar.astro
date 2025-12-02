@@ -56,17 +56,19 @@ const isCompositions = pathname.startsWith("/compositions");
             <!-- Right Side Actions -->
             <div class="flex items-center gap-4">
                 <!-- Twitch Link -->
-                <Button
-                    as="a"
-                    href="https://www.twitch.tv/akawonder"
-                    target="_blank"
-                    variant="ghost"
-                    size="sm"
-                    className="hidden sm:inline-flex hover:bg-purple-500/10 hover:text-purple-400"
-                >
-                    <i class="fa-brands fa-twitch"></i>
-                    <span class="hidden lg:inline">Twitch</span>
-                </Button>
+                <div class="hidden sm:inline-flex">
+                    <Button
+                        as="a"
+                        href="https://www.twitch.tv/akawonder"
+                        target="_blank"
+                        variant="ghost"
+                        size="sm"
+                        className="hover:bg-purple-500/10 hover:text-purple-400"
+                    >
+                        <i class="fa-brands fa-twitch"></i>
+                        <span class="hidden lg:inline">Twitch</span>
+                    </Button>
+                </div>
 
                 <!-- Mobile Twitch Icon -->
                 <a
