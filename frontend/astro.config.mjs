@@ -68,7 +68,7 @@ export default defineConfig({
     remarkPlugins: [remarkModifiedTime],
   },
   // Static output for simple deployment with serve
-  output: "static",
+  output: "server",
   // Configuración de imágenes remotas
   image: {
     domains: strapiHostname ? [strapiHostname] : [],
