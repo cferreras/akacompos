@@ -614,6 +614,7 @@ export const championRarity: Record<string, number> = {
   "Wukong": 4,
   "Yone": 4,
   "Yunara": 4,
+  "Taric": 4,
 
   // Cost 5
   "Aatrox": 5,
@@ -628,7 +629,6 @@ export const championRarity: Record<string, number> = {
   "Sett": 5,
   "Shyvana": 5,
   "Tahm Kench": 5,
-  "Taric": 5,
   "Thresh": 5,
   "Volibear": 5,
   "Xerath": 5,
