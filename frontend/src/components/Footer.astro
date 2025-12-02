@@ -1,8 +1,10 @@
 ---
 import Container from "./ui/Container.astro";
 
-// Get version from build-time environment variable injected by Vite plugin
-const version = import.meta.env.GIT_COMMIT_HASH || "unknown";
+import { getLatestCommit } from "../utils/github";
+
+// Get version from GitHub API (cached) or fallback to build-time env
+const version = await getLatestCommit();
 ---
 
 <footer
