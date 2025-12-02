@@ -4,6 +4,7 @@ import Badge from "../ui/Badge.astro";
 import Section from "../ui/Section.astro";
 import { championAssets } from "../../utils/assets";
 import { getCompositions } from "../../lib/strapi";
+import { Image } from "astro:assets";
 
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
@@ -172,17 +173,16 @@ function getUpdateTime(composition: any) {
                                             decoding="async"
                                         />
                                     ) : (
-                                        <img
-                                            src={
-                                                championAssets.Aatrox.src ||
-                                                championAssets.Aatrox
-                                            }
+                                        <Image
+                                            src={championAssets.Aatrox}
                                             alt={comp.title}
                                             class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-110"
                                             width={480}
                                             height={270}
                                             loading="lazy"
                                             decoding="async"
+                                            format="webp"
+                                            quality={85}
                                         />
                                     )}
                                     <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />

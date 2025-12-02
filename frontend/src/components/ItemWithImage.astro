@@ -1,6 +1,7 @@
 ---
 // Importar helper function from centralized assets
 import { itemAssets } from "../utils/assets";
+import { Image } from "astro:assets";
 
 export interface Props {
   itemName: string;
@@ -28,14 +29,16 @@ const sizePixels = {
   <div class="item-image-container">
     {
       itemImage ? (
-        <img
-          src={itemImage.src || itemImage}
+        <Image
+          src={itemImage}
           alt={itemName}
           class={`item-image ${sizeClasses[size]}`}
           width={sizePixels[size]}
           height={sizePixels[size]}
           loading="lazy"
           decoding="async"
+          format="webp"
+          quality={75}
         />
       ) : (
         <div class={`item-placeholder ${sizeClasses[size]}`} />

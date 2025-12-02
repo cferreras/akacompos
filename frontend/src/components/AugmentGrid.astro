@@ -2,6 +2,7 @@
 import { getAugment } from "../utils/augments.ts";
 
 import Tooltip from "./ui/Tooltip.astro";
+import { Image } from "astro:assets";
 
 interface Props {
     augments: Array<
@@ -88,14 +89,16 @@ const augmentsWithImages =
                             }`}
                         >
                             {augment.hasImage ? (
-                                <img
-                                    src={augment.image.src || augment.image}
+                                <Image
+                                    src={augment.image}
                                     alt={augment.name}
                                     class="w-full h-full object-contain p-1"
                                     width={40}
                                     height={40}
                                     loading="eager"
                                     decoding="async"
+                                    format="webp"
+                                    quality={75}
                                 />
                             ) : (
                                 <div class="w-full h-full bg-slate-700 flex items-center justify-center p-1">
@@ -144,14 +147,16 @@ const augmentsWithImages =
                             }`}
                         >
                             {augment.hasImage ? (
-                                <img
-                                    src={augment.image.src || augment.image}
+                                <Image
+                                    src={augment.image}
                                     alt={augment.name}
                                     class="w-full h-full object-contain p-2"
                                     width={120}
                                     height={120}
                                     loading="lazy"
                                     decoding="async"
+                                    format="webp"
+                                    quality={75}
                                 />
                             ) : (
                                 <div class="w-full h-full bg-slate-700 flex items-center justify-center p-2">

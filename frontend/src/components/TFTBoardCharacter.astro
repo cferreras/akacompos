@@ -2,6 +2,7 @@
 // Importar assets centralizados
 import { championAssets, itemAssets } from "../utils/assets";
 import StarsComponent from "./StarsComponent.astro";
+import { Image } from "astro:assets";
 
 // Colores predefinidos para los bordes
 const borderColors = {
@@ -75,14 +76,16 @@ const optimizedItemSize = Math.max(
         <div class="hexagon">
             {
                 finalImageSrc ? (
-                    <img
-                        src={finalImageSrc.src || finalImageSrc}
+                    <Image
+                        src={finalImageSrc}
                         alt={champion ? `${champion} champion` : "Champion"}
                         class="hexagon-image"
                         width={optimizedSize}
                         height={optimizedSize}
                         loading="lazy"
                         decoding="async"
+                        format="webp"
+                        quality={80}
                     />
                 ) : imageUrl ? (
                     <img src={imageUrl} alt="Champion" class="hexagon-image" />
@@ -99,14 +102,16 @@ const optimizedItemSize = Math.max(
             <div class="items-container">
                 {validItems.map((item) => (
                     <div class="item-slot">
-                        <img
-                            src={itemAssets[item].src || itemAssets[item]}
+                        <Image
+                            src={itemAssets[item]}
                             alt={`${item} item`}
                             class="item-image"
                             width={28}
                             height={28}
                             loading="lazy"
                             decoding="async"
+                            format="webp"
+                            quality={75}
                         />
                     </div>
                 ))}
