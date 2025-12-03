@@ -106,7 +106,13 @@ function transformComposition(item: any): Composition {
     slug: item.slug,
     tier: item.tier,
     author: item.author,
-    cover: item.cover?.url ? `${STRAPI_URL}${item.cover.url}` : undefined,
+    // Si la URL ya es absoluta (viene de R2), usarla directamente
+    // Si es relativa (local), concatenar con STRAPI_URL
+    cover: item.cover?.url
+      ? (item.cover.url.startsWith('http://') || item.cover.url.startsWith('https://'))
+        ? item.cover.url
+        : `${STRAPI_URL}${item.cover.url}`
+      : undefined,
     tags: item.tags,
     description: item.description,
     gameplayMode: item.gameplayMode,
