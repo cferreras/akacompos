@@ -4,44 +4,46 @@ import Footer from "../components/Footer.astro";
 import "../styles/global.css";
 
 export interface Props {
-  title?: string;
+    title?: string;
 }
 
-const { title = "TFT Composition Details" } = Astro.props;
+const {title = "TFT Composition Details"} = Astro.props;
 ---
 
 <!doctype html>
 <html class="dark" lang="es">
-  <head>
-    <meta charset="utf-8" />
+<head>
+    <meta charset="utf-8"/>
     <title>{title}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
-    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect" />
-    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <meta name="generator" content={Astro.generator}/>
+    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+    <meta name="robots" content="noindex"/>
     <link
-      as="style"
-      href="https://fonts.googleapis.com/css2?display=swap&family=Space+Grotesk:wght@400;500;700"
-      onload="this.rel='stylesheet'"
-      rel="stylesheet"
+            as="style"
+            href="https://fonts.googleapis.com/css2?display=swap&family=Space+Grotesk:wght@400;500;700"
+            onload="this.rel='stylesheet'"
+            rel="stylesheet"
     />
     <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-      rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+            rel="stylesheet"
     />
     <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-      rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+            rel="stylesheet"
     />
-  </head>
-  <body
-    class="bg-background-dark font-display text-slate-800 dark:text-slate-200 flex flex-col min-h-screen"
-  >
-    <Navbar />
-    <main class="flex-1">
-      <slot />
-    </main>
-    <Footer />
-  </body>
+    <script defer data-domain="compos.akawonder.com" src="http://plausible.carlosferreras.com/js/script.hash.outbound-links.js"></script>
+    <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+</head>
+<body
+        class="bg-background-dark font-display text-slate-800 dark:text-slate-200 flex flex-col min-h-screen"
+>
+<Navbar/>
+<main class="flex-1">
+    <slot/>
+</main>
+<Footer/>
+</body>
 </html>
