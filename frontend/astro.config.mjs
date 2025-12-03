@@ -40,6 +40,7 @@ function gitCommitPlugin() {
 
 // Cargar variables de entorno
 import { loadEnv } from "vite";
+import react from "@astrojs/react";
 const { STRAPI_URL } = loadEnv(
   process.env.NODE_ENV || "development",
   process.cwd(),
@@ -61,14 +62,18 @@ export default defineConfig({
       "**/*.svg",
     ],
   },
+
   adapter: node({
     mode: 'standalone'
   }),
+
   markdown: {
     remarkPlugins: [remarkModifiedTime],
   },
+
   // Static output for simple deployment with serve
   output: "server",
+
   // Configuración de imágenes remotas
   image: {
     domains: strapiHostname ? [strapiHostname] : [],
@@ -87,4 +92,6 @@ export default defineConfig({
       }
     },
   },
+
+  integrations: [react()]
 });

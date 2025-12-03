@@ -1,0 +1,100 @@
+import React from 'react';
+
+interface BadgeProps {
+    variant?: 'default' | 'primary' | 'success' | 'warning' | 'error' | 'info' | 'fast' | 'reroll' | 'aggressive' | 'defensive' | 'prismatic';
+    size?: 'xs' | 'sm' | 'md' | 'lg';
+    rounded?: boolean;
+    outlined?: boolean;
+    icon?: string;
+    className?: string;
+    children?: React.ReactNode;
+}
+
+export const Badge: React.FC<BadgeProps> = ({
+    variant = 'default',
+    size = 'sm',
+    rounded = false,
+    outlined = false,
+    icon,
+    className = '',
+    children,
+}) => {
+    // Estilos base según variante
+    const variantClasses = {
+        default: outlined
+            ? 'border-2 border-slate-500 text-slate-300 bg-transparent hover:bg-slate-500/10'
+            : 'bg-slate-500/20 text-slate-300 border border-slate-500/30',
+        primary: outlined
+            ? 'border-2 border-primary text-primary bg-transparent hover:bg-primary/10'
+            : 'bg-primary/20 text-primary border border-primary/30',
+        success: outlined
+            ? 'border-2 border-green-500 text-green-400 bg-transparent hover:bg-green-500/10'
+            : 'bg-green-500/20 text-green-400 border border-green-500/30',
+        warning: outlined
+            ? 'border-2 border-yellow-500 text-yellow-400 bg-transparent hover:bg-yellow-500/10'
+            : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30',
+        error: outlined
+            ? 'border-2 border-red-500 text-red-400 bg-transparent hover:bg-red-500/10'
+            : 'bg-red-500/20 text-red-400 border border-red-500/30',
+        info: outlined
+            ? 'border-2 border-blue-500 text-blue-400 bg-transparent hover:bg-blue-500/10'
+            : 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+        prismatic: outlined
+            ? 'border-2 border-purple-400 text-purple-300 bg-transparent hover:bg-purple-500/10'
+            : 'bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-200 border border-purple-500/40 shadow-[0_0_10px_rgba(168,85,247,0.2)]',
+        fast: outlined
+            ? 'border-2 border-blue-500 text-blue-400 bg-transparent hover:bg-blue-500/10'
+            : 'bg-blue-500/20 text-blue-400 border border-blue-500/30',
+        reroll: outlined
+            ? 'border-2 border-green-500 text-green-400 bg-transparent hover:bg-green-500/10'
+            : 'bg-green-500/20 text-green-400 border border-green-500/30',
+        aggressive: outlined
+            ? 'border-2 border-red-500 text-red-400 bg-transparent hover:bg-red-500/10'
+            : 'bg-red-500/20 text-red-400 border border-red-500/30',
+        defensive: outlined
+            ? 'border-2 border-yellow-500 text-yellow-400 bg-transparent hover:bg-yellow-500/10'
+            : 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30',
+    };
+
+    // Tamaños
+    const sizeClasses = {
+        xs: 'text-[0.625rem] px-1.5 py-0.5 gap-1',
+        sm: 'text-xs px-2 py-1 gap-1',
+        md: 'text-sm px-3 py-1.5 gap-1.5',
+        lg: 'text-base px-4 py-2 gap-2',
+    };
+
+    // Tamaño de iconos según el tamaño del badge
+    const iconSizeClasses = {
+        xs: 'text-xs',
+        sm: 'text-sm',
+        md: 'text-base',
+        lg: 'text-lg',
+    };
+
+    // Border radius
+    const roundedClass = rounded ? 'rounded-full' : 'rounded';
+
+    // Combinar todas las clases
+    const classes = [
+        'inline-flex items-center justify-center',
+        'font-semibold',
+        'transition-all duration-200',
+        'whitespace-nowrap',
+        'backdrop-blur-[4px]', // Inline style from Astro component
+        'hover:-translate-y-[1px] hover:brightness-110', // Inline style from Astro component
+        variantClasses[variant],
+        sizeClasses[size],
+        roundedClass,
+        className,
+    ].filter(Boolean).join(' ');
+
+    return (
+        <span className={classes}>
+            {icon && (
+                <i className={`fa-solid fa-${icon} ${iconSizeClasses[size]}`}></i>
+            )}
+            {children}
+        </span>
+    );
+};

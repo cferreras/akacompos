@@ -35,6 +35,7 @@ const {
     as: Tag = "div",
     href,
     className = "",
+    ...rest
 } = Astro.props;
 
 // Estilos base según variante
@@ -110,14 +111,17 @@ const classes = [
 const elementProps = {
     class: classes,
     ...(Tag === "a" && href ? { href } : {}),
+    ...rest,
 };
 ---
 
 <Tag {...elementProps} data-animate="true">
     {/* Glass reflection effect for gradient/glass variants */}
-    {(variant === "gradient" || variant === "glass") && (
-        <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-    )}
+    {
+        (variant === "gradient" || variant === "glass") && (
+            <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        )
+    }
     <slot />
 </Tag>
 
