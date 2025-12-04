@@ -17,6 +17,28 @@ interface Props {
 
 const { champions } = Astro.props;
 
+const getTraitColor = (tierIndex: number, totalTiers: number) => {
+    // Heuristic for trait colors
+    if (totalTiers === 1) return "bg-red-500"; // Unique -> Red
+
+    if (totalTiers === 2) {
+        if (tierIndex === 0) return "bg-amber-600"; // Bronze
+        return "bg-yellow-400"; // Gold
+    }
+
+    if (totalTiers === 3) {
+        if (tierIndex === 0) return "bg-amber-600"; // Bronze
+        if (tierIndex === 1) return "bg-slate-300"; // Silver
+        return "bg-yellow-400"; // Gold
+    }
+
+    // 4+ Tiers
+    if (tierIndex === 0) return "bg-amber-600"; // Bronze
+    if (tierIndex === 1) return "bg-slate-300"; // Silver
+    if (tierIndex === 2) return "bg-yellow-400"; // Gold
+    return "bg-fuchsia-400"; // Prismatic
+};
+
 const activeTraits = calculateActiveTraits(champions);
 ---
 
@@ -36,21 +58,25 @@ const activeTraits = calculateActiveTraits(champions);
                         position="bottom"
                         className="w-full"
                         triggerClassName="w-full"
-                        tooltipClassName="w-[280px] bg-surface-dark/95 backdrop-blur-xl border-white/10 shadow-2xl"
+                        tooltipClassName="w-[280px] bg-surface-dark/95 backdrop-blur-xl border-white/10 shadow-2xl hidden md:block"
                     >
                         <div slot="content" class="flex flex-col gap-3 p-1">
                             <div class="flex items-center gap-3 border-b border-white/5 pb-3">
                                 <div
                                     class={`p-1 rounded-md ${activeTier ? "bg-primary/20" : "bg-slate-800"}`}
                                 >
-                                    <Image
-                                        src={trait.icon}
-                                        alt={trait.name}
-                                        width={40}
-                                        height={40}
-                                        class="w-8 h-8 brightness-0 invert"
-                                        format="webp"
-                                        quality={70}
+                                    <div
+                                        class={`w-8 h-8 ${activeTier ? getTraitColor(tierIndex, trait.tiers.length) : "bg-slate-400"}`}
+                                        style={{
+                                            maskImage: `url(${trait.icon.src})`,
+                                            maskSize: "contain",
+                                            maskRepeat: "no-repeat",
+                                            maskPosition: "center",
+                                            WebkitMaskImage: `url(${trait.icon.src})`,
+                                            WebkitMaskSize: "contain",
+                                            WebkitMaskRepeat: "no-repeat",
+                                            WebkitMaskPosition: "center",
+                                        }}
                                     />
                                 </div>
                                 <div>
@@ -141,14 +167,18 @@ const activeTraits = calculateActiveTraits(champions);
                                 <div
                                     class={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${activeTier ? "bg-primary/20" : "bg-slate-800/50"}`}
                                 >
-                                    <Image
-                                        src={trait.icon}
-                                        alt={trait.name}
-                                        width={24}
-                                        height={24}
-                                        class={`w-6 h-6 brightness-0 invert transition-transform group-hover:scale-110 duration-300 ${!activeTier && "opacity-60"}`}
-                                        format="webp"
-                                        quality={70}
+                                    <div
+                                        class={`w-6 h-6 transition-transform group-hover:scale-110 duration-300 ${activeTier ? getTraitColor(tierIndex, trait.tiers.length) : "bg-slate-500 opacity-60"}`}
+                                        style={{
+                                            maskImage: `url(${trait.icon.src})`,
+                                            maskSize: "contain",
+                                            maskRepeat: "no-repeat",
+                                            maskPosition: "center",
+                                            WebkitMaskImage: `url(${trait.icon.src})`,
+                                            WebkitMaskSize: "contain",
+                                            WebkitMaskRepeat: "no-repeat",
+                                            WebkitMaskPosition: "center",
+                                        }}
                                     />
                                 </div>
                                 <span
