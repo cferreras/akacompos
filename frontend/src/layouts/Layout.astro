@@ -2,48 +2,116 @@
 import Navbar from "../components/Navbar.astro";
 import Footer from "../components/Footer.astro";
 import "../styles/global.css";
+import { SEO } from "astro-seo";
+import type { Props as SEOProps } from "astro-seo";
 
 export interface Props {
-    title?: string;
+        title?: string;
+        description?: string;
+        image?: string;
+        seo?: SEOProps;
 }
 
-const {title = "TFT Composition Details"} = Astro.props;
+const {
+        title = "AKACompos - Las mejores composiciones de TFT",
+        description = "Descubre las mejores composiciones de Teamfight Tactics (TFT) actualizadas para el meta actual. Estrategias probadas por AKAWonder.",
+        image = "/akawonder.png",
+        seo,
+} = Astro.props;
 ---
 
 <!doctype html>
 <html class="dark" lang="es">
-<head>
-    <meta charset="utf-8"/>
-    <title>{title}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-    <meta name="generator" content={Astro.generator}/>
-    <link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
-    <meta name="robots" content="noindex"/>
-    <link
-            as="style"
-            href="https://fonts.googleapis.com/css2?display=swap&family=Space+Grotesk:wght@400;500;700"
-            onload="this.rel='stylesheet'"
-            rel="stylesheet"
-    />
-    <link
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
-            rel="stylesheet"
-    />
-    <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-            rel="stylesheet"
-    />
-    <script defer data-domain="compos.akawonder.com" src="http://plausible.carlosferreras.com/js/script.hash.outbound-links.js"></script>
-    <script>window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
-</head>
-<body
-        class="bg-background-dark font-display text-slate-800 dark:text-slate-200 flex flex-col min-h-screen"
->
-<Navbar/>
-<main class="flex-1">
-    <slot/>
-</main>
-<Footer/>
-</body>
+        <head>
+                <meta charset="utf-8" />
+                <meta
+                        name="viewport"
+                        content="width=device-width, initial-scale=1"
+                />
+                <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+                <meta name="generator" content={Astro.generator} />
+
+                <SEO
+                        title={title}
+                        description={description}
+                        openGraph={{
+                                basic: {
+                                        title: title,
+                                        type: "website",
+                                        image: image,
+                                },
+                                optional: {
+                                        description: description,
+                                        locale: "es_ES",
+                                        siteName: "AKACompos",
+                                },
+                        }}
+                        twitter={{
+                                card: "summary_large_image",
+                                site: "@akawonder",
+                                creator: "@akawonder",
+                        }}
+                        extend={{
+                                meta: [
+                                        {
+                                                name: "twitter:image",
+                                                content: image,
+                                        },
+                                        {
+                                                name: "twitter:title",
+                                                content: title,
+                                        },
+                                        {
+                                                name: "twitter:description",
+                                                content: description,
+                                        },
+                                ],
+                        }}
+                        {...seo}
+                />
+
+                <link
+                        crossorigin=""
+                        href="https://fonts.gstatic.com/"
+                        rel="preconnect"
+                />
+                <link
+                        as="style"
+                        href="https://fonts.googleapis.com/css2?display=swap&family=Space+Grotesk:wght@400;500;700"
+                        onload="this.rel='stylesheet'"
+                        rel="stylesheet"
+                />
+                <link
+                        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+                        rel="stylesheet"
+                />
+                <link
+                        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+                        rel="stylesheet"
+                />
+                <script
+                        defer
+                        data-domain="compos.akawonder.com"
+                        src="http://plausible.carlosferreras.com/js/script.hash.outbound-links.js"
+                ></script>
+                <script>
+                        window.plausible =
+                                window.plausible ||
+                                function () {
+                                        (window.plausible.q =
+                                                window.plausible.q || []).push(
+                                                arguments,
+                                        );
+                                };
+                </script>
+        </head>
+        <body
+                class="bg-background-dark font-display text-slate-800 dark:text-slate-200 flex flex-col min-h-screen"
+        >
+                <Navbar />
+                <main class="flex-1">
+                        <slot />
+                </main>
+                <Footer />
+        </body>
 </html>

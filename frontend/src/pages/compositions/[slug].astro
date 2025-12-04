@@ -173,9 +173,17 @@ export function parseImages(description: any): string {
     }
     return result;
 }
+
+// SEO Logic
+const seoTitle = `${currentComposition.tier} - ${currentComposition.title} | AKACompos`;
+const seoDescription = `Guía completa para la composición ${currentComposition.title} (${currentComposition.tier}) en TFT. Descubre los mejores objetos, aumentos y posicionamiento para ganar con esta estrategia.`;
+let seoImage = "/akawonder.png";
+if (championsList.length > 0) {
+    seoImage = getChampionImage(championsList[0]);
+}
 ---
 
-<Layout title={`${currentComposition.tier} - ${currentComposition.title}`}>
+<Layout title={seoTitle} description={seoDescription} image={seoImage}>
     <!-- Header Section -->
     <Section
         variant="gradient"
