@@ -65,6 +65,15 @@ const optimizedItemSize = Math.max(
     16,
     Math.min(28, Math.floor(numericSize * 0.25)),
 );
+
+// Calcular escala de fuente basada en la longitud del nombre
+const nameLength = champion ? champion.length : 0;
+let fontScale = 1;
+if (nameLength > 12) {
+    fontScale = 0.7; // Nombres muy largos (ej. Heimerdinger, Twisted Fate)
+} else if (nameLength > 8) {
+    fontScale = 0.85; // Nombres medios (ej. Blitzcrank)
+}
 ---
 
 <div
@@ -93,8 +102,17 @@ const optimizedItemSize = Math.max(
                     <div class="empty-slot" />
                 )
             }
-            {champion && <div class="champion-name font-base">{champion}</div>}
         </div>
+        {
+            champion && (
+                <div
+                    class="champion-name font-base"
+                    style={`--font-scale: ${fontScale}`}
+                >
+                    {champion}
+                </div>
+            )
+        }
     </div>
 
     {
@@ -146,7 +164,9 @@ const optimizedItemSize = Math.max(
         transform: translate(-50%, -50%);
         color: white;
         font-weight: bold;
-        font-size: clamp(10px, calc(var(--size) * 0.14), 16px);
+        font-size: calc(
+            clamp(10px, calc(var(--size) * 0.14), 16px) * var(--font-scale, 1)
+        );
         text-align: center;
         white-space: nowrap;
         z-index: 30;
@@ -157,6 +177,10 @@ const optimizedItemSize = Math.max(
             -1px 1px 2px rgba(0, 0, 0, 0.8),
             0px 0px 4px rgba(0, 0, 0, 0.9);
         pointer-events: none;
+        width: auto;
+        max-width: 200%;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .hexagon {
@@ -292,7 +316,10 @@ const optimizedItemSize = Math.max(
         }
 
         .champion-name {
-            font-size: clamp(9px, calc(var(--size) * 0.13), 14px);
+            font-size: calc(
+                clamp(9px, calc(var(--size) * 0.13), 14px) *
+                    var(--font-scale, 1)
+            );
             padding: 2px clamp(3px, calc(var(--size) * 0.06), 8px);
         }
 
@@ -312,7 +339,10 @@ const optimizedItemSize = Math.max(
         }
 
         .champion-name {
-            font-size: clamp(8px, calc(var(--size) * 0.12), 12px);
+            font-size: calc(
+                clamp(8px, calc(var(--size) * 0.12), 12px) *
+                    var(--font-scale, 1)
+            );
             padding: 2px clamp(3px, calc(var(--size) * 0.05), 6px);
         }
 
