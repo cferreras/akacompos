@@ -73,10 +73,10 @@ const augmentsWithImages =
             <Tooltip
                 position="top"
                 className="w-full h-full"
-                tooltipClassName="min-w-[220px]"
+                tooltipClassName="w-[280px]"
             >
-                <div slot="content" class="flex flex-col gap-2">
-                    <div class="flex items-start gap-3">
+                <div slot="content" class="flex flex-col gap-3 p-1">
+                    <div class="flex items-center gap-3 border-b border-white/5 pb-3">
                         <div
                             class={`flex-shrink-0 w-10 h-10 rounded-lg overflow-hidden ${
                                 augment.tier === "silver"
@@ -108,8 +108,8 @@ const augmentsWithImages =
                                 </div>
                             )}
                         </div>
-                        <div class="flex-1">
-                            <h4 class="text-sm font-bold text-white leading-tight">
+                        <div>
+                            <h4 class="font-bold text-white text-sm leading-tight">
                                 {augment.name}
                             </h4>
                             <span

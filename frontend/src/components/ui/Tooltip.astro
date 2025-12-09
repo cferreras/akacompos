@@ -89,19 +89,19 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
         }
 
         private init() {
+            // Move tooltip to body to avoid clipping and z-index issues
+            document.body.appendChild(this.tooltip);
+
             this.trigger.addEventListener('mouseenter', () => this.show());
             this.trigger.addEventListener('mouseleave', () => this.hide());
             this.trigger.addEventListener('focus', () => this.show());
             this.trigger.addEventListener('blur', () => this.hide());
-
-            // Touch support
-            this.trigger.addEventListener('touchstart', (e) => {
-                // e.preventDefault(); // Allow scrolling
-                this.toggle();
-            }, { passive: true });
         }
 
         private show() {
+            // Disable on mobile devices (width < 768px)
+            if (window.innerWidth < 768) return;
+
             if (this.state.timeoutId) {
                 clearTimeout(this.state.timeoutId);
             }
@@ -220,7 +220,7 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
                     // Arrow pointing down
                     this.arrow.style.borderLeft = `${arrowSize}px solid transparent`;
                     this.arrow.style.borderRight = `${arrowSize}px solid transparent`;
-                    this.arrow.style.borderTop = `${arrowSize}px solid rgba(30, 41, 59, 0.98)`; // Match tooltip bg
+                    this.arrow.style.borderTop = `${arrowSize}px solid rgb(var(--color-surface-dark))`;
                     break;
                 case 'bottom':
                     top = triggerRect.bottom + offset;
@@ -231,7 +231,7 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
                     // Arrow pointing up
                     this.arrow.style.borderLeft = `${arrowSize}px solid transparent`;
                     this.arrow.style.borderRight = `${arrowSize}px solid transparent`;
-                    this.arrow.style.borderBottom = `${arrowSize}px solid rgba(15, 23, 42, 0.98)`; // Match tooltip bg
+                    this.arrow.style.borderBottom = `${arrowSize}px solid rgb(var(--color-surface-dark))`;
                     break;
                 case 'left':
                     top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
@@ -242,7 +242,7 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
                     // Arrow pointing right
                     this.arrow.style.borderTop = `${arrowSize}px solid transparent`;
                     this.arrow.style.borderBottom = `${arrowSize}px solid transparent`;
-                    this.arrow.style.borderLeft = `${arrowSize}px solid rgba(30, 41, 59, 0.98)`;
+                    this.arrow.style.borderLeft = `${arrowSize}px solid rgb(var(--color-surface-dark))`;
                     break;
                 case 'right':
                     top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
@@ -253,7 +253,7 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
                     // Arrow pointing left
                     this.arrow.style.borderTop = `${arrowSize}px solid transparent`;
                     this.arrow.style.borderBottom = `${arrowSize}px solid transparent`;
-                    this.arrow.style.borderRight = `${arrowSize}px solid rgba(15, 23, 42, 0.98)`;
+                    this.arrow.style.borderRight = `${arrowSize}px solid rgb(var(--color-surface-dark))`;
                     break;
             }
 
@@ -304,6 +304,10 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
             if (this.state.timeoutId) {
                 clearTimeout(this.state.timeoutId);
             }
+            // Remove tooltip from body
+            if (this.tooltip && this.tooltip.parentNode === document.body) {
+                document.body.removeChild(this.tooltip);
+            }
         }
     }
 
@@ -342,7 +346,7 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
 
     .tooltip-content {
         position: fixed;
-        z-index: var(--z-tooltip);
+        z-index: 9999;
         visibility: hidden;
         opacity: 0;
         transform: scale(0.95);
@@ -352,18 +356,13 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
     }
 
     .tooltip-inner {
-        background: linear-gradient(
-            135deg,
-            rgba(15, 23, 42, 0.98),
-            rgba(30, 41, 59, 0.98)
-        );
-        border: 1px solid rgba(148, 163, 184, 0.2);
+        background: rgb(var(--color-surface-dark) / 0.95);
+        border: 1px solid rgb(var(--color-border-dark));
         border-radius: var(--radius-lg);
         padding: 0.75rem;
         box-shadow:
             0 10px 25px -5px rgba(0, 0, 0, 0.5),
-            0 8px 10px -6px rgba(0, 0, 0, 0.5),
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            0 8px 10px -6px rgba(0, 0, 0, 0.5);
         backdrop-filter: blur(16px);
         color: rgb(var(--color-text-primary));
         font-size: 0.875rem;

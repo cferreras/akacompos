@@ -185,117 +185,102 @@ if (championsList.length > 0) {
 
 <Layout title={seoTitle} description={seoDescription} image={seoImage}>
     <!-- Header Section -->
-    <Section
-        variant="gradient"
-        spacing="lg"
-        divider={true}
-        dividerPosition="bottom"
-    >
-        <Container maxWidth="xl">
-            <div
-                class="flex flex-col md:flex-row md:items-start md:justify-between gap-4"
-            >
-                <div class="flex-1">
-                    <div class="flex items-center gap-3 mb-3">
-                        <Badge
-                            variant={getTierBadgeVariant(
-                                currentComposition.tier,
-                            )}
+    <div class="relative overflow-hidden bg-surface-darker border-b border-white/10">
+        <!-- Background decoration -->
+        <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-purple-500/10 pointer-events-none"></div>
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl pointer-events-none opacity-50"></div>
+        
+        <Container maxWidth="xl" className="relative z-10 py-12 md:py-16">
+             <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                <div class="flex-1 space-y-4">
+                    <div class="flex flex-wrap items-center gap-3">
+                         <Badge
+                            variant={getTierBadgeVariant(currentComposition.tier)}
                             icon="star"
-                            size="md"
+                            size="lg"
+                            className="shadow-lg shadow-primary/20"
                         >
                             {currentComposition.tier}
                         </Badge>
-                    </div>
-                    <h1 class="text-3xl md:text-5xl font-bold text-white mb-3">
-                        {currentComposition.title}
-                    </h1>
-                    <div class="flex items-center gap-2 text-sm text-slate-400">
-                        <i class="fa-solid fa-clock"></i>
-                        <span>Actualizado {lastModified}</span>
-                        <span class="text-slate-600">•</span>
-                        <span
-                            >por <a
-                                class="font-medium text-primary hover:underline"
-                                href="#">{currentComposition.author}</a
-                            ></span
-                        >
-                    </div>
-                </div>
-                <div>
-                    <div>
                         {
-                            currentComposition.compCode && (
-                                <Button
-                                    id="copy-btn"
-                                    variant="primary"
-                                    size="lg"
-                                    icon="copy"
-                                    iconPosition="left"
-                                    data-comp-code={currentComposition.compCode}
-                                >
-                                    <span id="copy-text">Copiar Código</span>
-                                </Button>
+                            currentComposition.tags && (
+                                (Array.isArray(currentComposition.tags)
+                                    ? currentComposition.tags
+                                    : typeof currentComposition.tags === "string"
+                                      ? currentComposition.tags.split(",").map((t) => t.trim())
+                                      : []
+                                ).map((tag: string) => (
+                                    <Badge variant={getTagVariant(tag)} size="md">
+                                        {tag}
+                                    </Badge>
+                                ))
                             )
                         }
                     </div>
+                    
+                    <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight drop-shadow-sm">
+                        {currentComposition.title}
+                    </h1>
+                    
+                    <div class="flex flex-wrap items-center gap-4 text-sm text-slate-400">
+                        <div class="flex items-center gap-2 bg-surface-dark/50 px-3 py-1.5 rounded-full border border-white/5">
+                            <i class="fa-solid fa-clock text-primary"></i>
+                            <span>Actualizado {lastModified}</span>
+                        </div>
+                        <div class="flex items-center gap-2 bg-surface-dark/50 px-3 py-1.5 rounded-full border border-white/5">
+                            <i class="fa-solid fa-user text-primary"></i>
+                            <span>por <span class="text-white font-medium">{currentComposition.author}</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex-shrink-0">
+                     {currentComposition.compCode && (
+                        <div class="p-1 bg-gradient-to-br from-white/10 to-transparent rounded-xl backdrop-blur-sm">
+                            <Button
+                                id="copy-btn"
+                                variant="primary"
+                                size="xl"
+                                icon="copy"
+                                iconPosition="left"
+                                className="w-full md:w-auto shadow-xl shadow-primary/20"
+                                data-comp-code={currentComposition.compCode}
+                            >
+                                <span id="copy-text" class="font-bold">Copiar Código</span>
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
-            {
-                currentComposition.tags && (
-                    <div class="mt-6 flex flex-wrap gap-2">
-                        {(Array.isArray(currentComposition.tags)
-                            ? currentComposition.tags
-                            : typeof currentComposition.tags === "string"
-                              ? currentComposition.tags
-                                    .split(",")
-                                    .map((t) => t.trim())
-                              : []
-                        ).map((tag: string) => (
-                            <Badge variant={getTagVariant(tag)} size="sm">
-                                {tag}
-                            </Badge>
-                        ))}
-                    </div>
-                )
-            }
         </Container>
-    </Section>
+    </div>
 
     <!-- Main Content -->
-    <Section spacing="lg">
+    <Section spacing="lg" className="relative">
         <Container maxWidth="xl">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-                <!-- Left Column: Board and Description -->
-                <div class="lg:col-span-2 space-y-6">
-                    <!-- Traits Display -->
-                    {
-                        championsList.length > 0 && (
-                            <Card variant="gradient" padding="lg">
-                                <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                                    <i class="fa-solid fa-sparkles text-primary" />
-                                    Traits Activos
-                                </h2>
-                                <TraitsDisplay champions={championsList} />
-                            </Card>
-                        )
-                    }
-
-                    <!-- Board -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
+                <!-- Left Column: Board and Description (8 cols) -->
+                <div class="lg:col-span-8 space-y-8">
+                    
+                    <!-- Board Section -->
                     <Card
                         variant="gradient"
-                        padding="lg"
+                        padding="none"
                         tier={getCardTier(currentComposition.tier)}
+                        className="overflow-hidden ring-1 ring-white/10 shadow-2xl shadow-black/50"
                     >
-                        <h2
-                            class="text-2xl font-bold text-white mb-4 flex items-center gap-2"
-                        >
-                            <i class="fa-solid fa-chess-board text-primary"></i>
-                            Tablero
-                        </h2>
-                        {
-                            boardData ? (
-                                <div class="tft-board-wrapper">
+                        <div class="p-6 border-b border-white/5 bg-white/5 flex items-center justify-between">
+                             <h2 class="text-2xl font-bold text-white flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+                                    <i class="fa-solid fa-chess-board text-xl"></i>
+                                </div>
+                                Tablero
+                            </h2>
+                        </div>
+                        
+                        <div class="p-6 md:p-8 bg-surface-darker/50">
+                             {boardData ? (
+                                <div class="tft-board-wrapper transform scale-100 origin-top-left">
                                     <TFTBoardFromData
                                         boardSize="large"
                                         boardData={boardData}
@@ -308,104 +293,83 @@ if (championsList.length > 0) {
                                         Board no configurado aún
                                     </p>
                                 </div>
-                            )
-                        }
+                            )}
+                        </div>
+                        
+                        <!-- Active Traits Footer inside Board Card -->
+                         {championsList.length > 0 && (
+                            <div class="p-6 bg-surface-dark border-t border-white/5">
+                                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                                    <i class="fa-solid fa-sparkles text-primary"></i>
+                                    Sinergias Activas
+                                </h3>
+                                <TraitsDisplay champions={championsList} />
+                            </div>
+                        )}
                     </Card>
 
-                    <!-- Description Cards -->
-                    <div class="space-y-6">
-                        <Card variant="glass" padding="lg">
-                            <h3
-                                class="text-xl font-bold text-white mb-4 flex items-center gap-2"
-                            >
-                                <i class="fa-solid fa-lightbulb text-yellow-400"
-                                ></i>
+                    <!-- Strategy Guide -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <Card variant="glass" padding="lg" className="h-full border-t-4 border-t-yellow-500">
+                            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                                <i class="fa-solid fa-lightbulb text-yellow-400 text-xl"></i>
                                 Cuándo jugarla
                             </h3>
-                            <div
-                                class="text-sm text-slate-300 leading-relaxed prose prose-invert max-w-none"
-                            >
-                                <Fragment
-                                    set:html={parseImages(
-                                        currentComposition.description,
-                                    )}
-                                />
+                            <div class="text-slate-300 leading-relaxed prose prose-invert prose-sm max-w-none">
+                                <Fragment set:html={parseImages(currentComposition.description)} />
                             </div>
                         </Card>
 
-                        <Card variant="glass" padding="lg">
-                            <h3
-                                class="text-xl font-bold text-white mb-4 flex items-center gap-2"
-                            >
-                                <i class="fa-solid fa-gamepad text-blue-400"
-                                ></i>
+                        <Card variant="glass" padding="lg" className="h-full border-t-4 border-t-blue-500">
+                            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+                                <i class="fa-solid fa-gamepad text-blue-400 text-xl"></i>
                                 Modo de juego
                             </h3>
-                            <div
-                                class="text-sm text-slate-300 leading-relaxed prose prose-invert max-w-none"
-                            >
-                                <Fragment
-                                    set:html={parseImages(
-                                        currentComposition.gameplayMode,
-                                    )}
-                                />
+                            <div class="text-slate-300 leading-relaxed prose prose-invert prose-sm max-w-none">
+                                <Fragment set:html={parseImages(currentComposition.gameplayMode)} />
                             </div>
                         </Card>
                     </div>
                 </div>
 
-                <!-- Right Column: Items and Augments -->
-                <div class="space-y-6">
+                <!-- Right Column: Items and Augments (4 cols) -->
+                <div class="lg:col-span-4 space-y-8">
                     <!-- Core Items -->
-                    {
-                        coreItemsData &&
-                            Array.isArray(coreItemsData) &&
-                            coreItemsData.length > 0 && (
-                                <Card variant="gradient" padding="lg">
-                                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                                        <i class="fa-solid fa-gem text-purple-400" />
-                                        Core Items
-                                    </h2>
-                                    <div class="space-y-3">
-                                        {coreItemsData.map((item: any) => (
-                                            <Card
-                                                variant="default"
-                                                padding="md"
-                                                hover={true}
-                                            >
-                                                <ItemWithImage
-                                                    itemName={item.name}
-                                                    description={
-                                                        item.description
-                                                    }
-                                                    size="medium"
-                                                />
-                                            </Card>
-                                        ))}
+                    {coreItemsData && Array.isArray(coreItemsData) && coreItemsData.length > 0 && (
+                        <Card variant="default" padding="lg" className="border-t-4 border-t-purple-500">
+                            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                                <i class="fa-solid fa-gem text-purple-400"></i>
+                                Core Items
+                            </h2>
+                            <div class="space-y-3">
+                                {coreItemsData.map((item: any) => (
+                                    <div class="group p-3 rounded-xl bg-surface-darker border border-white/5 hover:border-primary/50 transition-colors">
+                                        <ItemWithImage
+                                            itemName={item.name}
+                                            description={item.description}
+                                            size="medium"
+                                        />
                                     </div>
-                                </Card>
-                            )
-                    }
+                                ))}
+                            </div>
+                        </Card>
+                    )}
 
-                    <!-- Recommended Augments -->
-                    {
-                        augmentsData &&
-                            Array.isArray(augmentsData) &&
-                            augmentsData.length > 0 && (
-                                <Card variant="gradient" padding="lg">
-                                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                                        <i class="fa-solid fa-wand-magic-sparkles text-amber-400" />
-                                        Augmentos Recomendados
-                                    </h2>
-                                    <AugmentGrid augments={augmentsData} />
-                                </Card>
-                            )
-                    }
+                    <!-- Augments -->
+                    {augmentsData && Array.isArray(augmentsData) && augmentsData.length > 0 && (
+                        <Card variant="default" padding="lg" className="border-t-4 border-t-amber-500">
+                            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
+                                <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
+                                Augmentos
+                            </h2>
+                            <AugmentGrid augments={augmentsData} />
+                        </Card>
+                    )}
                 </div>
             </div>
         </Container>
-    </Section></Layout
->
+    </Section>
+</Layout>
 
 <style>
     /* Controlar z-index del board para que los tooltips puedan estar encima */
