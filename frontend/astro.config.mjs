@@ -52,6 +52,7 @@ const strapiHostname = STRAPI_URL ? new URL(STRAPI_URL).hostname : "";
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://akacompos.com',
   vite: {
     plugins: [tailwindcss(), gitCommitPlugin()],
     assetsInclude: [
