@@ -125,13 +125,13 @@ const elementProps = {
             <>
                 {icon && iconPosition === "left" && (
                     <i
-                        class={`fa-solid fa-${icon} ${iconSizeClasses[size as keyof typeof iconSizeClasses]}`}
+                        class={`${icon.includes("fa-") ? icon : `fa-solid fa-${icon}`} ${iconSizeClasses[size as keyof typeof iconSizeClasses]}`}
                     />
                 )}
                 <slot />
                 {icon && iconPosition === "right" && (
                     <i
-                        class={`fa-solid fa-${icon} ${iconSizeClasses[size as keyof typeof iconSizeClasses]}`}
+                        class={`${icon.includes("fa-") ? icon : `fa-solid fa-${icon}`} ${iconSizeClasses[size as keyof typeof iconSizeClasses]}`}
                     />
                 )}
             </>

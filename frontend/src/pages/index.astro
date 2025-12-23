@@ -1,10 +1,28 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Container from "../components/ui/Container.astro";
+import Section from "../components/ui/Section.astro";
+import Card from "../components/ui/Card.astro";
+import Badge from "../components/ui/Badge.astro";
+import Button from "../components/ui/Button.astro";
 import { Image } from "astro:assets";
 import akaWonderImage from "../assets/akawonder.png";
+import { getCompositionsByTier, getCompositionsCount } from "../lib/strapi";
+import { championAssets } from "../utils/assets";
 
 export const prerender = true;
+
+// Obtener composiciones destacadas (S Tier)
+const { data: featuredCompositions } = await getCompositionsByTier("S Tier");
+const topCompositions = featuredCompositions?.slice(0, 3) || [];
+
+// Obtener el número total de composiciones
+const { data: totalCompositions } = await getCompositionsCount();
+
+// Obtener la fecha de la última actualización
+const lastUpdate = featuredCompositions?.[0]?.updatedAt 
+    ? new Date(featuredCompositions[0].updatedAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })
+    : null;
 ---
 
 <Layout
@@ -46,7 +64,7 @@ export const prerender = true;
                                 class="relative inline-flex rounded-full h-2 w-2 bg-primary"
                             ></span>
                         </span>
-                        Actualizado para el meta actual
+                        {lastUpdate ? `Actualizado el ${lastUpdate}` : 'Actualizado para el meta actual'}
                     </div>
 
                     <!-- Title -->
@@ -144,71 +162,238 @@ export const prerender = true;
         </Container>
     </div>
 
-    <!-- Features Section -->
-    <div class="relative py-16 md:py-24">
-        <Container maxWidth="xl">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                <!-- Feature Card 1 -->
-                <div
-                    class="glass-card glass-card-hover rounded-2xl p-8 text-center space-y-4 animate-fade-in-up"
-                    style="animation-delay: 0.1s;"
-                >
-                    <div
-                        class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-primary shadow-glow-md"
+    <!-- Featured Compositions Section -->
+    {topCompositions.length > 0 && (
+        <Section 
+            title="Composiciones Destacadas" 
+            subtitle="Las estrategias más dominantes del meta actual, seleccionadas por AKAWonder."
+            variant="gradient"
+            spacing="xl"
+        >
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {topCompositions.map((comp, index) => (
+                    <Card
+                        as="a"
+                        href={`/compositions/${comp.slug}`}
+                        variant="gradient"
+                        hover={true}
+                        rounded="2xl"
+                        shadow="xl"
+                        padding="none"
+                        tier="prismatic"
+                        className="group animate-fade-in-up"
+                        style={`animation-delay: ${index * 0.1}s;`}
                     >
-                        <i class="fa-solid fa-chess text-3xl text-white"></i>
-                    </div>
+                        <div class="relative aspect-[16/9] overflow-hidden rounded-t-2xl">
+                            {comp.cover ? (
+                                <img
+                                    src={comp.cover}
+                                    alt={comp.title}
+                                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                />
+                            ) : (
+                                <div class="h-full w-full bg-slate-800 flex items-center justify-center">
+                                    <i class="fa-solid fa-image text-4xl text-slate-700"></i>
+                                </div>
+                            )}
+                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60"></div>
+                            <div class="absolute top-4 left-4">
+                                <Badge variant="primary" icon="star" size="sm">
+                                    {comp.tier}
+                                </Badge>
+                            </div>
+                        </div>
+                        <div class="p-6 space-y-3">
+                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors line-clamp-1">
+                                {comp.title}
+                            </h3>
+                            <p class="text-slate-400 text-sm line-clamp-2">
+                                {comp.description}
+                            </p>
+                            <div class="pt-4 flex items-center justify-between">
+                                <span class="text-xs text-slate-500 font-medium uppercase tracking-wider">
+                                    Ver detalles
+                                </span>
+                                <i class="fa-solid fa-arrow-right text-primary transition-transform group-hover:translate-x-1"></i>
+                            </div>
+                        </div>
+                    </Card>
+                ))}
+            </div>
+            <div class="mt-12 text-center">
+                <Button 
+                    as="a" 
+                    href="/compositions" 
+                    variant="outline" 
+                    size="lg"
+                    icon="table-cells-large"
+                >
+                    Ver todas las composiciones
+                </Button>
+            </div>
+        </Section>
+    )}
+
+    <!-- Stats Section -->
+    <div class="relative py-12 border-y border-white/5 bg-white/[0.02] backdrop-blur-sm">
+        <Container maxWidth="xl">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div class="space-y-1">
+                    <div class="text-3xl md:text-4xl font-bold text-white text-gradient-primary">{totalCompositions}+</div>
+                    <div class="text-sm text-slate-400 font-medium uppercase tracking-widest">Composiciones</div>
+                </div>
+                <div class="space-y-1">
+                    <div class="text-3xl md:text-4xl font-bold text-white text-gradient-primary">Bisemanales</div>
+                    <div class="text-sm text-slate-400 font-medium uppercase tracking-widest">Actualizaciones</div>
+                </div>
+                <div class="space-y-1">
+                    <div class="text-3xl md:text-4xl font-bold text-white text-gradient-primary">Top 1</div>
+                    <div class="text-sm text-slate-400 font-medium uppercase tracking-widest">Estrategias</div>
+                </div>
+                <div class="space-y-1">
+                    <div class="text-3xl md:text-4xl font-bold text-white text-gradient-primary">Pro</div>
+                    <div class="text-sm text-slate-400 font-medium uppercase tracking-widest">Consejos</div>
+                </div>
+            </div>
+        </Container>
+    </div>
+
+    <!-- Features Section -->
+    <Section 
+        title="¿Por qué AKACompos?" 
+        subtitle="La herramienta definitiva para subir de elo en Teamfight Tactics."
+        spacing="xl"
+    >
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Feature Card 1 -->
+            <Card
+                variant="glass"
+                padding="xl"
+                className="text-center space-y-6 animate-fade-in-up"
+                style="animation-delay: 0.1s;"
+            >
+                <div
+                    class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-primary shadow-glow-md mx-auto"
+                >
+                    <i class="fa-solid fa-chess text-4xl text-white"></i>
+                </div>
+                <div class="space-y-3">
                     <h3 class="text-2xl font-bold text-white">
                         Composiciones Expertas
                     </h3>
                     <p class="text-slate-400 leading-relaxed">
                         Estrategias probadas y optimizadas por AKAWonder para
-                        dominar el meta actual
+                        dominar el meta actual en los niveles más altos.
                     </p>
                 </div>
+            </Card>
 
-                <!-- Feature Card 2 -->
+            <!-- Feature Card 2 -->
+            <Card
+                variant="glass"
+                padding="xl"
+                className="text-center space-y-6 animate-fade-in-up"
+                style="animation-delay: 0.2s;"
+            >
                 <div
-                    class="glass-card glass-card-hover rounded-2xl p-8 text-center space-y-4 animate-fade-in-up"
-                    style="animation-delay: 0.2s;"
+                    class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-primary shadow-glow-md mx-auto"
                 >
-                    <div
-                        class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-primary shadow-glow-md"
-                    >
-                        <i
-                            class="fa-solid fa-clock-rotate-left text-3xl text-white"
-                        ></i>
-                    </div>
+                    <i
+                        class="fa-solid fa-clock-rotate-left text-4xl text-white"
+                    ></i>
+                </div>
+                <div class="space-y-3">
                     <h3 class="text-2xl font-bold text-white">
                         Siempre Actualizado
                     </h3>
                     <p class="text-slate-400 leading-relaxed">
                         Contenido actualizado constantemente para reflejar los
-                        últimos cambios del juego
+                        últimos parches y cambios de balance del juego.
                     </p>
                 </div>
+            </Card>
 
-                <!-- Feature Card 3 -->
+            <!-- Feature Card 3 -->
+            <Card
+                variant="glass"
+                padding="xl"
+                className="text-center space-y-6 animate-fade-in-up"
+                style="animation-delay: 0.3s;"
+            >
                 <div
-                    class="glass-card glass-card-hover rounded-2xl p-8 text-center space-y-4 animate-fade-in-up"
-                    style="animation-delay: 0.3s;"
+                    class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-primary shadow-glow-md mx-auto"
                 >
-                    <div
-                        class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-primary shadow-glow-md"
-                    >
-                        <i class="fa-solid fa-trophy text-3xl text-white"></i>
-                    </div>
+                    <i class="fa-solid fa-trophy text-4xl text-white"></i>
+                </div>
+                <div class="space-y-3">
                     <h3 class="text-2xl font-bold text-white">
                         Nivel Competitivo
                     </h3>
                     <p class="text-slate-400 leading-relaxed">
-                        Aprende de un jugador de alto nivel y mejora tu gameplay
+                        Aprende de un jugador profesional y mejora tu toma de
+                        decisiones en cada fase de la partida.
                     </p>
                 </div>
+            </Card>
+        </div>
+    </Section>
+
+    <!-- Community CTA -->
+    <Section spacing="xl" className="overflow-hidden">
+        <Card 
+            variant="gradient" 
+            padding="2xl" 
+            rounded="3xl" 
+            className="relative overflow-hidden border-primary/20"
+        >
+            <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-primary/20 rounded-full blur-3xl"></div>
+            <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
+            
+            <div class="relative z-10 text-center space-y-8">
+                <h2 class="text-3xl md:text-5xl font-bold text-white">
+                    Únete a la comunidad
+                </h2>
+                <p class="text-xl text-slate-300 max-w-2xl mx-auto">
+                    No te pierdas ninguna actualización y aprende en directo con AKAWonder en su canal de Twitch.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <Button 
+                        as="a" 
+                        href="https://www.twitch.tv/akawonder" 
+                        target="_blank"
+                        variant="primary" 
+                        size="xl"
+                        icon="fa-brands fa-twitch"
+                    >
+                        Ver en Twitch
+                    </Button>
+                    <Button 
+                        as="a" 
+                        href="https://x.com/aka_wonder" 
+                        target="_blank"
+                        variant="outline" 
+                        size="xl"
+                        icon="fa-brands fa-x-twitter"
+                    >
+                        Seguir en X
+                    </Button>
+                </div>
             </div>
-        </Container>
-    </div>
+        </Card>
+    </Section>
 </Layout>
+
+<style>
+    /* Ensure animations respect user preferences */
+    @media (prefers-reduced-motion: reduce) {
+        .animate-float,
+        .animate-glow-pulse,
+        .animate-gradient,
+        .animate-ping {
+            animation: none;
+        }
+    }
+</style>
 
 <style>
     /* Ensure animations respect user preferences */

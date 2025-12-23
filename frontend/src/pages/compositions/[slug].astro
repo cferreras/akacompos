@@ -20,6 +20,7 @@ import {
     getItemImage,
     getItemNames,
 } from "../../utils/assets.ts";
+import { getTraitByName } from "../../utils/traits.ts";
 dayjs.locale(es);
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -157,6 +158,23 @@ function getTagVariant(
     return "primary";
 }
 
+function getTagIcon(tag: string) {
+    // 1. Check for Champion
+    const champImg = getChampionImage(tag);
+    if (champImg && champImg !== tag) return { src: champImg, isTrait: false };
+
+    // 2. Check for Trait
+    const trait = getTraitByName(tag);
+    if (trait && trait.icon) {
+        return { 
+            src: typeof trait.icon === "string" ? trait.icon : trait.icon.src, 
+            isTrait: true 
+        };
+    }
+
+    return null;
+}
+
 export function parseImages(description: any): string {
     let result: string;
     if (typeof description === "string") {
@@ -196,7 +214,7 @@ if (championsList.length > 0) {
 
 <Layout title={seoTitle} description={seoDescription} image={seoImage}>
     <!-- Header Section -->
-    <div class="relative overflow-hidden bg-surface-darker border-b border-white/10 min-h-[400px] flex items-center">
+    <div class="relative overflow-hidden bg-surface-darker border-b border-white/10 min-h-[400px] flex items-center -mt-24 md:-mt-28 pt-24 md:pt-28">
         <!-- Background Image with Overlay -->
         {currentComposition.cover && (
             <div class="absolute inset-0 z-0">
@@ -213,7 +231,7 @@ if (championsList.length > 0) {
         <!-- Background decoration -->
         <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-purple-500/10 pointer-events-none"></div>
         
-        <Container maxWidth="xl" className="relative z-10 py-16 md:py-24">
+        <Container maxWidth="2xl" className="relative z-10 py-16 md:py-24">
              <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
                 <div class="flex-1 space-y-6">
                     <div class="flex flex-wrap items-center gap-3 animate-fade-in">
@@ -232,11 +250,21 @@ if (championsList.length > 0) {
                                     : typeof currentComposition.tags === "string"
                                       ? currentComposition.tags.split(",").map((t) => t.trim())
                                       : []
-                                ).map((tag: string) => (
-                                    <Badge variant={getTagVariant(tag)} size="md" className="bg-white/5 backdrop-blur-md border-white/10">
-                                        {tag}
-                                    </Badge>
-                                ))
+                                ).map((tag: string) => {
+                                    const tagIcon = getTagIcon(tag);
+                                    return (
+                                        <Badge variant={getTagVariant(tag)} size="md" className="bg-white/5 backdrop-blur-md border-white/10">
+                                            {tagIcon && (
+                                                <img 
+                                                    src={tagIcon.src} 
+                                                    alt={tag} 
+                                                    class={`w-5 h-5 rounded-full object-cover border border-white/20 mr-1 ${tagIcon.isTrait ? 'invert brightness-200' : ''}`}
+                                                />
+                                            )}
+                                            {tag}
+                                        </Badge>
+                                    );
+                                })
                             )
                         }
                     </div>
@@ -279,11 +307,10 @@ if (championsList.length > 0) {
     </div>
 
     <!-- Main Content -->
-    <Section spacing="xl" className="relative -mt-8 z-20">
-        <Container maxWidth="xl">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-                <!-- Left Column: Board and Description -->
-                <div class={hasRightColumn ? "lg:col-span-8 space-y-10" : "lg:col-span-12 space-y-10"}>
+    <Section spacing="xl" className="relative -mt-8 z-20" maxWidth="2xl">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+            <!-- Left Column: Board and Description -->
+            <div class={hasRightColumn ? "lg:col-span-8 space-y-10" : "lg:col-span-12 space-y-10"}>
                     
                     <!-- Board Section -->
                     <Card
@@ -304,12 +331,13 @@ if (championsList.length > 0) {
                             </h2>
                         </div>
                         
-                        <div class="p-6 md:p-12 bg-transparent relative z-10">
+                        <div class={hasRightColumn ? "p-6 md:p-12 bg-transparent relative z-10" : "p-4 md:p-6 lg:p-8 bg-transparent relative z-10"}>
                              {boardData ? (
-                                <div class="tft-board-wrapper flex justify-center">
+                                <div class="tft-board-wrapper flex justify-center overflow-x-auto pb-4">
                                     <TFTBoardFromData
                                         boardSize="large"
                                         boardData={boardData}
+                                        fullWidth={!hasRightColumn}
                                     />
                                 </div>
                             ) : (
@@ -434,7 +462,7 @@ if (championsList.length > 0) {
                     </div>
                 )}
             </div>
-        </Container>
+        </div>
     </Section>
 </Layout>
 

@@ -1,0 +1,58 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Section from "../components/ui/Section.astro";
+
+export const prerender = true;
+---
+
+<Layout 
+    title="Términos de Servicio - AKACompos"
+    description="Reglas de uso de la plataforma AKACompos."
+>
+    <Section 
+        title="Términos de Servicio" 
+        subtitle="Las reglas del juego (fuera del tablero)"
+        variant="gradient"
+        spacing="lg"
+    >
+        <div class="max-w-4xl mx-auto prose prose-invert space-y-8 text-slate-300">
+                <div class="glass-card p-8 rounded-2xl border border-slate-800/50">
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                        <span class="text-primary">01.</span> Uso de la Web
+                    </h2>
+                    <p>
+                        AKACompos es una herramienta gratuita para la comunidad de TFT. Puedes usarla para consultar composiciones, aprender estrategias y mejorar tu juego. Lo que no puedes hacer es intentar romperla, copiar el código sin permiso o usarla para fines malintencionados.
+                    </p>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl border border-slate-800/50">
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                        <span class="text-primary">02.</span> Propiedad Intelectual
+                    </h2>
+                    <p>
+                        Teamfight Tactics y todos los activos relacionados son propiedad de <strong>Riot Games</strong>. AKACompos es un proyecto de fans que cumple con las políticas de Riot para desarrolladores. 
+                    </p>
+                    <p>
+                        El diseño de la web y la curación de las composiciones son propiedad de AKACompos y AKAWonder.
+                    </p>
+                </div>
+
+                <div class="glass-card p-8 rounded-2xl border border-slate-800/50">
+                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
+                        <span class="text-primary">03.</span> ¿Por qué somos tan geniales? (Parte II)
+                    </h2>
+                    <p>
+                        Somos geniales porque no te obligamos a leer 50 páginas de términos legales aburridos. Queremos que pases más tiempo en el juego y menos tiempo leyendo letra pequeña. 
+                    </p>
+                    <p>
+                        Nuestra "regla de oro" es simple: <strong>Sé un buen estratega y respeta el trabajo de los demás.</strong> Si sigues eso, nos llevaremos de maravilla.
+                    </p>
+                    <div class="mt-6 flex justify-center">
+                        <div class="px-6 py-3 bg-primary/20 border border-primary/40 rounded-full text-primary font-bold animate-pulse">
+                            ¡A por el Top 1! 🏆
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </Section>
+</Layout>

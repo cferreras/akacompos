@@ -63,7 +63,7 @@ const getOptimizedSize = (size: string): number => {
 const optimizedSize = getOptimizedSize(size);
 const optimizedItemSize = Math.max(
     16,
-    Math.min(28, Math.floor(numericSize * 0.25)),
+    Math.min(48, Math.floor(numericSize * 0.25)),
 );
 
 // Calcular escala de fuente basada en la longitud del nombre
@@ -124,8 +124,8 @@ if (nameLength > 12) {
                             src={itemAssets[item]}
                             alt={`${item} item`}
                             class="item-image"
-                            width={28}
-                            height={28}
+                            width={optimizedItemSize}
+                            height={optimizedItemSize}
                             loading="lazy"
                             decoding="async"
                             format="webp"
@@ -224,21 +224,21 @@ if (nameLength > 12) {
 
     .items-container {
         position: absolute;
-        bottom: -10px;
+        bottom: calc(var(--size) * -0.1);
         left: 50%;
         transform: translateX(-50%);
         display: flex;
-        gap: 2px;
+        gap: 4px;
         z-index: 20;
     }
 
     .item-slot {
-        width: clamp(16px, calc(var(--size) * 0.28), 32px);
-        height: clamp(16px, calc(var(--size) * 0.28), 32px);
-        border-radius: 4px;
+        width: clamp(16px, calc(var(--size) * 0.28), 48px);
+        height: clamp(16px, calc(var(--size) * 0.28), 48px);
+        border-radius: 6px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         background: #000;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
         overflow: hidden;
         transition: all 0.2s ease;
     }
@@ -280,7 +280,7 @@ if (nameLength > 12) {
 
     .champion-name {
         color: white;
-        font-size: 11px;
+        font-size: clamp(10px, calc(var(--size) * 0.12), 16px);
         font-weight: 900;
         text-transform: uppercase;
         letter-spacing: 0.08em;
@@ -289,7 +289,7 @@ if (nameLength > 12) {
 
     .stars-container {
         position: absolute;
-        top: -15px;
+        top: calc(var(--size) * -0.15);
         z-index: 20;
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
     }

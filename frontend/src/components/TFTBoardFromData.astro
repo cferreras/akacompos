@@ -17,9 +17,10 @@ interface BoardData {
 interface Props {
     boardData: BoardData;
     boardSize?: 'small' | 'medium' | 'large';
+    fullWidth?: boolean;
 }
 
-const { boardData, boardSize = 'medium' } = Astro.props;
+const { boardData, boardSize = 'medium', fullWidth = false } = Astro.props;
 
 // Función para determinar el color del borde basado en las estrellas
 const getBorderColor = (champ : ChampionData): "purple" | "blue" | "yellow" | "green" | "gray" | "empty" => {
@@ -60,7 +61,7 @@ const createBoard = () => {
 const board = createBoard();
 ---
 
-<div class={`responsive-tft-board board-size-${boardSize}`}>
+<div class={`responsive-tft-board board-size-${boardSize} ${fullWidth ? 'is-full-width' : ''}`}>
     <div class="board-perspective">
         <div class="board-container">
             <div class="board-grid">
@@ -101,8 +102,44 @@ const board = createBoard();
         --board-offset: 44px;
     }
 
+    @media (min-width: 1400px) {
+        .is-full-width {
+            --hex-size: 120px;
+            --board-gap: 24px;
+            --board-offset: 64px;
+        }
+    }
+
+    @media (min-width: 1600px) {
+        :root {
+            --hex-size: 100px;
+            --board-gap: 20px;
+            --board-offset: 54px;
+        }
+
+        .is-full-width {
+            --hex-size: 150px;
+            --board-gap: 32px;
+            --board-offset: 80px;
+        }
+    }
+
+    @media (min-width: 1920px) {
+        :root {
+            --hex-size: 110px;
+            --board-gap: 20px;
+            --board-offset: 60px;
+        }
+
+        .is-full-width {
+            --hex-size: 180px;
+            --board-gap: 36px;
+            --board-offset: 90px;
+        }
+    }
+
     .board-perspective {
-        perspective: 1000px;
+        perspective: 2000px;
         width: 100%;
         display: flex;
         justify-content: center;
@@ -113,7 +150,7 @@ const board = createBoard();
         justify-content: center;
         margin-top: 25px;
         margin-bottom: 2rem;
-        transform: scale(var(--board-scale)) rotateX(10deg);
+        transform: scale(var(--board-scale, 1)) rotateX(10deg);
         transform-style: preserve-3d;
         transition: transform 0.5s ease;
     }
@@ -154,7 +191,13 @@ const board = createBoard();
     }
 
     .responsive-tft-board {
-        padding: 1.5rem 5rem 4rem;
+        padding: 1.5rem 1rem 4rem;
+    }
+
+    @media (min-width: 1024px) {
+        .responsive-tft-board {
+            padding: 1.5rem 2rem 4rem;
+        }
     }
 
 

@@ -8,85 +8,87 @@ const isCompositions = pathname.startsWith("/compositions");
 ---
 
 <header
-    class="sticky top-0 z-[100] bg-background-dark/40 backdrop-blur-xl border-b border-white/5 transition-all duration-500"
+    class="fixed top-3 md:top-6 left-0 right-0 z-[1000] transition-all duration-500"
     id="main-header"
 >
-    <Container maxWidth="xl" paddingY="none" paddingX="md">
-        <nav class="flex items-center justify-between h-16">
-            <!-- Logo & Navigation -->
-            <div class="flex items-center gap-12">
-                <a
-                    href="/"
-                    class="flex items-center gap-2 transition-all hover:opacity-80"
-                >
-                    <span
-                        class="text-white font-black text-xl tracking-tighter"
-                    >
-                        AKA<span class="text-primary">COMPOS</span>
-                    </span>
-                </a>
-
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center gap-1">
+    <Container maxWidth="xl" paddingX="md">
+        <div class="bg-slate-950/60 backdrop-blur-2xl border border-white/10 rounded-full px-6 py-2 shadow-2xl shadow-black/50">
+            <nav class="flex items-center justify-between h-12">
+                <!-- Logo & Navigation -->
+                <div class="flex items-center gap-8">
                     <a
                         href="/"
-                        class:list={[
-                            "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest transition-all",
-                            isHome
-                                ? "bg-primary/10 text-primary shadow-[inset_0_0_10px_rgba(164,107,255,0.1)]"
-                                : "text-slate-400 hover:text-white hover:bg-white/5",
-                        ]}
+                        class="flex items-center gap-2 transition-all hover:opacity-80"
                     >
-                        Inicio
+                        <span
+                            class="text-white font-black text-lg tracking-tighter"
+                        >
+                            AKA<span class="text-primary">COMPOS</span>
+                        </span>
                     </a>
-                    <a
-                        href="/compositions"
-                        class:list={[
-                            "px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest transition-all",
-                            isCompositions
-                                ? "bg-primary/10 text-primary shadow-[inset_0_0_10px_rgba(164,107,255,0.1)]"
-                                : "text-slate-400 hover:text-white hover:bg-white/5",
-                        ]}
-                    >
-                        Composiciones
-                    </a>
+
+                    <!-- Desktop Navigation -->
+                    <div class="hidden md:flex items-center gap-1">
+                        <a
+                            href="/"
+                            class:list={[
+                                "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
+                                isHome
+                                    ? "bg-primary/20 text-primary shadow-[inset_0_0_10px_rgba(164,107,255,0.1)]"
+                                    : "text-slate-400 hover:text-white hover:bg-white/5",
+                            ]}
+                        >
+                            Inicio
+                        </a>
+                        <a
+                            href="/compositions"
+                            class:list={[
+                                "px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest transition-all",
+                                isCompositions
+                                    ? "bg-primary/20 text-primary shadow-[inset_0_0_10px_rgba(164,107,255,0.1)]"
+                                    : "text-slate-400 hover:text-white hover:bg-white/5",
+                            ]}
+                        >
+                            Composiciones
+                        </a>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Right Side Actions -->
-            <div class="flex items-center gap-4">
-                <!-- Twitch Link -->
-                <a
-                    href="https://www.twitch.tv/akawonder"
-                    target="_blank"
-                    class="flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600/10 border border-purple-500/20 text-purple-400 text-xs font-black uppercase tracking-widest hover:bg-purple-600 hover:text-white hover:border-purple-600 transition-all duration-300 group"
-                >
-                    <i class="fa-brands fa-twitch text-sm group-hover:animate-bounce"></i>
-                    <span class="hidden sm:inline">Live</span>
-                </a>
+                <!-- Right Side Actions -->
+                <div class="flex items-center gap-3">
+                    <!-- Twitch Link -->
+                    <a
+                        href="https://www.twitch.tv/akawonder"
+                        target="_blank"
+                        class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-600/20 border border-purple-500/30 text-purple-400 text-[10px] font-black uppercase tracking-widest hover:bg-purple-600 hover:text-white hover:border-purple-600 transition-all duration-300 group"
+                    >
+                        <div class="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                        <span class="hidden sm:inline">Live</span>
+                    </a>
 
-                <!-- Mobile Menu Button -->
-                <button
-                    id="mobile-menu-button"
-                    class="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-white/5 text-slate-400 hover:text-white transition-all"
-                    aria-label="Menú"
-                >
-                    <i
-                        id="menu-icon"
-                        class="fa-solid fa-bars text-lg"
-                    ></i>
-                </button>
-            </div>
-        </nav>
+                    <!-- Mobile Menu Button -->
+                    <button
+                        id="mobile-menu-button"
+                        class="md:hidden w-8 h-8 flex items-center justify-center rounded-full bg-white/5 text-slate-400 hover:text-white transition-all"
+                        aria-label="Menú"
+                    >
+                        <i
+                            id="menu-icon"
+                            class="fa-solid fa-bars text-sm"
+                        ></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
 
         <!-- Mobile Menu -->
         <div
             id="mobile-menu"
-            class="md:hidden overflow-hidden transition-all duration-300 ease-in-out opacity-0 invisible"
+            class="md:hidden overflow-hidden transition-all duration-300 ease-in-out opacity-0 invisible mt-2"
             style="max-height: 0;"
         >
             <div
-                class="py-4 space-y-2 border-t border-slate-800/50 bg-background-dark/95 backdrop-blur-xl rounded-b-2xl mb-4 mx-2 px-2 shadow-xl border border-slate-800/50"
+                class="py-4 space-y-2 bg-slate-950/90 backdrop-blur-2xl rounded-3xl px-4 shadow-2xl border border-white/10"
             >
                 <a
                     href="/"
@@ -124,34 +126,35 @@ const isCompositions = pathname.startsWith("/compositions");
         const menuIcon = document.getElementById("menu-icon");
         const header = document.getElementById("main-header");
         let isOpen = false;
+        let lastScrollY = window.scrollY;
+        const scrollThreshold = 100;
 
         // Scroll effect
         window.addEventListener("scroll", () => {
-            if (window.scrollY > 10) {
-                header?.classList.remove(
-                    "bg-background-dark/60",
-                    "backdrop-blur-md",
-                    "border-slate-800/30",
-                );
-                header?.classList.add(
-                    "bg-background-dark/95",
-                    "backdrop-blur-xl",
-                    "border-slate-800",
-                    "shadow-elevation-2",
-                );
+            const currentScrollY = window.scrollY;
+
+            // Hide/Show logic
+            if (currentScrollY > lastScrollY && currentScrollY > scrollThreshold && !isOpen) {
+                // Scrolling down
+                header?.classList.add("-translate-y-[150%]", "opacity-0");
             } else {
-                header?.classList.remove(
-                    "bg-background-dark/95",
-                    "backdrop-blur-xl",
-                    "border-slate-800",
-                    "shadow-elevation-2",
-                );
-                header?.classList.add(
-                    "bg-background-dark/60",
-                    "backdrop-blur-md",
-                    "border-slate-800/30",
-                );
+                // Scrolling up
+                header?.classList.remove("-translate-y-[150%]", "opacity-0");
             }
+
+            if (currentScrollY > 20) {
+                header?.classList.add("top-2");
+                header?.classList.remove("top-3", "top-6");
+            } else {
+                if (window.innerWidth < 768) {
+                    header?.classList.add("top-3");
+                } else {
+                    header?.classList.add("top-6");
+                }
+                header?.classList.remove("top-2");
+            }
+
+            lastScrollY = currentScrollY;
         });
 
         if (menuButton && mobileMenu && menuIcon) {

@@ -7,6 +7,7 @@ import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Section } from '../ui/Section';
 import { championAssets } from '../../utils/assets';
+import { getTraitByName } from '../../utils/traits';
 
 // Configurar dayjs
 dayjs.locale('es');
@@ -115,6 +116,33 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
         return dayjs(composition.updatedAt || composition.createdAt).utc().fromNow();
     };
 
+    const getTagIcon = (tagName: string) => {
+        const lowerTag = tagName.toLowerCase();
+        
+        // 1. Check for Champion
+        const champKey = Object.keys(championAssets).find(
+            key => key.toLowerCase() === lowerTag
+        );
+        if (champKey) {
+            const asset = championAssets[champKey];
+            return { 
+                src: typeof asset === 'string' ? asset : asset.src, 
+                isTrait: false 
+            };
+        }
+
+        // 2. Check for Trait
+        const trait = getTraitByName(tagName);
+        if (trait && trait.icon) {
+            return { 
+                src: typeof trait.icon === 'string' ? trait.icon : trait.icon.src, 
+                isTrait: true 
+            };
+        }
+
+        return null;
+    };
+
     return (
         <>
             {/* Filter Section */}
@@ -130,18 +158,28 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
                         >
                             Todos
                         </button>
-                        {allTags.map((tag) => (
-                            <button
-                                key={tag}
-                                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${filter === tag
-                                    ? 'bg-primary text-white shadow-lg shadow-primary/25 capitalize'
-                                    : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50 capitalize'
-                                    }`}
-                                onClick={() => setFilter(tag)}
-                            >
-                                {tag}
-                            </button>
-                        ))}
+                        {allTags.map((tag) => {
+                            const tagIcon = getTagIcon(tag);
+                            return (
+                                <button
+                                    key={tag}
+                                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${filter === tag
+                                        ? 'bg-primary text-white shadow-lg shadow-primary/25 capitalize'
+                                        : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50 capitalize'
+                                        }`}
+                                    onClick={() => setFilter(tag)}
+                                >
+                                    {tagIcon && (
+                                        <img 
+                                            src={tagIcon.src} 
+                                            alt={tag} 
+                                            className={`w-5 h-5 rounded-full object-cover border border-white/20 ${tagIcon.isTrait ? 'invert brightness-200' : ''}`}
+                                        />
+                                    )}
+                                    {tag}
+                                </button>
+                            );
+                        })}
                     </div>
                 </Section>
             )}
@@ -223,16 +261,26 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
                                                 {/* Tags */}
                                                 {comp.tags && (
                                                     <div className="flex flex-wrap gap-1.5">
-                                                        {formatTags(comp.tags).map((tag) => (
-                                                            <Badge
-                                                                key={tag}
-                                                                variant={getTagVariant(tag) as any}
-                                                                size="xs"
-                                                                className="bg-black/60 backdrop-blur-md border-white/10"
-                                                            >
-                                                                {tag}
-                                                            </Badge>
-                                                        ))}
+                                                        {formatTags(comp.tags).map((tag) => {
+                                                            const tagIcon = getTagIcon(tag);
+                                                            return (
+                                                                <Badge
+                                                                    key={tag}
+                                                                    variant={getTagVariant(tag) as any}
+                                                                    size="xs"
+                                                                    className="bg-black/60 backdrop-blur-md border-white/10"
+                                                                >
+                                                                    {tagIcon && (
+                                                                        <img 
+                                                                            src={tagIcon.src} 
+                                                                            alt={tag} 
+                                                                            className={`w-3 h-3 rounded-full object-cover ${tagIcon.isTrait ? 'invert brightness-200' : ''}`}
+                                                                        />
+                                                                    )}
+                                                                    {tag}
+                                                                </Badge>
+                                                            );
+                                                        })}
                                                     </div>
                                                 )}
 

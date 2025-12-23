@@ -200,3 +200,17 @@ export async function getCompositionsByTier(tier?: string) {
     return { data: [], error };
   }
 }
+
+export async function getCompositionsCount() {
+  try {
+    const response = await strapiRequest("compositions", {
+      "pagination[pageSize]": 1,
+      publicationState: "live",
+    });
+
+    return { data: response.meta.pagination.total, error: null };
+  } catch (error) {
+    console.error("Error fetching compositions count:", error);
+    return { data: 0, error };
+  }
+}

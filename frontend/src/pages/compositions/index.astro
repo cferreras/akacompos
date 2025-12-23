@@ -13,22 +13,20 @@ export const prerender = true;
     title="Composiciones TFT - AKACompos"
     description="Lista completa de las mejores composiciones de Teamfight Tactics (TFT) para el parche actual. Encuentra tu estrategia ganadora."
 >
-    <Container maxWidth="xl">
-        <!-- Hero Section -->
-        <Section
-            title="TFT Compositions"
-            subtitle="Las mejores composiciones de AKAWonder actualizadas para el meta actual"
-            variant="gradient"
-            spacing="xl"
-            divider={true}
-            dividerPosition="bottom"
-        />
-
+    <!-- Hero Section -->
+    <Section
+        title="TFT Compositions"
+        subtitle="Las mejores composiciones de AKAWonder actualizadas para el meta actual"
+        variant="gradient"
+        spacing="xl"
+        divider={true}
+        dividerPosition="bottom"
+    >
         <!-- Compositions List (Server Island) -->
         <CompositionList server:defer>
             <div slot="fallback" class="flex justify-center items-center py-20">
                 <Spinner size="lg" color="primary" />
             </div>
         </CompositionList>
-    </Container>
+    </Section>
 </Layout>

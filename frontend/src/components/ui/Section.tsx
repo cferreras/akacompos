@@ -62,26 +62,28 @@ export const Section: React.FC<SectionProps> = ({
                 </div>
             )}
 
-            {(title || subtitle) && (
-                <div className="mb-12 sm:mb-16 lg:mb-24">
-                    {title && (
-                        <div className="flex items-baseline gap-4 mb-6">
-                            <h2 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-primary leading-[1.2] tracking-tight">
-                                {title}
-                            </h2>
-                            <div className="h-px flex-1 bg-gradient-to-r from-primary/30 to-transparent"></div>
-                        </div>
-                    )}
-                    {subtitle && (
-                        <p className="text-base sm:text-lg text-slate-400 mb-8 max-w-3xl leading-[1.6]">
-                            {subtitle}
-                        </p>
-                    )}
-                </div>
-            )}
+            <div className="mx-auto px-4 sm:px-6 lg:px-8 max-w-screen-xl">
+                {(title || subtitle) && (
+                    <div className="mb-12 sm:mb-16 lg:mb-24">
+                        {title && (
+                            <div className="flex items-center gap-4 mb-6">
+                                <h2 className="text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-br from-white to-primary leading-[1.2] tracking-tight">
+                                    {title}
+                                </h2>
+                                <div className="h-px flex-1 bg-gradient-to-r from-primary/30 to-transparent"></div>
+                            </div>
+                        )}
+                        {subtitle && (
+                            <p className="text-base sm:text-lg text-slate-400 mb-8 max-w-3xl leading-[1.6]">
+                                {subtitle}
+                            </p>
+                        )}
+                    </div>
+                )}
 
-            <div>
-                {children}
+                <div>
+                    {children}
+                </div>
             </div>
 
             {showBottomDivider && (
