@@ -85,9 +85,10 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
 
     const getCardTier = (tier: string) => {
         switch (tier) {
-            case "S Tier": return "gold";
-            case "A Tier": return "silver";
-            case "B Tier": return "bronze";
+            case "S Tier": return "prismatic";
+            case "A Tier": return "gold";
+            case "B Tier": return "silver";
+            case "C Tier": return "bronze";
             default: return null;
         }
     };
@@ -170,15 +171,15 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
                                     shadow="lg"
                                     padding="none"
                                     tier={getCardTier(tier)}
-                                    className="group"
+                                    className="group h-full"
                                 >
-                                    {/* Cover Image */}
-                                    <div className="aspect-[16/9] w-full overflow-hidden rounded-t-xl relative">
+                                    <div className="relative h-full aspect-[16/9] overflow-hidden">
+                                        {/* Cover Image */}
                                         {comp.cover ? (
                                             <img
                                                 src={comp.cover}
                                                 alt={comp.title}
-                                                className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-110"
+                                                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
                                                 loading="lazy"
                                                 decoding="async"
                                             />
@@ -186,54 +187,63 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
                                             <img
                                                 src={championAssets.Aatrox.src}
                                                 alt={comp.title}
-                                                className="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-110"
+                                                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
                                                 width={480}
                                                 height={270}
                                                 loading="lazy"
                                                 decoding="async"
                                             />
                                         )}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+
+                                        {/* Gradient Overlay - Darker at bottom for text readability */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent z-10" />
+                                        
+                                        {/* Bottom Fade/Blur Area */}
+                                        <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent z-10" />
 
                                         {/* Tier Badge Overlay */}
-                                        <div className="absolute top-3 left-3">
+                                        <div className="absolute top-3 left-3 z-20">
                                             <Badge
                                                 variant={getTierBadgeVariant(tier) as any}
                                                 icon="star"
                                                 size="sm"
+                                                className="shadow-lg"
                                             >
                                                 {tier}
                                             </Badge>
                                         </div>
-                                    </div>
 
-                                    {/* Content */}
-                                    <div className="p-4">
-                                        <h3 className="text-lg font-bold text-white mb-3 line-clamp-2 min-h-[3.5rem]">
-                                            {comp.title}
-                                        </h3>
+                                        {/* Content Overlay */}
+                                        <div className="absolute inset-0 flex flex-col justify-end p-5 z-20">
+                                            <h3 className="text-xl font-bold text-white mb-2 line-clamp-1 group-hover:text-primary transition-colors duration-300 drop-shadow-xl">
+                                                {comp.title}
+                                            </h3>
 
-                                        {/* Tags */}
-                                        {comp.tags && (
-                                            <div className="flex flex-wrap gap-2 mb-3">
-                                                {formatTags(comp.tags).map((tag) => (
-                                                    <Badge
-                                                        key={tag}
-                                                        variant={getTagVariant(tag) as any}
-                                                        size="xs"
-                                                    >
-                                                        {tag}
-                                                    </Badge>
-                                                ))}
+                                            <div className="flex items-center justify-between gap-3">
+                                                {/* Tags */}
+                                                {comp.tags && (
+                                                    <div className="flex flex-wrap gap-1.5">
+                                                        {formatTags(comp.tags).map((tag) => (
+                                                            <Badge
+                                                                key={tag}
+                                                                variant={getTagVariant(tag) as any}
+                                                                size="xs"
+                                                                className="bg-black/60 backdrop-blur-md border-white/10"
+                                                            >
+                                                                {tag}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                )}
+
+                                                {/* Update Time */}
+                                                <div className="flex items-center gap-1.5 text-[11px] text-slate-300 whitespace-nowrap drop-shadow-md">
+                                                    <i className="fa-solid fa-clock" />
+                                                    <span>
+                                                        {getUpdateTime(comp)}
+                                                    </span>
+                                                </div>
                                             </div>
-                                        )}
-
-                                        {/* Update Time */}
-                                        <div className="flex items-center gap-2 text-sm text-slate-400">
-                                            <i className="fa-solid fa-clock text-xs" />
-                                            <span>
-                                                Actualizado {getUpdateTime(comp)}
-                                            </span>
                                         </div>
                                     </div>
                                 </Card>

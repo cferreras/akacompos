@@ -119,13 +119,17 @@ function getTierBadgeVariant(
 }
 
 // Función para determinar tier de card
-function getCardTier(tier: string): "gold" | "silver" | "bronze" | null {
+function getCardTier(
+    tier: string,
+): "prismatic" | "gold" | "silver" | "bronze" | null {
     switch (tier) {
         case "S Tier":
-            return "gold";
+            return "prismatic";
         case "A Tier":
-            return "silver";
+            return "gold";
         case "B Tier":
+            return "silver";
+        case "C Tier":
             return "bronze";
         default:
             return null;
