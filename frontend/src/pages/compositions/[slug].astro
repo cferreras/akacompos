@@ -102,6 +102,13 @@ const championsList = boardData?.champions
     ? boardData.champions.map((champ: any) => champ.name)
     : [];
 
+// Verificar si hay contenido para la columna derecha
+const hasRightColumn =
+    (coreItemsData &&
+        Array.isArray(coreItemsData) &&
+        coreItemsData.length > 0) ||
+    (augmentsData && Array.isArray(augmentsData) && augmentsData.length > 0);
+
 // Función para determinar variante de badge según tier
 function getTierBadgeVariant(
     tier: string,
@@ -189,20 +196,32 @@ if (championsList.length > 0) {
 
 <Layout title={seoTitle} description={seoDescription} image={seoImage}>
     <!-- Header Section -->
-    <div class="relative overflow-hidden bg-surface-darker border-b border-white/10">
+    <div class="relative overflow-hidden bg-surface-darker border-b border-white/10 min-h-[400px] flex items-center">
+        <!-- Background Image with Overlay -->
+        {currentComposition.cover && (
+            <div class="absolute inset-0 z-0">
+                <img 
+                    src={currentComposition.cover} 
+                    alt="" 
+                    class="w-full h-full object-cover opacity-30 blur-sm scale-105"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-surface-darker via-surface-darker/80 to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-r from-surface-darker via-transparent to-surface-darker"></div>
+            </div>
+        )}
+        
         <!-- Background decoration -->
         <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-purple-500/10 pointer-events-none"></div>
-        <div class="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl pointer-events-none opacity-50"></div>
         
-        <Container maxWidth="xl" className="relative z-10 py-12 md:py-16">
-             <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-                <div class="flex-1 space-y-4">
-                    <div class="flex flex-wrap items-center gap-3">
+        <Container maxWidth="xl" className="relative z-10 py-16 md:py-24">
+             <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+                <div class="flex-1 space-y-6">
+                    <div class="flex flex-wrap items-center gap-3 animate-fade-in">
                          <Badge
                             variant={getTierBadgeVariant(currentComposition.tier)}
                             icon="star"
                             size="lg"
-                            className="shadow-lg shadow-primary/20"
+                            className="shadow-xl shadow-primary/20 scale-110"
                         >
                             {currentComposition.tier}
                         </Badge>
@@ -214,7 +233,7 @@ if (championsList.length > 0) {
                                       ? currentComposition.tags.split(",").map((t) => t.trim())
                                       : []
                                 ).map((tag: string) => (
-                                    <Badge variant={getTagVariant(tag)} size="md">
+                                    <Badge variant={getTagVariant(tag)} size="md" className="bg-white/5 backdrop-blur-md border-white/10">
                                         {tag}
                                     </Badge>
                                 ))
@@ -222,35 +241,35 @@ if (championsList.length > 0) {
                         }
                     </div>
                     
-                    <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight drop-shadow-sm">
+                    <h1 class="text-5xl md:text-7xl lg:text-8xl font-black text-white tracking-tighter drop-shadow-2xl animate-fade-in-up">
                         {currentComposition.title}
                     </h1>
                     
-                    <div class="flex flex-wrap items-center gap-4 text-sm text-slate-400">
-                        <div class="flex items-center gap-2 bg-surface-dark/50 px-3 py-1.5 rounded-full border border-white/5">
+                    <div class="flex flex-wrap items-center gap-6 text-sm text-slate-300 animate-fade-in" style="animation-delay: 200ms;">
+                        <div class="flex items-center gap-2.5 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-inner">
                             <i class="fa-solid fa-clock text-primary"></i>
-                            <span>Actualizado {lastModified}</span>
+                            <span>Actualizado <span class="text-white font-medium">{lastModified}</span></span>
                         </div>
-                        <div class="flex items-center gap-2 bg-surface-dark/50 px-3 py-1.5 rounded-full border border-white/5">
+                        <div class="flex items-center gap-2.5 bg-white/5 backdrop-blur-md px-4 py-2 rounded-full border border-white/10 shadow-inner">
                             <i class="fa-solid fa-user text-primary"></i>
                             <span>por <span class="text-white font-medium">{currentComposition.author}</span></span>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex-shrink-0">
+                <div class="flex-shrink-0 animate-fade-in" style="animation-delay: 400ms;">
                      {currentComposition.compCode && (
-                        <div class="p-1 bg-gradient-to-br from-white/10 to-transparent rounded-xl backdrop-blur-sm">
+                        <div class="p-1.5 bg-gradient-to-br from-primary/50 to-purple-500/50 rounded-2xl shadow-2xl shadow-primary/20">
                             <Button
                                 id="copy-btn"
                                 variant="primary"
                                 size="xl"
                                 icon="copy"
                                 iconPosition="left"
-                                className="w-full md:w-auto shadow-xl shadow-primary/20"
+                                className="w-full md:w-auto px-10 py-5 text-lg font-black uppercase tracking-wider"
                                 data-comp-code={currentComposition.compCode}
                             >
-                                <span id="copy-text" class="font-bold">Copiar Código</span>
+                                <span id="copy-text">Copiar Código</span>
                             </Button>
                         </div>
                     )}
@@ -260,41 +279,44 @@ if (championsList.length > 0) {
     </div>
 
     <!-- Main Content -->
-    <Section spacing="lg" className="relative">
+    <Section spacing="xl" className="relative -mt-8 z-20">
         <Container maxWidth="xl">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8">
-                <!-- Left Column: Board and Description (8 cols) -->
-                <div class="lg:col-span-8 space-y-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
+                <!-- Left Column: Board and Description -->
+                <div class={hasRightColumn ? "lg:col-span-8 space-y-10" : "lg:col-span-12 space-y-10"}>
                     
                     <!-- Board Section -->
                     <Card
                         variant="gradient"
                         padding="none"
+                        rounded="3xl"
                         tier={getCardTier(currentComposition.tier)}
-                        className="overflow-hidden ring-1 ring-white/10 shadow-2xl shadow-black/50"
+                        className="overflow-hidden ring-1 ring-white/10 shadow-2xl shadow-black/80 relative group"
                     >
-                        <div class="p-6 border-b border-white/5 bg-white/5 flex items-center justify-between">
-                             <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
-                                    <i class="fa-solid fa-chess-board text-xl"></i>
+                        <div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/5 blur-[100px] rounded-full pointer-events-none"></div>
+                        
+                        <div class="p-8 border-b border-white/5 bg-white/[0.02] flex items-center justify-between relative z-10">
+                             <h2 class="text-3xl font-black text-white flex items-center gap-4">
+                                <div class="w-14 h-14 rounded-2xl bg-primary/20 flex items-center justify-center text-primary shadow-[inset_0_0_20px_rgba(164,107,255,0.2)] border border-primary/20">
+                                    <i class="fa-solid fa-chess-board text-2xl"></i>
                                 </div>
-                                Tablero
+                                Tablero Final
                             </h2>
                         </div>
                         
-                        <div class="p-6 md:p-8 bg-surface-darker/50">
+                        <div class="p-6 md:p-12 bg-transparent relative z-10">
                              {boardData ? (
-                                <div class="tft-board-wrapper transform scale-100 origin-top-left">
+                                <div class="tft-board-wrapper flex justify-center">
                                     <TFTBoardFromData
                                         boardSize="large"
                                         boardData={boardData}
                                     />
                                 </div>
                             ) : (
-                                <div class="text-center py-12">
-                                    <i class="fa-solid fa-chess-board text-6xl text-slate-600 mb-4" />
-                                    <p class="text-slate-400">
-                                        Board no configurado aún
+                                <div class="text-center py-20">
+                                    <i class="fa-solid fa-chess-board text-8xl text-slate-700 mb-6 opacity-20" />
+                                    <p class="text-xl text-slate-500 font-medium">
+                                        Configuración de tablero pendiente
                                     </p>
                                 </div>
                             )}
@@ -302,10 +324,11 @@ if (championsList.length > 0) {
                         
                         <!-- Active Traits Footer inside Board Card -->
                          {championsList.length > 0 && (
-                            <div class="p-6 bg-surface-dark border-t border-white/5">
-                                <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-                                    <i class="fa-solid fa-sparkles text-primary"></i>
+                            <div class="p-8 bg-white/[0.02] backdrop-blur-md border-t border-white/5 relative z-10">
+                                <h3 class="text-xs font-black text-primary uppercase tracking-[0.2em] mb-6 flex items-center gap-3">
+                                    <span class="w-8 h-[1px] bg-primary/30"></span>
                                     Sinergias Activas
+                                    <span class="w-8 h-[1px] bg-primary/30"></span>
                                 </h3>
                                 <TraitsDisplay champions={championsList} />
                             </div>
@@ -313,63 +336,103 @@ if (championsList.length > 0) {
                     </Card>
 
                     <!-- Strategy Guide -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <Card variant="glass" padding="lg" className="h-full border-t-4 border-t-yellow-500">
-                            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                                <i class="fa-solid fa-lightbulb text-yellow-400 text-xl"></i>
+                    <div class={hasRightColumn ? "grid grid-cols-1 md:grid-cols-2 gap-8" : "grid grid-cols-1 md:grid-cols-2 gap-10"}>
+                        <Card 
+                            variant="glass" 
+                            padding="xl" 
+                            rounded="3xl"
+                            className="h-full border-t-4 border-t-yellow-500/50 hover:border-t-yellow-500 transition-all duration-500 group relative overflow-hidden"
+                        >
+                            <div class="absolute -right-10 -top-10 w-32 h-32 bg-yellow-500/10 blur-3xl rounded-full group-hover:bg-yellow-500/20 transition-colors duration-500"></div>
+                            
+                            <h3 class="text-2xl font-black text-white mb-6 flex items-center gap-4 group-hover:translate-x-1 transition-transform relative z-10">
+                                <div class="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center text-yellow-500 shadow-[inset_0_0_15px_rgba(234,179,8,0.2)] border border-yellow-500/20">
+                                    <i class="fa-solid fa-lightbulb text-xl"></i>
+                                </div>
                                 Cuándo jugarla
                             </h3>
-                            <div class="text-slate-300 leading-relaxed prose prose-invert prose-sm max-w-none">
+                            <div class="text-slate-300 leading-relaxed prose prose-invert prose-lg max-w-none prose-p:mb-4 prose-b:text-yellow-500 prose-strong:text-white relative z-10">
                                 <Fragment set:html={parseImages(currentComposition.description)} />
                             </div>
                         </Card>
 
-                        <Card variant="glass" padding="lg" className="h-full border-t-4 border-t-blue-500">
-                            <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
-                                <i class="fa-solid fa-gamepad text-blue-400 text-xl"></i>
+                        <Card 
+                            variant="glass" 
+                            padding="xl" 
+                            rounded="3xl"
+                            className="h-full border-t-4 border-t-blue-500/50 hover:border-t-blue-500 transition-all duration-500 group relative overflow-hidden"
+                        >
+                            <div class="absolute -right-10 -top-10 w-32 h-32 bg-blue-500/10 blur-3xl rounded-full group-hover:bg-blue-500/20 transition-colors duration-500"></div>
+
+                            <h3 class="text-2xl font-black text-white mb-6 flex items-center gap-4 group-hover:translate-x-1 transition-transform relative z-10">
+                                <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-500 shadow-[inset_0_0_15px_rgba(59,130,246,0.2)] border border-blue-500/20">
+                                    <i class="fa-solid fa-gamepad text-xl"></i>
+                                </div>
                                 Modo de juego
                             </h3>
-                            <div class="text-slate-300 leading-relaxed prose prose-invert prose-sm max-w-none">
+                            <div class="text-slate-300 leading-relaxed prose prose-invert prose-lg max-w-none prose-p:mb-4 prose-b:text-blue-500 prose-strong:text-white relative z-10">
                                 <Fragment set:html={parseImages(currentComposition.gameplayMode)} />
                             </div>
                         </Card>
                     </div>
                 </div>
 
-                <!-- Right Column: Items and Augments (4 cols) -->
-                <div class="lg:col-span-4 space-y-8">
-                    <!-- Core Items -->
-                    {coreItemsData && Array.isArray(coreItemsData) && coreItemsData.length > 0 && (
-                        <Card variant="default" padding="lg" className="border-t-4 border-t-purple-500">
-                            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
-                                <i class="fa-solid fa-gem text-purple-400"></i>
-                                Core Items
-                            </h2>
-                            <div class="space-y-3">
-                                {coreItemsData.map((item: any) => (
-                                    <div class="group p-3 rounded-xl bg-surface-darker border border-white/5 hover:border-primary/50 transition-colors">
-                                        <ItemWithImage
-                                            itemName={item.name}
-                                            description={item.description}
-                                            size="medium"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </Card>
-                    )}
+                <!-- Right Column: Items and Augments -->
+                {hasRightColumn && (
+                    <div class="lg:col-span-4 space-y-10">
+                        <!-- Core Items -->
+                        {coreItemsData && Array.isArray(coreItemsData) && coreItemsData.length > 0 && (
+                            <Card 
+                                variant="surface" 
+                                padding="xl" 
+                                rounded="3xl"
+                                className="border-t-4 border-t-purple-500/50 hover:border-t-purple-500 transition-all duration-500 relative overflow-hidden group"
+                            >
+                                <div class="absolute -right-10 -top-10 w-32 h-32 bg-purple-500/10 blur-3xl rounded-full group-hover:bg-purple-500/20 transition-colors duration-500"></div>
 
-                    <!-- Augments -->
-                    {augmentsData && Array.isArray(augmentsData) && augmentsData.length > 0 && (
-                        <Card variant="default" padding="lg" className="border-t-4 border-t-amber-500">
-                            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-3">
-                                <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i>
-                                Augmentos
-                            </h2>
-                            <AugmentGrid augments={augmentsData} />
-                        </Card>
-                    )}
-                </div>
+                                <h2 class="text-2xl font-black text-white mb-8 flex items-center gap-4 relative z-10">
+                                    <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-500 shadow-[inset_0_0_15px_rgba(168,85,247,0.2)] border border-purple-500/20">
+                                        <i class="fa-solid fa-gem text-xl"></i>
+                                    </div>
+                                    Core Items
+                                </h2>
+                                <div class="space-y-2 relative z-10">
+                                    {coreItemsData.map((item: any) => (
+                                        <div class="group/item p-3 rounded-2xl hover:bg-white/[0.05] transition-all duration-300">
+                                            <ItemWithImage
+                                                itemName={item.name}
+                                                description={item.description}
+                                                size="medium"
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+                            </Card>
+                        )}
+
+                        <!-- Augments -->
+                        {augmentsData && Array.isArray(augmentsData) && augmentsData.length > 0 && (
+                            <Card 
+                                variant="surface" 
+                                padding="xl" 
+                                rounded="3xl"
+                                className="border-t-4 border-t-amber-500/50 hover:border-t-amber-500 transition-all duration-500 relative overflow-hidden group"
+                            >
+                                <div class="absolute -right-10 -top-10 w-32 h-32 bg-amber-500/10 blur-3xl rounded-full group-hover:bg-amber-500/20 transition-colors duration-500"></div>
+
+                                <h2 class="text-2xl font-black text-white mb-8 flex items-center gap-4 relative z-10">
+                                    <div class="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-500 shadow-[inset_0_0_15px_rgba(245,158,11,0.2)] border border-amber-500/20">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-xl"></i>
+                                    </div>
+                                    Aumentos
+                                </h2>
+                                <div class="relative z-10">
+                                    <AugmentGrid augments={augmentsData} />
+                                </div>
+                            </Card>
+                        )}
+                    </div>
+                )}
             </div>
         </Container>
     </Section>

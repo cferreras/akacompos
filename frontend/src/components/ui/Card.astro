@@ -6,20 +6,20 @@
  * @param tier - Nivel/Rango de la tarjeta: 'bronze' | 'silver' | 'gold' | 'prismatic' | 'amber'
  * @param hover - Habilitar efectos de hover
  * @param padding - Tamaño del padding: 'none' | 'sm' | 'md' | 'lg' | 'xl'
- * @param rounded - Tamaño del border-radius: 'sm' | 'md' | 'lg' | 'xl' | '2xl'
- * @param shadow - Tamaño de la sombra: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+ * @param rounded - Tamaño del border-radius: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full'
+ * @param shadow - Tamaño de la sombra: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'inner'
  * @param as - Elemento HTML a renderizar: 'div' | 'article' | 'section' | 'a'
  * @param href - URL si as='a'
  * @param className - Clases adicionales
  */
 
 export interface Props {
-    variant?: "default" | "glass" | "gradient" | "outlined";
+    variant?: "default" | "glass" | "gradient" | "outlined" | "surface";
     tier?: "bronze" | "silver" | "gold" | "prismatic" | "amber" | null;
     hover?: boolean;
-    padding?: "none" | "sm" | "md" | "lg" | "xl";
-    rounded?: "sm" | "md" | "lg" | "xl" | "2xl";
-    shadow?: "none" | "sm" | "md" | "lg" | "xl" | "2xl";
+    padding?: "none" | "sm" | "md" | "lg" | "xl" | "2xl";
+    rounded?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
+    shadow?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "inner";
     as?: "div" | "article" | "section" | "a";
     href?: string;
     className?: string;
@@ -40,11 +40,12 @@ const {
 
 // Estilos base según variante
 const variantClasses = {
-    default: "bg-surface-dark border border-slate-700",
-    glass: "bg-surface-dark/50 backdrop-blur-glass border border-slate-700/50",
+    default: "bg-surface-dark border border-white/5",
+    glass: "bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]",
     gradient:
-        "bg-gradient-to-br from-surface-dark via-surface-darker to-surface-dark border border-slate-700",
-    outlined: "bg-transparent border-2 border-slate-700",
+        "bg-gradient-to-br from-surface-dark via-surface-darker to-surface-dark border border-white/5",
+    outlined: "bg-transparent border-2 border-white/10",
+    surface: "bg-surface-darker border border-white/5",
 };
 
 // Padding
@@ -54,6 +55,7 @@ const paddingClasses = {
     md: "p-4",
     lg: "p-6",
     xl: "p-8",
+    "2xl": "p-12",
 };
 
 // Border radius
@@ -63,6 +65,8 @@ const roundedClasses = {
     lg: "rounded-lg",
     xl: "rounded-xl",
     "2xl": "rounded-2xl",
+    "3xl": "rounded-3xl",
+    full: "rounded-full",
 };
 
 // Shadow
@@ -73,6 +77,7 @@ const shadowClasses = {
     lg: "shadow-lg",
     xl: "shadow-xl",
     "2xl": "shadow-2xl",
+    inner: "shadow-inner",
 };
 
 // Tier border y efectos
@@ -127,6 +132,30 @@ const elementProps = {
 
 <style>
     /* Efectos adicionales para cards con tier */
+    :global(.tier-bronze) {
+        border-color: rgba(205, 127, 50, 0.3) !important;
+        box-shadow: inset 0 0 20px rgba(205, 127, 50, 0.05);
+    }
+    :global(.tier-silver) {
+        border-color: rgba(148, 163, 184, 0.3) !important;
+        box-shadow: inset 0 0 20px rgba(148, 163, 184, 0.05);
+    }
+    :global(.tier-gold) {
+        border-color: rgba(251, 191, 36, 0.3) !important;
+        box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.05);
+    }
+    :global(.tier-prismatic) {
+        border-color: rgba(164, 107, 255, 0.4) !important;
+        box-shadow: 
+            inset 0 0 30px rgba(164, 107, 255, 0.1),
+            0 0 20px rgba(164, 107, 255, 0.1);
+        background-image: linear-gradient(to bottom right, rgba(164, 107, 255, 0.05), transparent, rgba(164, 107, 255, 0.05)) !important;
+    }
+    :global(.tier-amber) {
+        border-color: rgba(245, 158, 11, 0.3) !important;
+        box-shadow: inset 0 0 20px rgba(245, 158, 11, 0.05);
+    }
+
     :global(.tier-bronze),
     :global(.tier-silver),
     :global(.tier-gold),

@@ -61,34 +61,37 @@ const board = createBoard();
 ---
 
 <div class={`responsive-tft-board board-size-${boardSize}`}>
-    <div class="board-container">
-        <div class="board-grid">
-            {board.map((row, rowIndex) => (
-                    <div class={`board-row ${rowIndex % 2 === 1 ? 'offset' : ''}`}>
-                        {row.map((cell, colIndex) => (
-                                <div class="board-cell" data-row={rowIndex} data-col={colIndex}>
-                                    {cell ? (
-                                            <TFTBoardCharacter
-                                                    champion={cell.champion as any}
-                                                    borderColor={cell.borderColor}
-                                                    items={cell.items as any}
-                                                    size="var(--hex-size)"
-                                                    stars={cell.stars}
-                                            />
-                                    ) : (
-                                            <TFTBoardCharacter
-                                                    borderColor="empty"
-                                                    size="var(--hex-size)"
-                                            />
-                                    )}
-                                </div>
-                        ))}
-                    </div>
-            ))}
+    <div class="board-perspective">
+        <div class="board-container">
+            <div class="board-grid">
+                {board.map((row, rowIndex) => (
+                        <div 
+                            class={`board-row ${rowIndex % 2 === 1 ? 'offset' : ''}`}
+                            style={`z-index: ${10 - rowIndex}; position: relative;`}
+                        >
+                            {row.map((cell, colIndex) => (
+                                    <div class="board-cell" data-row={rowIndex} data-col={colIndex}>
+                                        {cell ? (
+                                                <TFTBoardCharacter
+                                                        champion={cell.champion as any}
+                                                        borderColor={cell.borderColor}
+                                                        items={cell.items as any}
+                                                        size="var(--hex-size)"
+                                                        stars={cell.stars}
+                                                />
+                                        ) : (
+                                                <TFTBoardCharacter
+                                                        borderColor="empty"
+                                                        size="var(--hex-size)"
+                                                />
+                                        )}
+                                    </div>
+                            ))}
+                        </div>
+                ))}
+            </div>
         </div>
     </div>
-
-
 </div>
 
 <style>
@@ -98,35 +101,11 @@ const board = createBoard();
         --board-offset: 44px;
     }
 
-    /* Tamaños del board */
-    .board-size-small {
-        --board-scale: 0.7;
-    }
-
-    .board-size-medium {
-        --board-scale: 1;
-    }
-
-    .board-size-large {
-        --board-scale: 1.16;
-    }
-
-    .board-size-small :root {
-        --hex-size: 56px;
-        --board-gap: 11px;
-        --board-offset: 31px;
-    }
-
-    .board-size-large :root {
-        --hex-size: 104px;
-        --board-gap: 21px;
-        --board-offset: 57px;
-    }
-
-    .responsive-tft-board {
+    .board-perspective {
+        perspective: 1000px;
         width: 100%;
-        max-width: 500px;
-        margin: 0 auto;
+        display: flex;
+        justify-content: center;
     }
 
     .board-container {
@@ -134,7 +113,13 @@ const board = createBoard();
         justify-content: center;
         margin-top: 25px;
         margin-bottom: 2rem;
-        transform: scale(var(--board-scale));
+        transform: scale(var(--board-scale)) rotateX(10deg);
+        transform-style: preserve-3d;
+        transition: transform 0.5s ease;
+    }
+
+    .board-container:hover {
+        transform: scale(var(--board-scale)) rotateX(5deg);
     }
 
     .board-grid {
@@ -143,6 +128,9 @@ const board = createBoard();
         flex-direction: column;
         align-items: center;
         min-width: fit-content;
+        background: radial-gradient(circle at center, rgba(164, 107, 255, 0.05) 0%, transparent 70%);
+        padding: 2rem;
+        border-radius: 50%;
     }
 
     .board-row {
@@ -166,7 +154,7 @@ const board = createBoard();
     }
 
     .responsive-tft-board {
-        padding: 1.5rem 5rem 1rem;
+        padding: 1.5rem 5rem 4rem;
     }
 
 

@@ -67,7 +67,7 @@ const augmentsWithImages =
         .filter((aug): aug is NonNullable<typeof aug> => aug !== null) || [];
 ---
 
-<div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-3 gap-3 md:gap-4">
+<div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-3 gap-4">
     {
         augmentsWithImages.map((augment) => (
             <Tooltip
@@ -75,92 +75,103 @@ const augmentsWithImages =
                 className="w-full h-full"
                 tooltipClassName="w-[280px]"
             >
-                <div slot="content" class="flex flex-col gap-3 p-1">
-                    <div class="flex items-center gap-3 border-b border-white/5 pb-3">
+                <div slot="content" class="flex flex-col gap-3 p-2">
+                    <div class="flex items-center gap-3 border-b border-white/10 pb-3">
                         <div
-                            class={`flex-shrink-0 w-10 h-10 rounded-lg overflow-hidden ${
+                            class={`flex-shrink-0 w-12 h-12 rounded-xl overflow-hidden p-1.5 bg-slate-900/80 border-2 ${
                                 augment.tier === "silver"
-                                    ? "ring-2 ring-slate-400"
+                                    ? "border-slate-400 shadow-[0_0_10px_rgba(148,163,184,0.3)]"
                                     : augment.tier === "gold"
-                                      ? "ring-2 ring-amber-400"
+                                      ? "border-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.3)]"
                                       : augment.tier === "prismatic"
-                                        ? "ring-2 ring-purple-400"
-                                        : "ring-2 ring-slate-600"
+                                        ? "border-purple-400 shadow-[0_0_10px_rgba(192,132,252,0.3)]"
+                                        : "border-slate-600"
                             }`}
                         >
                             {augment.hasImage ? (
                                 <Image
                                     src={augment.image}
                                     alt={augment.name}
-                                    class="w-full h-full object-contain p-1"
-                                    width={40}
-                                    height={40}
+                                    class="w-full h-full object-contain"
+                                    width={48}
+                                    height={48}
                                     loading="eager"
                                     decoding="async"
                                     format="webp"
-                                    quality={75}
+                                    quality={80}
                                 />
                             ) : (
-                                <div class="w-full h-full bg-slate-700 flex items-center justify-center p-1">
-                                    <span class="text-slate-200 text-[7px] font-semibold text-center leading-tight break-words">
-                                        {augment.name}
+                                <div class="w-full h-full bg-slate-800 flex items-center justify-center">
+                                    <span class="text-slate-400 text-[8px] font-bold text-center uppercase">
+                                        {augment.name.substring(0, 3)}
                                     </span>
                                 </div>
                             )}
                         </div>
                         <div>
-                            <h4 class="font-bold text-white text-sm leading-tight">
+                            <h4 class="font-black text-white text-base leading-tight tracking-tight">
                                 {augment.name}
                             </h4>
-                            <span
-                                class={`text-xs font-semibold capitalize ${
-                                    augment.tier === "silver"
-                                        ? "text-slate-400"
-                                        : augment.tier === "gold"
-                                          ? "text-amber-400"
-                                          : augment.tier === "prismatic"
-                                            ? "text-purple-400"
-                                            : "text-slate-600"
-                                }`}
-                            >
-                                {augment.tier}
-                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <span
+                                    class={`text-[10px] font-black uppercase tracking-widest ${
+                                        augment.tier === "silver"
+                                            ? "text-slate-400"
+                                            : augment.tier === "gold"
+                                              ? "text-amber-400"
+                                              : augment.tier === "prismatic"
+                                                ? "text-purple-400"
+                                                : "text-slate-600"
+                                    }`}
+                                >
+                                    {augment.tier}
+                                </span>
+                                <div class="w-1 h-1 rounded-full bg-white/20"></div>
+                                <span class="text-[10px] text-white/40 font-bold uppercase tracking-widest">Augment</span>
+                            </div>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-300 leading-relaxed whitespace-normal break-words">
+                    <p class="text-xs text-slate-300 leading-relaxed font-medium">
                         {augment.description}
                     </p>
                 </div>
 
                 <div class="augment-card group relative h-full">
-                    <div class="flex flex-col items-center gap-2 p-3 rounded-lg bg-slate-800/50 border-2 border-slate-800 hover:bg-slate-800 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/20 hover:scale-105 cursor-pointer h-full transition-all duration-300">
+                    <div class="flex flex-col items-center gap-3 p-3 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-slate-800/60 hover:border-white/20 hover:shadow-2xl hover:shadow-black/50 hover:-translate-y-1 cursor-pointer h-full transition-all duration-300 backdrop-blur-sm">
+                        {/* Tier Indicator Dot */}
+                        <div class={`absolute top-2 right-2 w-2 h-2 rounded-full blur-[1px] ${
+                            augment.tier === "silver" ? "bg-slate-400" : 
+                            augment.tier === "gold" ? "bg-amber-400" : 
+                            augment.tier === "prismatic" ? "bg-purple-400" : "bg-slate-600"
+                        }`}></div>
+
                         {/* Augment Image */}
                         <div
-                            class={`aspect-square rounded-lg overflow-hidden transition-all w-full ${
+                            class={`aspect-square rounded-xl overflow-hidden transition-all w-full p-2 bg-slate-950/50 border-2 ${
                                 augment.tier === "silver"
-                                    ? "ring-2 ring-slate-400 shadow-lg shadow-slate-400/30"
+                                    ? "border-slate-400/30 group-hover:border-slate-400 shadow-lg shadow-slate-900/50"
                                     : augment.tier === "gold"
-                                      ? "ring-2 ring-amber-400 shadow-lg shadow-amber-400/30"
+                                      ? "border-amber-400/30 group-hover:border-amber-400 shadow-lg shadow-amber-900/20"
                                       : augment.tier === "prismatic"
-                                        ? "ring-2 ring-purple-400 shadow-lg shadow-purple-400/30"
-                                        : "ring-2 ring-slate-600 shadow-lg shadow-slate-600/30"
+                                        ? "border-purple-400/30 group-hover:border-purple-400 shadow-lg shadow-purple-900/20"
+                                        : "border-slate-600/30 group-hover:border-slate-600 shadow-lg shadow-slate-900/50"
                             }`}
                         >
                             {augment.hasImage ? (
                                 <Image
                                     src={augment.image}
                                     alt={augment.name}
-                                    class="w-full h-full object-contain p-2"
+                                    class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
                                     width={120}
                                     height={120}
                                     loading="lazy"
                                     decoding="async"
                                     format="webp"
-                                    quality={75}
+                                    quality={80}
                                 />
                             ) : (
-                                <div class="w-full h-full bg-slate-700 flex items-center justify-center p-2">
-                                    <span class="text-slate-200 text-[8px] font-semibold text-center leading-tight break-words">
+                                <div class="w-full h-full bg-slate-800 flex items-center justify-center">
+                                    <span class="text-slate-500 text-[10px] font-black text-center uppercase tracking-tighter">
                                         {augment.name}
                                     </span>
                                 </div>
@@ -168,7 +179,7 @@ const augmentsWithImages =
                         </div>
 
                         {/* Augment Name */}
-                        <p class="text-xs md:text-sm xl:text-xs font-semibold text-slate-200 text-center line-clamp-2 min-h-[2.5rem] flex items-center justify-center w-full">
+                        <p class="text-[11px] md:text-xs font-black text-slate-300 group-hover:text-white text-center line-clamp-2 min-h-[2.5rem] flex items-center justify-center w-full transition-colors duration-300 uppercase tracking-tight">
                             {augment.name}
                         </p>
                     </div>
