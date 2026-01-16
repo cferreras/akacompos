@@ -162,6 +162,19 @@ import VoidStaffImg from "../assets/items/combined/voidstaff.png";
 import WarmogsArmorImg from "../assets/items/combined/warmogs-armor.png";
 
 // ============================================================================
+// CHAMPION IMAGE POSITIONS
+// ============================================================================
+
+/**
+ * Mapeo de posiciones de objeto para las imágenes de los campeones.
+ * Esto permite un centrado manual para que las caras se vean bien en los hexágonos.
+ * Formato: "x% y%"
+ */
+export const championImagePositions: Record<string, string> = {
+    "Default": "90% 20%", // Valor por defecto para centrar en las caras
+};
+
+// ============================================================================
 // OBJETOS DE EXPORTACIÓN
 // ============================================================================
 

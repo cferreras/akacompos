@@ -1,6 +1,6 @@
 ---
 // Importar assets centralizados
-import { championAssets, itemAssets } from "../utils/assets";
+import { championAssets, itemAssets, championImagePositions } from "../utils/assets";
 import StarsComponent from "./StarsComponent.astro";
 import { Image } from "astro:assets";
 
@@ -39,6 +39,7 @@ const {
 
 // Usar la imagen del campeón si se especifica, si no usar imageUrl, sino mostrar vacío
 const finalImageSrc = champion ? championAssets[champion] : null;
+const imagePosition = champion ? (championImagePositions[champion] || championImagePositions["Default"]) : championImagePositions["Default"];
 const showEmptySlot = !champion && !imageUrl;
 
 // Obtener el color final del borde
@@ -89,6 +90,7 @@ if (nameLength > 12) {
                         src={finalImageSrc}
                         alt={champion ? `${champion} champion` : "Champion"}
                         class="hexagon-image"
+                        style={`object-position: ${imagePosition};`}
                         width={optimizedSize}
                         height={optimizedSize}
                         loading="lazy"
@@ -97,7 +99,7 @@ if (nameLength > 12) {
                         quality={80}
                     />
                 ) : imageUrl ? (
-                    <img src={imageUrl} alt="Champion" class="hexagon-image" />
+                    <img src={imageUrl} alt="Champion" class="hexagon-image" style={`object-position: ${imagePosition};`} />
                 ) : (
                     <div class="empty-slot" />
                 )
@@ -202,13 +204,13 @@ if (nameLength > 12) {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        object-position: center;
-        transition: transform 0.5s ease;
+        /* object-position is now set dynamically */
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         z-index: 2;
     }
 
     .character-container:hover .hexagon-image {
-        transform: scale(1.15);
+        transform: scale(1.25);
     }
 
     .empty-slot {
@@ -289,8 +291,13 @@ if (nameLength > 12) {
 
     .stars-container {
         position: absolute;
-        top: calc(var(--size) * -0.15);
+        top: calc(var(--size) * -0.12);
+        left: 50%;
+        transform: translateX(-50%);
         z-index: 20;
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+        width: 100%;
+        display: flex;
+        justify-content: center;
     }
 </style>
