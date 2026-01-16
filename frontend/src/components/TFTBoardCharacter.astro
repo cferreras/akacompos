@@ -49,11 +49,13 @@ const finalBorderColor = borderColors[borderColor as keyof typeof borderColors];
 const validItems = items.slice(0, 3).filter((item) => item in itemAssets);
 
 // Calcular tamaño numérico para el componente Image
-const numericSize = parseInt(size.replace("px", ""));
+const numericSize = size.includes("px") ? parseInt(size.replace("px", "")) : 96;
 
 // Determinar tamaño optimizado para Image basado en el size prop
 const getOptimizedSize = (size: string): number => {
+    if (size.includes("var(")) return 192;
     const num = parseInt(size.replace("px", ""));
+    if (isNaN(num)) return 128;
     if (num <= 64) return 64;
     if (num <= 96) return 96;
     if (num <= 128) return 128;
@@ -62,10 +64,12 @@ const getOptimizedSize = (size: string): number => {
 };
 
 const optimizedSize = getOptimizedSize(size);
-const optimizedItemSize = Math.max(
-    16,
-    Math.min(48, Math.floor(numericSize * 0.25)),
-);
+const optimizedItemSize = size.includes("var(") 
+    ? 48 
+    : Math.max(
+        16,
+        Math.min(48, Math.floor(numericSize * 0.25)),
+    );
 
 // Calcular escala de fuente basada en la longitud del nombre
 const nameLength = champion ? champion.length : 0;
@@ -81,7 +85,9 @@ if (nameLength > 12) {
     class="character-container select-none group"
     style={`--border-color: ${finalBorderColor}; --size: ${size};`}
 >
-    <StarsComponent stars={stars} />
+    <div class="stars-container">
+        <StarsComponent stars={stars} />
+    </div>
     <div class="hexagon-container">
         <div class="hexagon">
             {
@@ -151,6 +157,7 @@ if (nameLength > 12) {
         justify-content: center;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+        flex-shrink: 0;
     }
 
     .character-container:hover {

@@ -97,44 +97,41 @@ const board = createBoard();
 
 <style>
     :root {
-        --hex-size: 80px;
+        --hex-size: 85px;
         --board-gap: 16px;
         --board-offset: 44px;
     }
 
+    /* Versión para cuando ocupa todo el ancho */
+    @media (min-width: 1024px) {
+        .is-full-width {
+            --hex-size: 100px;
+            --board-gap: 12px;
+            --board-offset: 56px;
+        }
+    }
+
     @media (min-width: 1400px) {
         .is-full-width {
-            --hex-size: 120px;
-            --board-gap: 24px;
-            --board-offset: 64px;
+            --hex-size: 110px;
+            --board-gap: 16px;
+            --board-offset: 63px;
         }
     }
 
     @media (min-width: 1600px) {
-        :root {
-            --hex-size: 100px;
-            --board-gap: 20px;
-            --board-offset: 54px;
-        }
-
         .is-full-width {
-            --hex-size: 150px;
-            --board-gap: 32px;
-            --board-offset: 80px;
+            --hex-size: 120px;
+            --board-gap: 20px;
+            --board-offset: 70px;
         }
     }
 
     @media (min-width: 1920px) {
-        :root {
-            --hex-size: 110px;
-            --board-gap: 20px;
-            --board-offset: 60px;
-        }
-
         .is-full-width {
-            --hex-size: 180px;
-            --board-gap: 36px;
-            --board-offset: 90px;
+            --hex-size: 130px;
+            --board-gap: 24px;
+            --board-offset: 77px;
         }
     }
 
@@ -159,7 +156,6 @@ const board = createBoard();
     }
 
     .board-grid {
-        margin-left: calc(var(--hex-size) / -2 );
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -167,6 +163,8 @@ const board = createBoard();
         background: radial-gradient(circle at center, rgba(164, 107, 255, 0.05) 0%, transparent 70%);
         padding: 2rem;
         border-radius: 50%;
+        /* Centrado compensando el offset de las filas: mitad del translateX de .offset */
+        margin-left: calc(calc(calc(var(--hex-size) / 2) + calc(var(--board-gap) / 2)) * -0.5);
     }
 
     .board-row {
@@ -174,6 +172,7 @@ const board = createBoard();
         gap: var(--board-gap);
         justify-content: center;
         align-items: center;
+        flex-shrink: 0;
     }
 
     .board-row.offset {
@@ -187,6 +186,7 @@ const board = createBoard();
         align-items: center;
         width: var(--hex-size);
         height: var(--hex-size);
+        flex-shrink: 0;
     }
 
     .responsive-tft-board {
@@ -202,11 +202,11 @@ const board = createBoard();
 
 
     /* Responsive breakpoints */
-    @media (max-width: 1400px){
+    @media (max-width: 1536px){
         :root {
-            --hex-size: 72px;
-            --board-gap: 7px;
-            --board-offset: 39px;
+            --hex-size: 76px;
+            --board-gap: 8px;
+            --board-offset: 42px;
         }
 
         .responsive-tft-board {
