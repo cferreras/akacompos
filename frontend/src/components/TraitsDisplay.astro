@@ -1,14 +1,6 @@
 ---
-import {
-    calculateActiveTraits,
-    type Trait,
-    type TraitTier,
-    type ActiveTrait,
-} from "../utils/traits";
-
+import { calculateActiveTraits } from "../utils/traits";
 import { getChampionImageMeta, resolveChampionName } from "../utils/assets";
-
-import Tooltip from "./ui/Tooltip.astro";
 import { Image } from "astro:assets";
 
 interface Props {
@@ -18,14 +10,25 @@ interface Props {
 const { champions } = Astro.props;
 
 const getTraitColor = (tierIndex: number, totalTiers: number) => {
-    if (totalTiers === 1) return "bg-red-500";
+    if (totalTiers === 1) return "text-red-400";
     if (totalTiers === 2) {
-        return tierIndex === 0 ? "bg-amber-600" : "bg-yellow-400";
+        return tierIndex === 0 ? "text-amber-600" : "text-yellow-400";
     }
-    if (tierIndex === 0) return "bg-amber-600";
-    if (tierIndex === 1) return "bg-slate-300";
-    if (tierIndex === 2) return "bg-yellow-400";
-    return "bg-fuchsia-400";
+    if (tierIndex === 0) return "text-amber-600";
+    if (tierIndex === 1) return "text-slate-300";
+    if (tierIndex === 2) return "text-yellow-400";
+    return "text-fuchsia-400";
+};
+
+const getTraitBg = (tierIndex: number, totalTiers: number) => {
+    if (totalTiers === 1) return "bg-red-400/20";
+    if (totalTiers === 2) {
+        return tierIndex === 0 ? "bg-amber-600/20" : "bg-yellow-400/20";
+    }
+    if (tierIndex === 0) return "bg-amber-600/20";
+    if (tierIndex === 1) return "bg-slate-300/20";
+    if (tierIndex === 2) return "bg-yellow-400/20";
+    return "bg-fuchsia-400/20";
 };
 
 const activeTraits = calculateActiveTraits(champions);
@@ -34,136 +37,43 @@ const activeTraits = calculateActiveTraits(champions);
 <div class="traits">
     {
         activeTraits.length === 0 ? (
-            <div class="p-3 bg-slate-800/50 rounded-lg border border-white/5 text-center">
-                <p class="text-slate-400 text-xs">
-                    No se encontraron traits activos
-                </p>
+            <div class="p-3 bg-slate-800/30 rounded-lg text-center">
+                <p class="text-slate-400 text-xs">No se encontraron traits activos</p>
             </div>
         ) : (
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                 {activeTraits.map(({ trait, count, activeTier, tierIndex }) => (
-                    <Tooltip
-                        position="bottom"
-                        className="w-full"
-                        triggerClassName="w-full"
-                        tooltipClassName="w-[280px]"
-                    >
-                        <div slot="content" class="flex flex-col gap-3 p-2">
-                            <div class="flex items-center gap-3 border-b border-white/10 pb-3">
-                                <div class={`p-1.5 rounded-lg ${activeTier ? "bg-primary/20" : "bg-slate-800"}`}>
-                                    <div
-                                        class={`w-8 h-8 ${activeTier ? getTraitColor(tierIndex, trait.tiers.length) : "bg-slate-500"}`}
-                                        style={{
-                                            maskImage: `url(${trait.icon.src})`,
-                                            maskSize: "contain",
-                                            maskRepeat: "no-repeat",
-                                            maskPosition: "center",
-                                            WebkitMaskImage: `url(${trait.icon.src})`,
-                                            WebkitMaskSize: "contain",
-                                            WebkitMaskRepeat: "no-repeat",
-                                            WebkitMaskPosition: "center",
-                                        }}
-                                    />
-                                </div>
-                                <div>
-                                    <h4 class="font-semibold text-white text-sm">
-                                        {trait.name}
-                                    </h4>
-                                    <span class="text-xs text-primary">
-                                        {count} activo{count !== 1 ? "s" : ""}
-                                    </span>
-                                </div>
+                    <div class={`group p-2 rounded-lg flex items-center gap-2 ${activeTier ? "bg-slate-800/40" : "bg-slate-800/20 opacity-60"}`}>
+                        <div class="relative flex-shrink-0">
+                            <div class={`w-8 h-8 rounded-lg flex items-center justify-center ${activeTier ? getTraitBg(tierIndex, trait.tiers.length) : "bg-slate-700/50"}`}>
+                                <div
+                                    class={`w-5 h-5 ${activeTier ? getTraitColor(tierIndex, trait.tiers.length) : "text-slate-500"}`}
+                                    style={{
+                                        maskImage: `url(${trait.icon.src})`,
+                                        maskSize: "contain",
+                                        maskRepeat: "no-repeat",
+                                        maskPosition: "center",
+                                        WebkitMaskImage: `url(${trait.icon.src})`,
+                                        WebkitMaskSize: "contain",
+                                        WebkitMaskRepeat: "no-repeat",
+                                        WebkitMaskPosition: "center",
+                                        backgroundColor: 'currentColor'
+                                    }}
+                                />
                             </div>
-                            
-                            <p class="text-xs text-slate-300 leading-relaxed">
-                                {trait.description}
+                            <span class={`absolute -bottom-1 -right-1 w-4 h-4 flex items-center justify-center text-[10px] font-semibold rounded-full border border-slate-900 ${activeTier ? "bg-primary text-white" : "bg-slate-700 text-slate-400"}`}>
+                                {count}
+                            </span>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class={`font-medium text-sm truncate ${activeTier ? "text-white" : "text-slate-400"}`}>
+                                {trait.name}
                             </p>
-
-                            <div class="flex flex-col gap-1 bg-slate-900/50 rounded-lg p-2">
-                                {trait.tiers.map((tier, idx) => (
-                                    <div
-                                        class={`flex items-center gap-2 p-1.5 rounded ${idx === tierIndex ? "bg-primary/20" : "opacity-50"}`}
-                                    >
-                                        <span class={`text-xs font-semibold px-1.5 py-0.5 rounded ${idx === tierIndex ? "bg-primary text-white" : "bg-slate-700 text-slate-400"}`}>
-                                            {tier.count}
-                                        </span>
-                                        <span class={`text-xs flex-1 ${idx === tierIndex ? "text-white" : "text-slate-400"}`}>
-                                            {tier.effect}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div class="pt-2 border-t border-white/5">
-                                <p class="text-[10px] uppercase text-slate-500 font-medium mb-2">
-                                    Campeones
-                                </p>
-                                <div class="flex flex-wrap gap-1">
-                                    {trait.champions.map((champName) => {
-                                        const resolvedChampName = resolveChampionName(champName);
-                                        const isActive = champions.some((c) => resolveChampionName(c) === resolvedChampName);
-                                        const champImage = getChampionImageMeta(champName);
-                                        if (!champImage) return null;
-
-                                        return (
-                                            <div class={`${isActive ? "opacity-100" : "opacity-30 grayscale"}`}>
-                                                <Image
-                                                    src={champImage}
-                                                    alt={champName}
-                                                    width={28}
-                                                    height={28}
-                                                    class={`w-7 h-7 rounded border ${isActive ? "border-primary" : "border-slate-700"}`}
-                                                    format="webp"
-                                                    quality={70}
-                                                />
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </div>
+                            <p class="text-[10px] text-slate-500 uppercase">
+                                {trait.type}
+                            </p>
                         </div>
-
-                        <div
-                            class={`trait-card relative rounded-lg p-2 border flex items-center gap-2 cursor-help w-full
-                                ${activeTier
-                                    ? "bg-slate-800 border-primary/30"
-                                    : "bg-slate-800/50 border-white/5 opacity-70"
-                                }
-                            `}
-                        >
-                            <div class="relative flex-shrink-0">
-                                <div class={`w-8 h-8 rounded-lg flex items-center justify-center ${activeTier ? "bg-primary/10" : "bg-slate-800"}`}>
-                                    <div
-                                        class={`w-5 h-5 ${activeTier ? getTraitColor(tierIndex, trait.tiers.length) : "bg-slate-500 opacity-60"}`}
-                                        style={{
-                                            maskImage: `url(${trait.icon.src})`,
-                                            maskSize: "contain",
-                                            maskRepeat: "no-repeat",
-                                            maskPosition: "center",
-                                            WebkitMaskImage: `url(${trait.icon.src})`,
-                                            WebkitMaskSize: "contain",
-                                            WebkitMaskRepeat: "no-repeat",
-                                            WebkitMaskPosition: "center",
-                                        }}
-                                    />
-                                </div>
-                                <span
-                                    class={`absolute -bottom-1 -right-1 w-4 h-4 flex items-center justify-center text-[10px] font-semibold rounded-full border border-slate-900
-                                    ${activeTier ? "bg-primary text-white" : "bg-slate-700 text-slate-400"}`}
-                                >
-                                    {count}
-                                </span>
-                            </div>
-                            <div class="flex-1 min-w-0">
-                                <p class={`font-medium text-sm truncate ${activeTier ? "text-white" : "text-slate-400"}`}>
-                                    {trait.name}
-                                </p>
-                                <p class="text-[10px] text-slate-500 uppercase">
-                                    {trait.type}
-                                </p>
-                            </div>
-                        </div>
-                    </Tooltip>
+                    </div>
                 ))}
             </div>
         )
