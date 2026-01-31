@@ -98,6 +98,20 @@ export interface Augment {
   icon: string;
 }
 
+// Función helper para obtener URL de imagen con formato optimizado
+function getImageUrl(imageData: any, preferredFormat: 'thumbnail' | 'small' | 'medium' | 'large' = 'medium'): string | undefined {
+  if (!imageData?.url) return undefined;
+  
+  // Usar formato optimizado si está disponible
+  const formatUrl = imageData.formats?.[preferredFormat]?.url;
+  if (formatUrl) {
+    return formatUrl.startsWith('http') ? formatUrl : `${STRAPI_URL}${formatUrl}`;
+  }
+  
+  // Fallback a la imagen original
+  return imageData.url.startsWith('http') ? imageData.url : `${STRAPI_URL}${imageData.url}`;
+}
+
 // Función helper para transformar datos de Strapi al formato esperado
 function transformComposition(item: any): Composition {
   return {
@@ -106,13 +120,8 @@ function transformComposition(item: any): Composition {
     slug: item.slug,
     tier: item.tier,
     author: item.author,
-    // Si la URL ya es absoluta (viene de R2), usarla directamente
-    // Si es relativa (local), concatenar con STRAPI_URL
-    cover: item.cover?.url
-      ? (item.cover.url.startsWith('http://') || item.cover.url.startsWith('https://'))
-        ? item.cover.url
-        : `${STRAPI_URL}${item.cover.url}`
-      : undefined,
+    // Usar versión medium de la imagen para optimizar carga
+    cover: getImageUrl(item.cover, 'medium'),
     tags: item.tags,
     description: item.description,
     gameplayMode: item.gameplayMode,
