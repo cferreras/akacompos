@@ -1,29 +1,14 @@
 ---
 /**
  * Button Component - Componente de botón reutilizable
- *
- * @param variant - Estilo del botón: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger'
- * @param size - Tamaño del botón: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
- * @param fullWidth - Si el botón debe ocupar todo el ancho: boolean
- * @param disabled - Si el botón está deshabilitado: boolean
- * @param loading - Si el botón muestra estado de carga: boolean
- * @param icon - Nombre del icono (opcional)
- * @param iconPosition - Posición del icono: 'left' | 'right'
- * @param as - Elemento HTML a renderizar: 'button' | 'a'
- * @param href - URL si as='a'
- * @param target - Target del enlace si as='a'
- * @param type - Tipo del botón si as='button'
- * @param className - Clases adicionales
  */
 
 export interface Props {
-    variant?: "primary" | "secondary" | "outline" | "ghost" | "danger";
-    size?: "xs" | "sm" | "md" | "lg" | "xl";
+    variant?: "primary" | "secondary" | "outline" | "ghost";
+    size?: "sm" | "md" | "lg";
     fullWidth?: boolean;
     disabled?: boolean;
     loading?: boolean;
-    icon?: string;
-    iconPosition?: "left" | "right";
     as?: "button" | "a";
     href?: string;
     target?: string;
@@ -37,8 +22,6 @@ const {
     fullWidth = false,
     disabled = false,
     loading = false,
-    icon,
-    iconPosition = "left",
     as: Tag = "button",
     href,
     target,
@@ -47,63 +30,37 @@ const {
     ...rest
 } = Astro.props;
 
-// Estilos base según variante
 const variantClasses = {
-    primary:
-        "bg-primary text-white border-2 border-primary hover:bg-primary/90 hover:shadow-primary-lg active:scale-95",
-    secondary:
-        "bg-slate-700 text-white border-2 border-slate-700 hover:bg-slate-600 hover:shadow-lg active:scale-95",
-    outline:
-        "bg-transparent text-primary border-2 border-primary hover:bg-primary/10 hover:shadow-primary-md active:scale-95",
-    ghost: "bg-transparent text-slate-300 border-2 border-transparent hover:bg-slate-700/50 hover:text-white active:scale-95",
-    danger: "bg-red-600 text-white border-2 border-red-600 hover:bg-red-500 hover:shadow-lg hover:shadow-red-500/30 active:scale-95",
+    primary: "bg-primary text-white hover:bg-primary-dark",
+    secondary: "bg-slate-700 text-white hover:bg-slate-600",
+    outline: "bg-transparent text-primary border border-primary hover:bg-primary/10",
+    ghost: "bg-transparent text-slate-300 hover:bg-white/5 hover:text-white",
 };
 
-// Tamaños
 const sizeClasses = {
-    xs: "text-xs px-2 py-1 gap-1",
-    sm: "text-sm px-3 py-1.5 gap-1.5",
-    md: "text-base px-4 py-2 gap-2",
-    lg: "text-lg px-6 py-3 gap-2",
-    xl: "text-xl px-8 py-4 gap-3",
+    sm: "text-sm px-3 py-1.5",
+    md: "text-base px-4 py-2",
+    lg: "text-lg px-6 py-3",
 };
 
-// Tamaño de iconos según el tamaño del botón
-const iconSizeClasses = {
-    xs: "text-xs",
-    sm: "text-sm",
-    md: "text-base",
-    lg: "text-lg",
-    xl: "text-xl",
-};
+const disabledClasses = disabled || loading
+    ? "opacity-50 cursor-not-allowed pointer-events-none"
+    : "cursor-pointer";
 
-// Estado deshabilitado
-const disabledClasses =
-    disabled || loading
-        ? "opacity-50 cursor-not-allowed pointer-events-none"
-        : "cursor-pointer";
-
-// Ancho completo
 const widthClass = fullWidth ? "w-full" : "";
 
-// Combinar todas las clases
 const classes = [
     "inline-flex items-center justify-center",
-    "font-semibold",
+    "font-medium",
     "rounded-lg",
-    "transition-all duration-200",
-    "focus-ring",
-    "whitespace-nowrap",
-    variantClasses[variant as keyof typeof variantClasses],
-    sizeClasses[size as keyof typeof sizeClasses],
+    "transition-colors duration-200",
+    variantClasses[variant],
+    sizeClasses[size],
     disabledClasses,
     widthClass,
     className,
-]
-    .filter(Boolean)
-    .join(" ");
+].filter(Boolean).join(" ");
 
-// Props para el elemento
 const elementProps = {
     class: classes,
     ...(Tag === "button" ? { type, disabled: disabled || loading } : {}),
@@ -113,86 +70,12 @@ const elementProps = {
 ---
 
 <Tag {...elementProps}>
-    {
-        loading ? (
-            <>
-                <i
-                    class={`fa-solid fa-spinner animate-spin ${iconSizeClasses[size as keyof typeof iconSizeClasses]}`}
-                />
-                <slot name="loading">Cargando...</slot>
-            </>
-        ) : (
-            <>
-                {icon && iconPosition === "left" && (
-                    <i
-                        class={`${icon.includes("fa-") ? icon : `fa-solid fa-${icon}`} ${iconSizeClasses[size as keyof typeof iconSizeClasses]}`}
-                    />
-                )}
-                <slot />
-                {icon && iconPosition === "right" && (
-                    <i
-                        class={`${icon.includes("fa-") ? icon : `fa-solid fa-${icon}`} ${iconSizeClasses[size as keyof typeof iconSizeClasses]}`}
-                    />
-                )}
-            </>
-        )
-    }
+    {loading ? (
+        <>
+            <i class="fa-solid fa-spinner fa-spin mr-2" />
+            <slot name="loading">Cargando...</slot>
+        </>
+    ) : (
+        <slot />
+    )}
 </Tag>
-
-<style>
-    /* Efectos adicionales */
-    button,
-    a {
-        position: relative;
-        overflow: hidden;
-    }
-
-    /* Efecto de onda al hacer clic */
-    button::after,
-    a::after {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 0;
-        height: 0;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.3);
-        transform: translate(-50%, -50%);
-        transition:
-            width 0.6s,
-            height 0.6s;
-    }
-
-    button:active::after,
-    a:active::after {
-        width: 300px;
-        height: 300px;
-    }
-
-    /* Prevenir efecto en botones deshabilitados */
-    button:disabled::after,
-    button.pointer-events-none::after,
-    a.pointer-events-none::after {
-        display: none;
-    }
-
-    /* Animación de aparición */
-    @media (prefers-reduced-motion: no-preference) {
-        button,
-        a {
-            animation: buttonFadeIn 0.2s ease-out;
-        }
-    }
-
-    @keyframes buttonFadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(0.25rem);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>

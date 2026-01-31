@@ -1,25 +1,13 @@
 ---
 /**
  * Card Component - Componente de tarjeta reutilizable
- *
- * @param variant - Estilo de la tarjeta: 'default' | 'glass' | 'gradient' | 'outlined'
- * @param tier - Nivel/Rango de la tarjeta: 'bronze' | 'silver' | 'gold' | 'prismatic' | 'amber'
- * @param hover - Habilitar efectos de hover
- * @param padding - Tamaño del padding: 'none' | 'sm' | 'md' | 'lg' | 'xl'
- * @param rounded - Tamaño del border-radius: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | 'full'
- * @param shadow - Tamaño de la sombra: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'inner'
- * @param as - Elemento HTML a renderizar: 'div' | 'article' | 'section' | 'a'
- * @param href - URL si as='a'
- * @param className - Clases adicionales
  */
 
 export interface Props {
-    variant?: "default" | "glass" | "gradient" | "outlined" | "surface";
-    tier?: "bronze" | "silver" | "gold" | "prismatic" | "amber" | null;
-    hover?: boolean;
+    variant?: "default" | "glass" | "outlined" | "surface";
     padding?: "none" | "sm" | "md" | "lg" | "xl" | "2xl";
-    rounded?: "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "full";
-    shadow?: "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "inner";
+    rounded?: "sm" | "md" | "lg" | "xl" | "2xl";
+    shadow?: "none" | "sm" | "md" | "lg";
     as?: "div" | "article" | "section" | "a";
     href?: string;
     className?: string;
@@ -27,92 +15,55 @@ export interface Props {
 
 const {
     variant = "default",
-    tier = null,
-    hover = false,
     padding = "md",
     rounded = "lg",
-    shadow = "md",
+    shadow = "none",
     as: Tag = "div",
     href,
     className = "",
     ...rest
 } = Astro.props;
 
-// Estilos base según variante
 const variantClasses = {
-    default: "bg-surface-dark border border-white/5",
-    glass: "bg-white/[0.03] backdrop-blur-xl border border-white/10 shadow-[inset_0_1px_1px_rgba(255,255,255,0.05)]",
-    gradient:
-        "bg-gradient-to-br from-surface-dark via-surface-darker to-surface-dark border border-white/5",
-    outlined: "bg-transparent border-2 border-white/10",
-    surface: "bg-surface-darker border border-white/5",
+    default: "bg-slate-900 border border-white/5",
+    glass: "bg-slate-800/50 border border-white/10",
+    outlined: "bg-transparent border border-white/10",
+    surface: "bg-slate-800",
 };
 
-// Padding
 const paddingClasses = {
     none: "",
-    sm: "p-2",
+    sm: "p-3",
     md: "p-4",
     lg: "p-6",
     xl: "p-8",
-    "2xl": "p-12",
+    "2xl": "p-10",
 };
 
-// Border radius
 const roundedClasses = {
     sm: "rounded",
     md: "rounded-md",
     lg: "rounded-lg",
     xl: "rounded-xl",
     "2xl": "rounded-2xl",
-    "3xl": "rounded-3xl",
-    full: "rounded-full",
 };
 
-// Shadow
 const shadowClasses = {
     none: "",
     sm: "shadow-sm",
     md: "shadow-md",
     lg: "shadow-lg",
-    xl: "shadow-xl",
-    "2xl": "shadow-2xl",
-    inner: "shadow-inner",
 };
 
-// Tier border y efectos
-const tierClasses = tier
-    ? (
-          {
-              bronze: "tier-bronze border-2",
-              silver: "tier-silver border-2",
-              gold: "tier-gold border-2",
-              prismatic: "tier-prismatic border-2",
-              amber: "tier-amber border-2",
-          } as Record<string, string>
-      )[tier]
-    : "";
-
-// Efectos hover
-const hoverClasses = hover
-    ? "transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-primary/20 hover:brightness-110 cursor-pointer group"
-    : "";
-
-// Combinar todas las clases
 const classes = [
-    variantClasses[variant as keyof typeof variantClasses],
-    paddingClasses[padding as keyof typeof paddingClasses],
-    roundedClasses[rounded as keyof typeof roundedClasses],
-    shadowClasses[shadow as keyof typeof shadowClasses],
-    tierClasses,
-    hoverClasses,
-    "relative overflow-hidden",
+    variantClasses[variant],
+    paddingClasses[padding],
+    roundedClasses[rounded],
+    shadowClasses[shadow],
+    "overflow-hidden",
     className,
-]
-    .filter(Boolean)
-    .join(" ");
+].filter(Boolean).join(" ");
 
-// Props para el elemento
 const elementProps = {
     class: classes,
     ...(Tag === "a" && href ? { href } : {}),
@@ -120,65 +71,6 @@ const elementProps = {
 };
 ---
 
-<Tag {...elementProps} data-animate="true">
-    {/* Glass reflection effect for gradient/glass variants */}
-    {
-        (variant === "gradient" || variant === "glass") && (
-            <div class="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-        )
-    }
+<Tag {...elementProps}>
     <slot />
 </Tag>
-
-<style>
-    /* Efectos adicionales para cards con tier */
-    :global(.tier-bronze) {
-        border-color: rgba(205, 127, 50, 0.3) !important;
-        box-shadow: inset 0 0 20px rgba(205, 127, 50, 0.05);
-    }
-    :global(.tier-silver) {
-        border-color: rgba(148, 163, 184, 0.3) !important;
-        box-shadow: inset 0 0 20px rgba(148, 163, 184, 0.05);
-    }
-    :global(.tier-gold) {
-        border-color: rgba(251, 191, 36, 0.3) !important;
-        box-shadow: inset 0 0 20px rgba(251, 191, 36, 0.05);
-    }
-    :global(.tier-prismatic) {
-        border-color: rgba(164, 107, 255, 0.4) !important;
-        box-shadow: 
-            inset 0 0 30px rgba(164, 107, 255, 0.1),
-            0 0 20px rgba(164, 107, 255, 0.1);
-        background-image: linear-gradient(to bottom right, rgba(164, 107, 255, 0.05), transparent, rgba(164, 107, 255, 0.05)) !important;
-    }
-    :global(.tier-amber) {
-        border-color: rgba(245, 158, 11, 0.3) !important;
-        box-shadow: inset 0 0 20px rgba(245, 158, 11, 0.05);
-    }
-
-    :global(.tier-bronze),
-    :global(.tier-silver),
-    :global(.tier-gold),
-    :global(.tier-prismatic),
-    :global(.tier-amber) {
-        backdrop-filter: blur(12px);
-    }
-
-    /* Animación de entrada opcional */
-    @media (prefers-reduced-motion: no-preference) {
-        [data-animate="true"] {
-            animation: cardFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) backwards;
-        }
-    }
-
-    @keyframes cardFadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(1rem);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-</style>

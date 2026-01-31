@@ -1,25 +1,18 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Container from "../components/ui/Container.astro";
-import Section from "../components/ui/Section.astro";
 import Card from "../components/ui/Card.astro";
 import Badge from "../components/ui/Badge.astro";
-import Button from "../components/ui/Button.astro";
 import { Image } from "astro:assets";
 import akaWonderImage from "../assets/akawonder.png";
 import { getCompositionsByTier, getCompositionsCount } from "../lib/strapi";
-import { championAssets } from "../utils/assets";
 
 export const prerender = true;
 
-// Obtener composiciones destacadas (S Tier)
 const { data: featuredCompositions } = await getCompositionsByTier("S Tier");
 const topCompositions = featuredCompositions?.slice(0, 3) || [];
-
-// Obtener el número total de composiciones
 const { data: totalCompositions } = await getCompositionsCount();
 
-// Obtener la fecha de la última actualización
 const lastUpdate = featuredCompositions?.[0]?.updatedAt 
     ? new Date(featuredCompositions[0].updatedAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })
     : null;
@@ -29,382 +22,258 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
     title="AKACompos - Las mejores composiciones de TFT"
     description="Descubre las mejores composiciones de Teamfight Tactics (TFT) actualizadas para el meta actual. Estrategias probadas por AKAWonder."
 >
-    <!-- Animated Background -->
-    <div class="fixed inset-0 -z-10 overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-animated animate-gradient">
-        </div>
-        <div
-            class="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-float"
-        >
-        </div>
-        <div
-            class="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-float"
-            style="animation-delay: -1.5s;"
-        >
-        </div>
-    </div>
-
     <!-- Hero Section -->
-    <div class="relative overflow-hidden py-12 md:py-24 lg:py-32">
-        <Container maxWidth="xl">
-            <div class="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <section class="relative py-16 md:py-24 lg:py-32 overflow-hidden">
+        <!-- Subtle background -->
+        <div class="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-950"></div>
+        
+        <Container maxWidth="xl" className="relative">
+            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <!-- Content -->
-                <div
-                    class="text-center md:text-left space-y-8 animate-fade-in-up"
-                >
+                <div class="text-center lg:text-left space-y-6">
                     <!-- Badge -->
-                    <div
-                        class="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs sm:text-sm font-medium backdrop-blur-sm max-w-full"
-                    >
-                        <span class="relative flex h-2 w-2">
-                            <span
-                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"
-                            ></span>
-                            <span
-                                class="relative inline-flex rounded-full h-2 w-2 bg-primary"
-                            ></span>
-                        </span>
-                        {lastUpdate ? `Actualizado el ${lastUpdate}` : 'Actualizado para el meta actual'}
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+                        {lastUpdate ? `Actualizado el ${lastUpdate}` : 'Meta actual'}
                     </div>
 
                     <!-- Title -->
-                    <h1
-                        class="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-white leading-tight"
-                    >
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
                         Las mejores composiciones de
-                        <span class="text-gradient-prismatic text-shadow-glow">
-                            TFT
-                        </span>
+                        <span class="text-gradient"> TFT</span>
                     </h1>
 
                     <!-- Subtitle -->
-                    <p
-                        class="text-xl md:text-2xl text-slate-300 leading-relaxed max-w-2xl"
-                    >
-                        Bienvenido a <span class="text-primary font-semibold"
-                            >AKACompos</span
-                        >, tu fuente de referencia para las composiciones más
-                        potentes y actualizadas de Teamfight Tactics,
-                        directamente desde la mente del maestro estratega, <span
-                            class="text-primary font-semibold">AKAWonder</span
-                        >.
+                    <p class="text-lg md:text-xl text-slate-400 leading-relaxed max-w-xl">
+                        Bienvenido a <span class="text-white font-medium">AKACompos</span>, 
+                        tu fuente de referencia para las composiciones más potentes de 
+                        Teamfight Tactics, directamente de <span class="text-white font-medium">AKAWonder</span>.
                     </p>
 
                     <!-- CTA Buttons -->
-                    <div
-                        class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start"
-                    >
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
                         <a
-                            class="group relative inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 rounded-xl bg-gradient-primary text-white text-base sm:text-lg font-bold shadow-elevation-3 hover:shadow-elevation-4 hover:shadow-glow-md transition-all duration-300 overflow-hidden"
                             href="/compositions"
+                            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark transition-colors"
                         >
-                            <span class="relative z-10 flex items-center gap-2">
-                                Ver Composiciones
-                                <span
-                                    class="material-symbols-outlined transition-transform group-hover:translate-x-1"
-                                >
-                                    arrow_forward
-                                </span>
-                            </span>
-                            <div
-                                class="absolute inset-0 bg-gradient-to-r from-primary to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"
-                            >
-                            </div>
+                            Ver Composiciones
+                            <i class="fa-solid fa-arrow-right text-sm"></i>
                         </a>
-
                         <a
-                            class="group inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 rounded-xl glass-card glass-card-hover text-slate-200 text-base sm:text-lg font-bold transition-all duration-300"
                             href="https://www.twitch.tv/akawonder"
                             target="_blank"
+                            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white/5 text-white font-medium border border-white/10 hover:bg-white/10 transition-colors"
                         >
-                            <i
-                                class="fa-brands fa-twitch mr-2 text-purple-400 transition-transform group-hover:scale-110"
-                            ></i>
+                            <i class="fa-brands fa-twitch text-purple-400"></i>
                             Canal de Twitch
                         </a>
                     </div>
                 </div>
 
-                <!-- Profile Image -->
-                <div
-                    class="relative flex justify-center items-center animate-fade-in"
-                    style="animation-delay: 0.2s;"
-                >
-                    <!-- Glow Effects -->
-                    <div
-                        class="absolute inset-0 bg-gradient-to-r from-primary/30 via-purple-500/30 to-primary/30 blur-3xl rounded-full animate-glow-pulse"
-                    >
-                    </div>
-                    <div
-                        class="absolute inset-0 bg-primary/10 blur-2xl rounded-full animate-pulse"
-                    >
-                    </div>
-
-                    <!-- Image Container -->
-                    <div class="relative group">
-                        <div
-                            class="absolute -inset-1 bg-gradient-to-r from-primary via-purple-500 to-primary rounded-full blur opacity-75 group-hover:opacity-100 transition duration-1000 group-hover:duration-200 animate-gradient"
-                        >
-                        </div>
+                <!-- Image -->
+                <div class="relative flex justify-center">
+                    <div class="relative">
+                        <!-- Subtle glow -->
+                        <div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-75"></div>
+                        
                         <Image
                             src={akaWonderImage}
                             alt="AKAWonder"
-                            class="relative w-48 h-48 sm:w-64 sm:h-64 md:w-96 md:h-96 lg:w-[28rem] lg:h-[28rem] object-cover rounded-full border-4 border-background-dark shadow-elevation-4 object-top transition-transform duration-300 group-hover:scale-105"
-                            width={448}
-                            height={448}
+                            class="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-cover rounded-2xl shadow-2xl object-top"
+                            width={400}
+                            height={400}
                             quality={95}
                             loading="eager"
-                            decoding="async"
                         />
                     </div>
                 </div>
             </div>
         </Container>
-    </div>
-
-    <!-- Featured Compositions Section -->
-    {topCompositions.length > 0 && (
-        <Section 
-            title="Composiciones Destacadas" 
-            subtitle="Las estrategias más dominantes del meta actual, seleccionadas por AKAWonder."
-            variant="gradient"
-            spacing="xl"
-        >
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {topCompositions.map((comp, index) => (
-                    <Card
-                        as="a"
-                        href={`/compositions/${comp.slug}`}
-                        variant="gradient"
-                        hover={true}
-                        rounded="2xl"
-                        shadow="xl"
-                        padding="none"
-                        tier="prismatic"
-                        className="group animate-fade-in-up"
-                        style={`animation-delay: ${index * 0.1}s;`}
-                    >
-                        <div class="relative aspect-[16/9] overflow-hidden rounded-t-2xl">
-                            {comp.cover ? (
-                                <img
-                                    src={comp.cover}
-                                    alt={comp.title}
-                                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                                />
-                            ) : (
-                                <div class="h-full w-full bg-slate-800 flex items-center justify-center">
-                                    <i class="fa-solid fa-image text-4xl text-slate-700"></i>
-                                </div>
-                            )}
-                            <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-60"></div>
-                            <div class="absolute top-4 left-4">
-                                <Badge variant="primary" icon="star" size="sm">
-                                    {comp.tier}
-                                </Badge>
-                            </div>
-                        </div>
-                        <div class="p-6 space-y-3">
-                            <h3 class="text-xl font-bold text-white group-hover:text-primary transition-colors line-clamp-1">
-                                {comp.title}
-                            </h3>
-                            <p class="text-slate-400 text-sm line-clamp-2">
-                                {comp.description}
-                            </p>
-                            <div class="pt-4 flex items-center justify-between">
-                                <span class="text-xs text-slate-500 font-medium uppercase tracking-wider">
-                                    Ver detalles
-                                </span>
-                                <i class="fa-solid fa-arrow-right text-primary transition-transform group-hover:translate-x-1"></i>
-                            </div>
-                        </div>
-                    </Card>
-                ))}
-            </div>
-            <div class="mt-12 text-center">
-                <Button 
-                    as="a" 
-                    href="/compositions" 
-                    variant="outline" 
-                    size="lg"
-                    icon="table-cells-large"
-                >
-                    Ver todas las composiciones
-                </Button>
-            </div>
-        </Section>
-    )}
+    </section>
 
     <!-- Stats Section -->
-    <div class="relative py-12 border-y border-white/5 bg-white/[0.02] backdrop-blur-sm">
+    <section class="py-12 border-y border-white/5 bg-slate-900/50">
         <Container maxWidth="xl">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 text-center">
-                <div class="space-y-1">
-                    <div class="text-2xl md:text-4xl font-bold text-white text-gradient-primary">{totalCompositions}+</div>
-                    <div class="text-[10px] md:text-sm text-slate-400 font-medium uppercase tracking-widest">Composiciones</div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-3xl md:text-4xl font-bold text-white">{totalCompositions}+</div>
+                    <div class="text-sm text-slate-500 mt-1">Composiciones</div>
                 </div>
-                <div class="space-y-1">
-                    <div class="text-2xl md:text-4xl font-bold text-white text-gradient-primary">Bisemanales</div>
-                    <div class="text-[10px] md:text-sm text-slate-400 font-medium uppercase tracking-widest">Actualizaciones</div>
+                <div>
+                    <div class="text-3xl md:text-4xl font-bold text-white">S Tier</div>
+                    <div class="text-sm text-slate-500 mt-1">Estrategias Top</div>
                 </div>
-                <div class="space-y-1">
-                    <div class="text-2xl md:text-4xl font-bold text-white text-gradient-primary">Top 1</div>
-                    <div class="text-[10px] md:text-sm text-slate-400 font-medium uppercase tracking-widest">Estrategias</div>
+                <div>
+                    <div class="text-3xl md:text-4xl font-bold text-white">Pro</div>
+                    <div class="text-sm text-slate-500 mt-1">Consejos</div>
                 </div>
-                <div class="space-y-1">
-                    <div class="text-2xl md:text-4xl font-bold text-white text-gradient-primary">Pro</div>
-                    <div class="text-[10px] md:text-sm text-slate-400 font-medium uppercase tracking-widest">Consejos</div>
+                <div>
+                    <div class="text-3xl md:text-4xl font-bold text-white">24/7</div>
+                    <div class="text-sm text-slate-500 mt-1">Actualizado</div>
                 </div>
             </div>
         </Container>
-    </div>
+    </section>
+
+    <!-- Featured Compositions -->
+    {topCompositions.length > 0 && (
+        <section class="py-16 md:py-24">
+            <Container maxWidth="xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                        Composiciones Destacadas
+                    </h2>
+                    <p class="text-slate-400 max-w-2xl mx-auto">
+                        Las estrategias más dominantes del meta actual, seleccionadas por AKAWonder.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-6">
+                    {topCompositions.map((comp) => (
+                        <a
+                            href={`/compositions/${comp.slug}`}
+                            class="group block"
+                        >
+                            <Card
+                                variant="default"
+                                padding="none"
+                                className="overflow-hidden hover-lift"
+                            >
+                                <div class="aspect-video relative overflow-hidden">
+                                    {comp.cover ? (
+                                        <img
+                                            src={comp.cover}
+                                            alt={comp.title}
+                                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                        />
+                                    ) : (
+                                        <div class="w-full h-full bg-slate-800 flex items-center justify-center">
+                                            <i class="fa-solid fa-image text-3xl text-slate-700"></i>
+                                        </div>
+                                    )}
+                                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                                    <div class="absolute top-3 left-3">
+                                        <Badge variant="primary" size="sm">
+                                            {comp.tier}
+                                        </Badge>
+                                    </div>
+                                </div>
+                                <div class="p-5">
+                                    <h3 class="text-lg font-semibold text-white group-hover:text-primary transition-colors mb-2">
+                                        {comp.title}
+                                    </h3>
+                                    <p class="text-sm text-slate-400 line-clamp-2">
+                                        {comp.description}
+                                    </p>
+                                    <div class="mt-4 flex items-center text-sm text-primary font-medium">
+                                        Ver detalles
+                                        <i class="fa-solid fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                                    </div>
+                                </div>
+                            </Card>
+                        </a>
+                    ))}
+                </div>
+
+                <div class="mt-12 text-center">
+                    <a
+                        href="/compositions"
+                        class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/10 text-white font-medium hover:bg-white/5 transition-colors"
+                    >
+                        Ver todas las composiciones
+                        <i class="fa-solid fa-table-cells-large"></i>
+                    </a>
+                </div>
+            </Container>
+        </section>
+    )}
 
     <!-- Features Section -->
-    <Section 
-        title="¿Por qué AKACompos?" 
-        subtitle="La herramienta definitiva para subir de elo en Teamfight Tactics."
-        spacing="xl"
-    >
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Feature Card 1 -->
-            <Card
-                variant="glass"
-                padding="xl"
-                className="text-center space-y-6 animate-fade-in-up"
-                style="animation-delay: 0.1s;"
-            >
-                <div
-                    class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-primary shadow-glow-md mx-auto"
-                >
-                    <i class="fa-solid fa-chess text-4xl text-white"></i>
-                </div>
-                <div class="space-y-3">
-                    <h3 class="text-2xl font-bold text-white">
+    <section class="py-16 md:py-24 bg-slate-900/30">
+        <Container maxWidth="xl">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
+                    ¿Por qué AKACompos?
+                </h2>
+                <p class="text-slate-400 max-w-2xl mx-auto">
+                    La herramienta definitiva para subir de elo en Teamfight Tactics.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Feature 1 -->
+                <Card variant="glass" padding="xl" className="text-center">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                        <i class="fa-solid fa-chess text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">
                         Composiciones Expertas
                     </h3>
-                    <p class="text-slate-400 leading-relaxed">
-                        Estrategias probadas y optimizadas por AKAWonder para
-                        dominar el meta actual en los niveles más altos.
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Estrategias probadas y optimizadas por AKAWonder para dominar el meta actual.
                     </p>
-                </div>
-            </Card>
+                </Card>
 
-            <!-- Feature Card 2 -->
-            <Card
-                variant="glass"
-                padding="xl"
-                className="text-center space-y-6 animate-fade-in-up"
-                style="animation-delay: 0.2s;"
-            >
-                <div
-                    class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-primary shadow-glow-md mx-auto"
-                >
-                    <i
-                        class="fa-solid fa-clock-rotate-left text-4xl text-white"
-                    ></i>
-                </div>
-                <div class="space-y-3">
-                    <h3 class="text-2xl font-bold text-white">
+                <!-- Feature 2 -->
+                <Card variant="glass" padding="xl" className="text-center">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                        <i class="fa-solid fa-clock-rotate-left text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">
                         Siempre Actualizado
                     </h3>
-                    <p class="text-slate-400 leading-relaxed">
-                        Contenido actualizado constantemente para reflejar los
-                        últimos parches y cambios de balance del juego.
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Contenido actualizado constantemente para reflejar los últimos parches.
                     </p>
-                </div>
-            </Card>
+                </Card>
 
-            <!-- Feature Card 3 -->
-            <Card
-                variant="glass"
-                padding="xl"
-                className="text-center space-y-6 animate-fade-in-up"
-                style="animation-delay: 0.3s;"
-            >
-                <div
-                    class="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-primary shadow-glow-md mx-auto"
-                >
-                    <i class="fa-solid fa-trophy text-4xl text-white"></i>
-                </div>
-                <div class="space-y-3">
-                    <h3 class="text-2xl font-bold text-white">
+                <!-- Feature 3 -->
+                <Card variant="glass" padding="xl" className="text-center">
+                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
+                        <i class="fa-solid fa-trophy text-2xl text-primary"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-white mb-2">
                         Nivel Competitivo
                     </h3>
-                    <p class="text-slate-400 leading-relaxed">
-                        Aprende de un jugador profesional y mejora tu toma de
-                        decisiones en cada fase de la partida.
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        Aprende de un jugador profesional y mejora tu toma de decisiones.
                     </p>
-                </div>
-            </Card>
-        </div>
-    </Section>
+                </Card>
+            </div>
+        </Container>
+    </section>
 
-    <!-- Community CTA -->
-    <Section spacing="xl" className="overflow-hidden">
-        <Card 
-            variant="gradient" 
-            padding="2xl" 
-            rounded="3xl" 
-            className="relative overflow-hidden border-primary/20"
-        >
-            <div class="absolute top-0 right-0 -mt-20 -mr-20 w-64 h-64 bg-primary/20 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl"></div>
-            
-            <div class="relative z-10 text-center space-y-8">
-                <h2 class="text-3xl md:text-5xl font-bold text-white">
-                    Únete a la comunidad
-                </h2>
-                <p class="text-xl text-slate-300 max-w-2xl mx-auto">
-                    No te pierdas ninguna actualización y aprende en directo con AKAWonder en su canal de Twitch.
-                </p>
-                <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                    <Button 
-                        as="a" 
-                        href="https://www.twitch.tv/akawonder" 
-                        target="_blank"
-                        variant="primary" 
-                        size="lg"
-                        className="w-full sm:w-auto"
-                        icon="fa-brands fa-twitch"
-                    >
-                        Ver en Twitch
-                    </Button>
-                    <Button 
-                        as="a" 
-                        href="https://x.com/aka_wonder" 
-                        target="_blank"
-                        variant="outline" 
-                        size="lg"
-                        className="w-full sm:w-auto"
-                        icon="fa-brands fa-x-twitter"
-                    >
-                        Seguir en X
-                    </Button>
+    <!-- CTA Section -->
+    <section class="py-16 md:py-24">
+        <Container maxWidth="xl">
+            <div class="relative rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-8 md:p-12 lg:p-16 text-center border border-white/5">
+                <div class="relative z-10 max-w-2xl mx-auto space-y-6">
+                    <h2 class="text-3xl md:text-4xl font-bold text-white">
+                        Únete a la comunidad
+                    </h2>
+                    <p class="text-lg text-slate-400">
+                        No te pierdas ninguna actualización y aprende en directo con AKAWonder en su canal de Twitch.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center gap-4 pt-2">
+                        <a
+                            href="https://www.twitch.tv/akawonder"
+                            target="_blank"
+                            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-purple-600 text-white font-medium hover:bg-purple-700 transition-colors"
+                        >
+                            <i class="fa-brands fa-twitch"></i>
+                            Ver en Twitch
+                        </a>
+                        <a
+                            href="https://x.com/aka_wonder"
+                            target="_blank"
+                            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white/5 text-white font-medium border border-white/10 hover:bg-white/10 transition-colors"
+                        >
+                            <i class="fa-brands fa-x-twitter"></i>
+                            Seguir en X
+                        </a>
+                    </div>
                 </div>
             </div>
-        </Card>
-    </Section>
+        </Container>
+    </section>
 </Layout>
-
-<style>
-    /* Ensure animations respect user preferences */
-    @media (prefers-reduced-motion: reduce) {
-        .animate-float,
-        .animate-glow-pulse,
-        .animate-gradient,
-        .animate-ping {
-            animation: none;
-        }
-    }
-</style>
-
-<style>
-    /* Ensure animations respect user preferences */
-    @media (prefers-reduced-motion: reduce) {
-        .animate-float,
-        .animate-glow-pulse,
-        .animate-gradient,
-        .animate-ping {
-            animation: none;
-        }
-    }
-</style>

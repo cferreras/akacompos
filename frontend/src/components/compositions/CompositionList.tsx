@@ -5,11 +5,9 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import 'dayjs/locale/es';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
-import { Section } from '../ui/Section';
 import { championAssets } from '../../utils/assets';
 import { getTraitByName } from '../../utils/traits';
 
-// Configurar dayjs
 dayjs.locale('es');
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -32,10 +30,16 @@ interface CompositionListProps {
 
 const tierOrder = ["S Tier", "A Tier", "B Tier", "C Tier"];
 
+const tierColors: Record<string, string> = {
+    "S Tier": "text-purple-400",
+    "A Tier": "text-yellow-400",
+    "B Tier": "text-slate-300",
+    "C Tier": "text-amber-600",
+};
+
 export const CompositionList: React.FC<CompositionListProps> = ({ compositions }) => {
     const [filter, setFilter] = useState<string>('all');
 
-    // Extract all unique tags
     const allTags = useMemo(() => {
         const tags = new Set<string>();
         compositions.forEach(comp => {
@@ -48,7 +52,6 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
         return Array.from(tags).sort();
     }, [compositions]);
 
-    // Filter compositions
     const filteredCompositions = useMemo(() => {
         if (filter === 'all') return compositions;
         return compositions.filter(comp => {
@@ -61,7 +64,6 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
         });
     }, [compositions, filter]);
 
-    // Group by tier
     const compositionsByTier = useMemo(() => {
         return filteredCompositions.reduce((acc, comp) => {
             const tier = comp.tier;
@@ -73,7 +75,6 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
         }, {} as Record<string, Composition[]>);
     }, [filteredCompositions]);
 
-    // Helper functions
     const getTierBadgeVariant = (tier: string) => {
         switch (tier) {
             case "S Tier": return "primary";
@@ -84,30 +85,11 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
         }
     };
 
-    const getCardTier = (tier: string) => {
-        switch (tier) {
-            case "S Tier": return "prismatic";
-            case "A Tier": return "gold";
-            case "B Tier": return "silver";
-            case "C Tier": return "bronze";
-            default: return null;
-        }
-    };
-
-    const getTagVariant = (tag: string) => {
-        const lowerTag = tag.toLowerCase();
-        if (lowerTag.includes("fast")) return "fast";
-        if (lowerTag.includes("reroll")) return "reroll";
-        if (lowerTag.includes("aggressive") || lowerTag.includes("agresivo")) return "aggressive";
-        if (lowerTag.includes("defensive") || lowerTag.includes("defensivo")) return "defensive";
-        return "primary";
-    };
-
     const formatTags = (tags: any): string[] => {
         if (typeof tags === "string") {
-            return tags.split(",").map((tag: string) => tag.trim()).slice(0, 3);
+            return tags.split(",").map((tag: string) => tag.trim()).slice(0, 2);
         } else if (Array.isArray(tags)) {
-            return tags.slice(0, 3);
+            return tags.slice(0, 2);
         }
         return [];
     };
@@ -119,7 +101,6 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
     const getTagIcon = (tagName: string) => {
         const lowerTag = tagName.toLowerCase();
         
-        // 1. Check for Champion
         const champKey = Object.keys(championAssets).find(
             key => key.toLowerCase() === lowerTag
         );
@@ -131,7 +112,6 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
             };
         }
 
-        // 2. Check for Trait
         const trait = getTraitByName(tagName);
         if (trait && trait.icon) {
             return { 
@@ -144,181 +124,124 @@ export const CompositionList: React.FC<CompositionListProps> = ({ compositions }
     };
 
     return (
-        <>
+        <div className="space-y-8">
             {/* Filter Section */}
             {allTags.length > 0 && (
-                <Section spacing="md">
-                    <div className="flex flex-wrap gap-2">
-                        <button
-                            className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${filter === 'all'
-                                ? 'bg-primary text-white shadow-lg shadow-primary/25 capitalize'
-                                : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50 capitalize'
+                <div className="flex flex-wrap gap-2">
+                    <button
+                        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                            filter === 'all'
+                                ? 'bg-primary text-white'
+                                : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
+                        }`}
+                        onClick={() => setFilter('all')}
+                    >
+                        Todos
+                    </button>
+                    {allTags.map((tag) => {
+                        const tagIcon = getTagIcon(tag);
+                        return (
+                            <button
+                                key={tag}
+                                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1.5 ${
+                                    filter === tag
+                                        ? 'bg-primary text-white'
+                                        : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
                                 }`}
-                            onClick={() => setFilter('all')}
-                        >
-                            Todos
-                        </button>
-                        {allTags.map((tag) => {
-                            const tagIcon = getTagIcon(tag);
-                            return (
-                                <button
-                                    key={tag}
-                                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${filter === tag
-                                        ? 'bg-primary text-white shadow-lg shadow-primary/25 capitalize'
-                                        : 'bg-slate-800/50 text-slate-400 hover:bg-slate-700 hover:text-white border border-slate-700/50 capitalize'
-                                        }`}
-                                    onClick={() => setFilter(tag)}
-                                >
-                                    {tagIcon && (
-                                        <img 
-                                            src={tagIcon.src} 
-                                            alt={tag} 
-                                            className={`w-5 h-5 rounded-full object-cover border border-white/20 ${tagIcon.isTrait ? 'invert brightness-200' : ''}`}
-                                        />
-                                    )}
-                                    {tag}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </Section>
+                                onClick={() => setFilter(tag)}
+                            >
+                                {tagIcon && (
+                                    <img 
+                                        src={tagIcon.src} 
+                                        alt={tag} 
+                                        className={`w-4 h-4 rounded-full object-cover ${tagIcon.isTrait ? 'invert brightness-200' : ''}`}
+                                    />
+                                )}
+                                {tag}
+                            </button>
+                        );
+                    })}
+                </div>
             )}
 
-            {/* Compositions List */}
+            {/* Compositions by Tier */}
             {tierOrder.map((tier) => {
                 const tieredComps = compositionsByTier[tier] || [];
                 if (tieredComps.length === 0) return null;
 
                 return (
-                    <Section
-                        key={tier}
-                        title={tier}
-                        spacing="lg"
-                        variant="default"
-                        id={tier.toLowerCase().replace(" ", "-")}
-                    >
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-8">
+                    <div key={tier} id={tier.toLowerCase().replace(" ", "-")}>
+                        <h3 className={`text-lg font-semibold mb-4 ${tierColors[tier] || 'text-slate-300'}`}>
+                            {tier}
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {tieredComps.map((comp) => (
                                 <Card
                                     key={comp.id}
                                     as="a"
                                     href={`/compositions/${comp.slug}`}
-                                    variant="gradient"
+                                    variant="default"
                                     hover={true}
-                                    rounded="xl"
-                                    shadow="lg"
                                     padding="none"
-                                    tier={getCardTier(tier)}
-                                    className="group h-full"
+                                    className="group"
                                 >
-                                    <div className="relative h-full aspect-[16/9] overflow-hidden">
-                                        {/* Cover Image */}
+                                    <div className="aspect-video relative overflow-hidden">
                                         {comp.cover ? (
                                             <img
                                                 src={comp.cover}
                                                 alt={comp.title}
-                                                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
+                                                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                                                 loading="lazy"
-                                                decoding="async"
                                             />
                                         ) : (
-                                            <img
-                                                src={championAssets.Aatrox.src}
-                                                alt={comp.title}
-                                                className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                                                width={480}
-                                                height={270}
-                                                loading="lazy"
-                                                decoding="async"
-                                            />
+                                            <div className="w-full h-full bg-slate-800 flex items-center justify-center">
+                                                <i className="fa-solid fa-chess text-3xl text-slate-700" />
+                                            </div>
                                         )}
-
-                                        {/* Gradient Overlay - Darker at bottom for text readability */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent z-10" />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
                                         
-                                        {/* Bottom Fade/Blur Area */}
-                                        <div className="absolute bottom-0 left-0 right-0 h-2/3 bg-gradient-to-t from-slate-950 via-slate-950/80 to-transparent z-10" />
-
-                                        {/* Tier Badge Overlay */}
-                                        <div className="absolute top-3 left-3 z-20">
-                                            <Badge
-                                                variant={getTierBadgeVariant(tier) as any}
-                                                icon="star"
-                                                size="sm"
-                                                className="shadow-lg"
-                                            >
-                                                {tier}
-                                            </Badge>
-                                        </div>
-
                                         {/* Content Overlay */}
-                                        <div className="absolute inset-0 flex flex-col justify-end p-5 z-20">
-                                            <h3 className="text-xl font-bold text-white mb-2 line-clamp-1 group-hover:text-primary transition-colors duration-300 drop-shadow-xl">
+                                        <div className="absolute inset-0 flex flex-col justify-end p-4">
+                                            <h4 className="text-lg font-semibold text-white mb-2 group-hover:text-primary transition-colors">
                                                 {comp.title}
-                                            </h3>
-
-                                            <div className="flex items-center justify-between gap-3">
-                                                {/* Tags */}
-                                                {comp.tags && (
-                                                    <div className="flex flex-wrap gap-1.5">
-                                                        {formatTags(comp.tags).map((tag) => {
-                                                            const tagIcon = getTagIcon(tag);
-                                                            return (
-                                                                <Badge
-                                                                    key={tag}
-                                                                    variant={getTagVariant(tag) as any}
-                                                                    size="xs"
-                                                                    className="bg-black/60 backdrop-blur-md border-white/10"
-                                                                >
-                                                                    {tagIcon && (
-                                                                        <img 
-                                                                            src={tagIcon.src} 
-                                                                            alt={tag} 
-                                                                            className={`w-3 h-3 rounded-full object-cover ${tagIcon.isTrait ? 'invert brightness-200' : ''}`}
-                                                                        />
-                                                                    )}
-                                                                    {tag}
-                                                                </Badge>
-                                                            );
-                                                        })}
-                                                    </div>
-                                                )}
-
-                                                {/* Update Time */}
-                                                <div className="flex items-center gap-1.5 text-[11px] text-slate-300 whitespace-nowrap drop-shadow-md">
-                                                    <i className="fa-solid fa-clock" />
-                                                    <span>
-                                                        {getUpdateTime(comp)}
-                                                    </span>
+                                            </h4>
+                                            
+                                            <div className="flex items-center justify-between">
+                                                <div className="flex flex-wrap gap-1">
+                                                    {formatTags(comp.tags).map((tag) => (
+                                                        <span 
+                                                            key={tag} 
+                                                            className="text-[0.65rem] px-1.5 py-0.5 rounded bg-black/50 text-slate-300"
+                                                        >
+                                                            {tag}
+                                                        </span>
+                                                    ))}
                                                 </div>
+                                                <span className="text-[0.65rem] text-slate-400">
+                                                    {getUpdateTime(comp)}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
                                 </Card>
                             ))}
                         </div>
-                    </Section>
+                    </div>
                 );
             })}
 
             {/* Empty State */}
             {filteredCompositions.length === 0 && (
-                <Section spacing="xl">
-                    <Card variant="glass" padding="xl" className="text-center">
-                        <div className="flex flex-col items-center gap-4">
-                            <div className="text-6xl opacity-50">
-                                <i className="fa-solid fa-folder-open" />
-                            </div>
-                            <h3 className="text-2xl font-bold text-white">
-                                No hay composiciones disponibles
-                            </h3>
-                            <p className="text-slate-400 max-w-md">
-                                No hay composiciones disponibles con los filtros seleccionados.
-                            </p>
-                        </div>
-                    </Card>
-                </Section>
+                <div className="text-center py-16">
+                    <i className="fa-solid fa-folder-open text-4xl text-slate-700 mb-4" />
+                    <h3 className="text-lg font-medium text-white mb-2">
+                        No hay composiciones disponibles
+                    </h3>
+                    <p className="text-slate-400 text-sm">
+                        No hay composiciones con los filtros seleccionados.
+                    </p>
+                </div>
             )}
-        </>
+        </div>
     );
 };
