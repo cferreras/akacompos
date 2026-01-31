@@ -1,15 +1,4 @@
 ---
-/**
- * Tooltip Component - Componente de tooltip reutilizable
- *
- * @param content - Contenido del tooltip (string o HTML). Opcional si se usa slot="content"
- * @param position - Posición del tooltip: 'top' | 'bottom' | 'left' | 'right' | 'auto'
- * @param delay - Retraso antes de mostrar (ms)
- * @param maxWidth - Ancho máximo del tooltip
- * @param className - Clases adicionales para el contenedor
- * @param tooltipClassName - Clases adicionales para el tooltip
- */
-
 export interface Props {
     content?: string;
     position?: 'top' | 'bottom' | 'left' | 'right' | 'auto';
@@ -24,7 +13,7 @@ const {
     content,
     position = 'auto',
     delay = 150,
-    maxWidth = '20rem',
+    maxWidth = '16rem',
     className = '',
     tooltipClassName = '',
     triggerClassName = '',
@@ -89,7 +78,6 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
         }
 
         private init() {
-            // Move tooltip to body to avoid clipping and z-index issues
             document.body.appendChild(this.tooltip);
 
             this.trigger.addEventListener('mouseenter', () => this.show());
@@ -99,7 +87,6 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
         }
 
         private show() {
-            // Disable on mobile devices (width < 768px)
             if (window.innerWidth < 768) return;
 
             if (this.state.timeoutId) {
@@ -110,8 +97,6 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
                 this.state.isVisible = true;
                 this.tooltip.style.visibility = 'visible';
                 this.tooltip.setAttribute('aria-hidden', 'false');
-
-                // Calculate position immediately before showing
                 this.updatePosition();
 
                 requestAnimationFrame(() => {
@@ -119,7 +104,6 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
                     this.tooltip.style.transform = 'scale(1)';
                 });
 
-                // Actualizar posición continuamente mientras está visible
                 this.startPositionUpdates();
             }, this.delay);
         }
@@ -143,14 +127,6 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
             }, 150);
         }
 
-        private toggle() {
-            if (this.state.isVisible) {
-                this.hide();
-            } else {
-                this.show();
-            }
-        }
-
         private startPositionUpdates() {
             const update = () => {
                 if (this.state.isVisible) {
@@ -172,28 +148,20 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
             const triggerRect = this.trigger.getBoundingClientRect();
             const tooltipRect = this.tooltip.getBoundingClientRect();
             const arrowSize = 6;
-            const offset = 10;
+            const offset = 8;
 
             let finalPosition = this.position;
 
-            // Auto-detect best position
             if (this.position === 'auto') {
                 const spaceTop = triggerRect.top;
                 const spaceBottom = window.innerHeight - triggerRect.bottom;
-                const spaceLeft = triggerRect.left;
-                const spaceRight = window.innerWidth - triggerRect.right;
 
-                // Prefer top, then bottom, then right, then left
                 if (spaceTop > tooltipRect.height + offset) {
                     finalPosition = 'top';
                 } else if (spaceBottom > tooltipRect.height + offset) {
                     finalPosition = 'bottom';
-                } else if (spaceRight > tooltipRect.width + offset) {
-                    finalPosition = 'right';
-                } else if (spaceLeft > tooltipRect.width + offset) {
-                    finalPosition = 'left';
                 } else {
-                    finalPosition = 'top'; // Fallback
+                    finalPosition = 'top';
                 }
             }
 
@@ -202,9 +170,7 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
             let arrowTop = '';
             let arrowLeft = '';
             let arrowTransform = '';
-            let arrowBorderColor = 'transparent';
 
-            // Reset arrow borders
             this.arrow.style.borderLeft = 'none';
             this.arrow.style.borderRight = 'none';
             this.arrow.style.borderTop = 'none';
@@ -217,10 +183,9 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
                     arrowTop = '100%';
                     arrowLeft = '50%';
                     arrowTransform = 'translateX(-50%)';
-                    // Arrow pointing down
                     this.arrow.style.borderLeft = `${arrowSize}px solid transparent`;
                     this.arrow.style.borderRight = `${arrowSize}px solid transparent`;
-                    this.arrow.style.borderTop = `${arrowSize}px solid rgb(var(--color-surface-dark))`;
+                    this.arrow.style.borderTop = `${arrowSize}px solid rgb(30, 41, 59)`;
                     break;
                 case 'bottom':
                     top = triggerRect.bottom + offset;
@@ -228,63 +193,33 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
                     arrowTop = `-${arrowSize}px`;
                     arrowLeft = '50%';
                     arrowTransform = 'translateX(-50%)';
-                    // Arrow pointing up
                     this.arrow.style.borderLeft = `${arrowSize}px solid transparent`;
                     this.arrow.style.borderRight = `${arrowSize}px solid transparent`;
-                    this.arrow.style.borderBottom = `${arrowSize}px solid rgb(var(--color-surface-dark))`;
-                    break;
-                case 'left':
-                    top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
-                    left = triggerRect.left - tooltipRect.width - offset;
-                    arrowTop = '50%';
-                    arrowLeft = '100%';
-                    arrowTransform = 'translateY(-50%)';
-                    // Arrow pointing right
-                    this.arrow.style.borderTop = `${arrowSize}px solid transparent`;
-                    this.arrow.style.borderBottom = `${arrowSize}px solid transparent`;
-                    this.arrow.style.borderLeft = `${arrowSize}px solid rgb(var(--color-surface-dark))`;
-                    break;
-                case 'right':
-                    top = triggerRect.top + (triggerRect.height / 2) - (tooltipRect.height / 2);
-                    left = triggerRect.right + offset;
-                    arrowTop = '50%';
-                    arrowLeft = `-${arrowSize}px`;
-                    arrowTransform = 'translateY(-50%)';
-                    // Arrow pointing left
-                    this.arrow.style.borderTop = `${arrowSize}px solid transparent`;
-                    this.arrow.style.borderBottom = `${arrowSize}px solid transparent`;
-                    this.arrow.style.borderRight = `${arrowSize}px solid rgb(var(--color-surface-dark))`;
+                    this.arrow.style.borderBottom = `${arrowSize}px solid rgb(30, 41, 59)`;
                     break;
             }
 
-            // Ajustar si se sale de la pantalla horizontalmente
-            const margin = 10;
+            const margin = 8;
             if (left < margin) {
                 left = margin;
-                // Adjust arrow if tooltip shifted
                 if (finalPosition === 'top' || finalPosition === 'bottom') {
                     const triggerCenter = triggerRect.left + triggerRect.width / 2;
-                    const tooltipLeft = left;
-                    const arrowNewLeft = triggerCenter - tooltipLeft;
+                    const arrowNewLeft = triggerCenter - left;
                     arrowLeft = `${arrowNewLeft}px`;
                     arrowTransform = 'translateX(-50%)';
                 }
             } else if (left + tooltipRect.width > window.innerWidth - margin) {
                 left = window.innerWidth - tooltipRect.width - margin;
-                // Adjust arrow if tooltip shifted
                 if (finalPosition === 'top' || finalPosition === 'bottom') {
                     const triggerCenter = triggerRect.left + triggerRect.width / 2;
-                    const tooltipLeft = left;
-                    const arrowNewLeft = triggerCenter - tooltipLeft;
+                    const arrowNewLeft = triggerCenter - left;
                     arrowLeft = `${arrowNewLeft}px`;
                     arrowTransform = 'translateX(-50%)';
                 }
             }
 
-            // Ajustar si se sale de la pantalla verticalmente
-            if (top < margin) {
-                top = margin;
-            } else if (top + tooltipRect.height > window.innerHeight - margin) {
+            if (top < margin) top = margin;
+            else if (top + tooltipRect.height > window.innerHeight - margin) {
                 top = window.innerHeight - tooltipRect.height - margin;
             }
 
@@ -294,8 +229,6 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
             this.arrow.style.top = arrowTop;
             this.arrow.style.left = arrowLeft;
             this.arrow.style.transform = arrowTransform;
-            
-            // Remove background from arrow to use borders
             this.arrow.style.background = 'transparent';
         }
 
@@ -304,32 +237,24 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
             if (this.state.timeoutId) {
                 clearTimeout(this.state.timeoutId);
             }
-            // Remove tooltip from body
             if (this.tooltip && this.tooltip.parentNode === document.body) {
                 document.body.removeChild(this.tooltip);
             }
         }
     }
 
-    // Initialize all tooltips
     document.addEventListener('DOMContentLoaded', () => {
         const initTooltips = () => {
             const tooltipWrappers = document.querySelectorAll('[data-tooltip-wrapper]');
-            const tooltipManagers: TooltipManager[] = [];
-
             tooltipWrappers.forEach((wrapper) => {
-                // Check if already initialized
                 if (!(wrapper as any).__tooltipManager) {
                     const manager = new TooltipManager(wrapper as HTMLElement);
                     (wrapper as any).__tooltipManager = manager;
-                    tooltipManagers.push(manager);
                 }
             });
         };
 
         initTooltips();
-
-        // Re-init on dynamic content changes if needed (MutationObserver could be added here)
     });
 </script>
 
@@ -351,20 +276,17 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
         opacity: 0;
         transform: scale(0.95);
         pointer-events: none;
-        transition: opacity var(--transition-fast) ease-in-out, transform var(--transition-fast) ease-in-out;
+        transition: opacity 150ms ease, transform 150ms ease;
         width: max-content;
     }
 
     .tooltip-inner {
-        background: rgb(var(--color-surface-dark) / 0.95);
-        border: 1px solid rgb(var(--color-border-dark));
-        border-radius: var(--radius-lg);
+        background: rgb(30, 41, 59);
+        border: 1px solid rgb(51, 65, 85);
+        border-radius: 0.5rem;
         padding: 0.75rem;
-        box-shadow:
-            0 10px 25px -5px rgba(0, 0, 0, 0.5),
-            0 8px 10px -6px rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(16px);
-        color: rgb(var(--color-text-primary));
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        color: rgb(248, 250, 252);
         font-size: 0.875rem;
         line-height: 1.4;
     }
@@ -376,7 +298,6 @@ const tooltipId = `tooltip-${Math.random().toString(36).substr(2, 9)}`;
         z-index: -1;
     }
 
-    /* Responsive adjustments */
     @media (max-width: 767px) {
         .tooltip-content {
             max-width: calc(100vw - 2rem) !important;

@@ -18,55 +18,41 @@ interface Props {
 const { champions } = Astro.props;
 
 const getTraitColor = (tierIndex: number, totalTiers: number) => {
-    // Heuristic for trait colors
-    if (totalTiers === 1) return "bg-red-500"; // Unique -> Red
-
+    if (totalTiers === 1) return "bg-red-500";
     if (totalTiers === 2) {
-        if (tierIndex === 0) return "bg-amber-600"; // Bronze
-        return "bg-yellow-400"; // Gold
+        return tierIndex === 0 ? "bg-amber-600" : "bg-yellow-400";
     }
-
-    if (totalTiers === 3) {
-        if (tierIndex === 0) return "bg-amber-600"; // Bronze
-        if (tierIndex === 1) return "bg-slate-300"; // Silver
-        return "bg-yellow-400"; // Gold
-    }
-
-    // 4+ Tiers
-    if (tierIndex === 0) return "bg-amber-600"; // Bronze
-    if (tierIndex === 1) return "bg-slate-300"; // Silver
-    if (tierIndex === 2) return "bg-yellow-400"; // Gold
-    return "bg-fuchsia-400"; // Prismatic
+    if (tierIndex === 0) return "bg-amber-600";
+    if (tierIndex === 1) return "bg-slate-300";
+    if (tierIndex === 2) return "bg-yellow-400";
+    return "bg-fuchsia-400";
 };
 
 const activeTraits = calculateActiveTraits(champions);
 ---
 
-<div class="traits-display">
+<div class="traits">
     {
         activeTraits.length === 0 ? (
-            <div class="p-4 bg-surface-dark/30 backdrop-blur-sm rounded-lg border border-white/5 text-center">
-                <p class="text-slate-400 text-sm">
-                    No se encontraron traits activos. Champions:{" "}
-                    {champions.length > 0 ? champions.join(", ") : "Ninguno"}
+            <div class="p-3 bg-slate-800/50 rounded-lg border border-white/5 text-center">
+                <p class="text-slate-400 text-xs">
+                    No se encontraron traits activos
                 </p>
             </div>
         ) : (
-            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                 {activeTraits.map(({ trait, count, activeTier, tierIndex }) => (
                     <Tooltip
                         position="bottom"
                         className="w-full"
                         triggerClassName="w-full"
-                        tooltipClassName="w-[320px]"
+                        tooltipClassName="w-[280px]"
                     >
-                        <div slot="content" class="flex flex-col gap-4 p-2">
-                            <div class="flex items-center gap-4 border-b border-white/10 pb-4">
-                                <div
-                                    class={`p-2 rounded-xl ${activeTier ? "bg-primary/20 shadow-lg shadow-primary/10" : "bg-slate-800/50"}`}
-                                >
+                        <div slot="content" class="flex flex-col gap-3 p-2">
+                            <div class="flex items-center gap-3 border-b border-white/10 pb-3">
+                                <div class={`p-1.5 rounded-lg ${activeTier ? "bg-primary/20" : "bg-slate-800"}`}>
                                     <div
-                                        class={`w-10 h-10 ${activeTier ? getTraitColor(tierIndex, trait.tiers.length) : "bg-slate-500"}`}
+                                        class={`w-8 h-8 ${activeTier ? getTraitColor(tierIndex, trait.tiers.length) : "bg-slate-500"}`}
                                         style={{
                                             maskImage: `url(${trait.icon.src})`,
                                             maskSize: "contain",
@@ -80,41 +66,39 @@ const activeTraits = calculateActiveTraits(champions);
                                     />
                                 </div>
                                 <div>
-                                    <h4 class="font-black text-white text-base leading-tight tracking-tight">
+                                    <h4 class="font-semibold text-white text-sm">
                                         {trait.name}
                                     </h4>
-                                    <span class="text-xs font-bold text-primary uppercase tracking-wider">
+                                    <span class="text-xs text-primary">
                                         {count} activo{count !== 1 ? "s" : ""}
                                     </span>
                                 </div>
                             </div>
                             
-                            <p class="text-sm text-slate-300 leading-relaxed italic">
-                                "{trait.description}"
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                {trait.description}
                             </p>
 
-                            <div class="flex flex-col gap-2 bg-black/40 rounded-xl p-3 border border-white/5">
+                            <div class="flex flex-col gap-1 bg-slate-900/50 rounded-lg p-2">
                                 {trait.tiers.map((tier, idx) => (
                                     <div
-                                        class={`flex items-center gap-3 p-2 rounded-lg transition-all duration-300 ${idx === tierIndex ? "bg-primary/20 border border-primary/30 shadow-inner" : "bg-transparent opacity-50"}`}
+                                        class={`flex items-center gap-2 p-1.5 rounded ${idx === tierIndex ? "bg-primary/20" : "opacity-50"}`}
                                     >
-                                        <span
-                                            class={`inline-flex items-center justify-center min-w-[1.75rem] h-7 px-2 rounded-md text-xs font-black ${idx === tierIndex ? "bg-primary text-white shadow-lg shadow-primary/30" : "bg-slate-800 text-slate-500"}`}
-                                        >
+                                        <span class={`text-xs font-semibold px-1.5 py-0.5 rounded ${idx === tierIndex ? "bg-primary text-white" : "bg-slate-700 text-slate-400"}`}>
                                             {tier.count}
                                         </span>
-                                        <span class={`text-xs flex-1 leading-tight ${idx === tierIndex ? "text-white font-bold" : "text-slate-400"}`}>
+                                        <span class={`text-xs flex-1 ${idx === tierIndex ? "text-white" : "text-slate-400"}`}>
                                             {tier.effect}
                                         </span>
                                     </div>
                                 ))}
                             </div>
 
-                            <div class="pt-2 mt-1 border-t border-white/5">
-                                <p class="text-[10px] uppercase tracking-wider text-slate-500 font-black mb-3">
-                                    Campeones en esta composición
+                            <div class="pt-2 border-t border-white/5">
+                                <p class="text-[10px] uppercase text-slate-500 font-medium mb-2">
+                                    Campeones
                                 </p>
-                                <div class="flex flex-wrap gap-2">
+                                <div class="flex flex-wrap gap-1">
                                     {trait.champions.map((champName) => {
                                         const resolvedChampName = resolveChampionName(champName);
                                         const isActive = champions.some((c) => resolveChampionName(c) === resolvedChampName);
@@ -122,14 +106,13 @@ const activeTraits = calculateActiveTraits(champions);
                                         if (!champImage) return null;
 
                                         return (
-                                            <div class={`relative transition-all duration-300 ${isActive ? "opacity-100 scale-110" : "opacity-20 grayscale hover:opacity-60 hover:grayscale-0"}`}>
+                                            <div class={`${isActive ? "opacity-100" : "opacity-30 grayscale"}`}>
                                                 <Image
                                                     src={champImage}
                                                     alt={champName}
-                                                    width={36}
-                                                    height={36}
-                                                    class={`w-9 h-9 rounded-lg border-2 ${isActive ? "border-primary shadow-lg shadow-primary/30" : "border-slate-700"}`}
-                                                    title={champName}
+                                                    width={28}
+                                                    height={28}
+                                                    class={`w-7 h-7 rounded border ${isActive ? "border-primary" : "border-slate-700"}`}
                                                     format="webp"
                                                     quality={70}
                                                 />
@@ -141,24 +124,17 @@ const activeTraits = calculateActiveTraits(champions);
                         </div>
 
                         <div
-                            class={`trait-card relative rounded-2xl p-4 border flex items-center gap-4 transition-all duration-500 cursor-help w-full group overflow-hidden
-                                ${
-                                    activeTier
-                                        ? "bg-surface-darker/80 backdrop-blur-xl border-primary/30 hover:border-primary hover:bg-surface-dark shadow-xl shadow-black/40"
-                                        : "bg-surface-darker/40 backdrop-blur-sm border-white/5 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 hover:bg-surface-darker/60"
+                            class={`trait-card relative rounded-lg p-2 border flex items-center gap-2 cursor-help w-full
+                                ${activeTier
+                                    ? "bg-slate-800 border-primary/30"
+                                    : "bg-slate-800/50 border-white/5 opacity-70"
                                 }
                             `}
                         >
-                            {activeTier && (
-                                <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                            )}
-
                             <div class="relative flex-shrink-0">
-                                <div
-                                    class={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 ${activeTier ? "bg-primary/10 shadow-inner" : "bg-slate-800/50"}`}
-                                >
+                                <div class={`w-8 h-8 rounded-lg flex items-center justify-center ${activeTier ? "bg-primary/10" : "bg-slate-800"}`}>
                                     <div
-                                        class={`w-8 h-8 transition-colors duration-500 ${activeTier ? getTraitColor(tierIndex, trait.tiers.length) : "bg-slate-500 opacity-60"}`}
+                                        class={`w-5 h-5 ${activeTier ? getTraitColor(tierIndex, trait.tiers.length) : "bg-slate-500 opacity-60"}`}
                                         style={{
                                             maskImage: `url(${trait.icon.src})`,
                                             maskSize: "contain",
@@ -172,24 +148,17 @@ const activeTraits = calculateActiveTraits(champions);
                                     />
                                 </div>
                                 <span
-                                    class={`absolute -bottom-1 -right-1 border-2 border-surface-darker rounded-full w-6 h-6 flex items-center justify-center text-xs font-black shadow-xl transition-transform duration-500 group-hover:scale-110
-                                    ${
-                                        activeTier
-                                            ? "bg-primary text-white"
-                                            : "bg-slate-700 text-slate-400"
-                                    }
-                                `}
+                                    class={`absolute -bottom-1 -right-1 w-4 h-4 flex items-center justify-center text-[10px] font-semibold rounded-full border border-slate-900
+                                    ${activeTier ? "bg-primary text-white" : "bg-slate-700 text-slate-400"}`}
                                 >
                                     {count}
                                 </span>
                             </div>
-                            <div class="flex-1 min-w-0 relative z-10">
-                                <p
-                                    class={`font-black text-base truncate transition-colors duration-300 ${activeTier ? "text-white group-hover:text-primary" : "text-slate-400 group-hover:text-white"}`}
-                                >
+                            <div class="flex-1 min-w-0">
+                                <p class={`font-medium text-sm truncate ${activeTier ? "text-white" : "text-slate-400"}`}>
                                     {trait.name}
                                 </p>
-                                <p class={`text-[10px] font-black uppercase tracking-[0.15em] transition-colors duration-300 ${activeTier ? "text-primary/80" : "text-slate-600"}`}>
+                                <p class="text-[10px] text-slate-500 uppercase">
                                     {trait.type}
                                 </p>
                             </div>
@@ -202,5 +171,7 @@ const activeTraits = calculateActiveTraits(champions);
 </div>
 
 <style>
-    /* Custom styles removed as they are replaced by Tailwind and Tooltip component */
+    .traits {
+        width: 100%;
+    }
 </style>

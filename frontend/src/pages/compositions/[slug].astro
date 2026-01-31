@@ -2,7 +2,6 @@
 import Layout from "../../layouts/Layout.astro";
 import Card from "../../components/ui/Card.astro";
 import Badge from "../../components/ui/Badge.astro";
-import Section from "../../components/ui/Section.astro";
 import Container from "../../components/ui/Container.astro";
 import TFTBoardFromData from "../../components/TFTBoardFromData.astro";
 import TraitsDisplay from "../../components/TraitsDisplay.astro";
@@ -26,7 +25,6 @@ dayjs.extend(relativeTime);
 
 export async function getStaticPaths() {
     const { data: compositions } = await getCompositions();
-
     return compositions
         ? compositions.map((composition: any) => ({
               params: { slug: composition.slug },
@@ -39,9 +37,7 @@ const { composition } = Astro.props;
 const { slug } = Astro.params;
 
 if (!composition && slug) {
-    const { data: fetchedComposition, error } = await getComposition(
-        slug as string,
-    );
+    const { data: fetchedComposition, error } = await getComposition(slug as string);
     if (error || !fetchedComposition) {
         return Astro.redirect("/404");
     }
@@ -49,14 +45,11 @@ if (!composition && slug) {
 }
 
 const currentComposition = Astro.props.composition;
-
 if (!currentComposition) {
     return Astro.redirect("/404");
 }
 
-const lastModified = dayjs(
-    currentComposition.updatedAt || currentComposition.createdAt,
-)
+const lastModified = dayjs(currentComposition.updatedAt || currentComposition.createdAt)
     .utc()
     .fromNow();
 
@@ -91,7 +84,7 @@ const championsList = boardData?.champions
     ? boardData.champions.map((champ: any) => champ.name)
     : [];
 
-const hasRightColumn =
+const hasRightColumnContent =
     (coreItemsData && Array.isArray(coreItemsData) && coreItemsData.length > 0) ||
     (augmentsData && Array.isArray(augmentsData) && augmentsData.length > 0);
 
@@ -138,14 +131,14 @@ export function parseImages(description: any): string {
     for (const matchName of allKeywords) {
         result = result.replace(
             new RegExp(`\\b${matchName}\\b`, "gi"),
-            `<b>${matchName}</b> <img src="${getChampionNames().includes(matchName) ? getChampionImage(matchName) : getItemImage(matchName)}" alt="${matchName}" class="rounded-full aspect-square h-5 inline align-middle border border-slate-600"/>`,
+            `<b>${matchName}</b> <img src="${getChampionNames().includes(matchName) ? getChampionImage(matchName) : getItemImage(matchName)}" alt="${matchName}" class="rounded-full aspect-square h-4 inline align-middle border border-slate-600"/>`,
         );
     }
     return result;
 }
 
 const seoTitle = `${currentComposition.tier} - ${currentComposition.title} | AKACompos`;
-const seoDescription = `Guía completa para la composición ${currentComposition.title} (${currentComposition.tier}) en TFT. Descubre los mejores objetos, aumentos y posicionamiento.`;
+const seoDescription = `Guía completa para la composición ${currentComposition.title} (${currentComposition.tier}) en TFT.`;
 let seoImage = "/akawonder.png";
 if (championsList.length > 0) {
     seoImage = getChampionImage(championsList[0]);
@@ -153,24 +146,13 @@ if (championsList.length > 0) {
 ---
 
 <Layout title={seoTitle} description={seoDescription} image={seoImage}>
-    <!-- Header Section -->
-    <div class="relative bg-slate-900 border-b border-white/5 pt-24 pb-12">
-        {currentComposition.cover && (
-            <div class="absolute inset-0 z-0">
-                <img 
-                    src={currentComposition.cover} 
-                    alt="" 
-                    class="w-full h-full object-cover opacity-20"
-                />
-                <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/90 to-slate-950/70"></div>
-            </div>
-        )}
-        
-        <Container maxWidth="xl" className="relative z-10">
-            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-                <div class="flex-1 space-y-4">
+    <!-- Header -->
+    <div class="bg-slate-900 border-b border-white/5 pt-20 pb-8">
+        <Container maxWidth="xl">
+            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+                <div class="flex-1 space-y-3">
                     <div class="flex flex-wrap items-center gap-2">
-                        <Badge variant={getTierBadgeVariant(currentComposition.tier)} size="md">
+                        <Badge variant={getTierBadgeVariant(currentComposition.tier)} size="sm">
                             {currentComposition.tier}
                         </Badge>
                         {
@@ -183,12 +165,12 @@ if (championsList.length > 0) {
                                 ).map((tag: string) => {
                                     const tagIcon = getTagIcon(tag);
                                     return (
-                                        <Badge variant="default" size="sm">
+                                        <Badge variant="default" size="xs">
                                             {tagIcon && (
                                                 <img 
                                                     src={tagIcon.src} 
                                                     alt={tag} 
-                                                    class={`w-4 h-4 rounded-full object-cover mr-1 ${tagIcon.isTrait ? 'invert brightness-200' : ''}`}
+                                                    class={`w-3 h-3 rounded-full object-cover mr-1 ${tagIcon.isTrait ? 'invert brightness-200' : ''}`}
                                                 />
                                             )}
                                             {tag}
@@ -199,11 +181,11 @@ if (championsList.length > 0) {
                         }
                     </div>
                     
-                    <h1 class="text-3xl md:text-5xl font-bold text-white">
+                    <h1 class="text-2xl md:text-4xl font-bold text-white">
                         {currentComposition.title}
                     </h1>
                     
-                    <div class="flex flex-wrap items-center gap-4 text-sm text-slate-400">
+                    <div class="flex flex-wrap items-center gap-3 text-sm text-slate-400">
                         <span>Actualizado {lastModified}</span>
                         <span class="text-slate-600">•</span>
                         <span>por {currentComposition.author}</span>
@@ -213,7 +195,7 @@ if (championsList.length > 0) {
                 {currentComposition.compCode && (
                     <button
                         id="copy-btn"
-                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark transition-colors"
+                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors"
                         data-comp-code={currentComposition.compCode}
                     >
                         <i class="fa-solid fa-copy"></i>
@@ -224,105 +206,146 @@ if (championsList.length > 0) {
         </Container>
     </div>
 
-    <!-- Main Content -->
-    <Section spacing="lg" className="py-8">
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Left Column -->
-            <div class={hasRightColumn ? "lg:col-span-8 space-y-8" : "lg:col-span-12 space-y-8"}>
-                <!-- Board Section -->
-                <Card variant="default" padding="none">
-                    <div class="p-4 border-b border-white/5 flex items-center justify-between">
-                        <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-chess-board text-primary"></i>
-                            Tablero Final
-                        </h2>
-                    </div>
-                    
-                    <div class="p-4">
-                        {boardData ? (
-                            <div class="flex justify-center overflow-x-auto">
-                                <TFTBoardFromData
-                                    boardSize="large"
-                                    boardData={boardData}
-                                    fullWidth={!hasRightColumn}
-                                />
-                            </div>
-                        ) : (
-                            <div class="text-center py-12">
-                                <i class="fa-solid fa-chess-board text-4xl text-slate-700 mb-3" />
-                                <p class="text-slate-500">Configuración de tablero pendiente</p>
+    <!-- Content -->
+    <div class="py-6">
+        <Container maxWidth="xl">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Left Column - Always has Board -->
+                <div class="lg:col-span-8 space-y-6">
+                    <!-- Board -->
+                    <Card variant="default" padding="none">
+                        <div class="p-4 border-b border-white/5 flex items-center justify-between">
+                            <h2 class="text-base font-medium text-white flex items-center gap-2">
+                                <i class="fa-solid fa-chess-board text-primary text-sm"></i>
+                                Tablero Final
+                            </h2>
+                            
+                            <!-- Toggle Names -->
+                            <label class="flex items-center gap-2 cursor-pointer select-none">
+                                <span class="text-xs text-slate-400">Nombres</span>
+                                <div class="relative">
+                                    <input 
+                                        type="checkbox" 
+                                        id="toggle-names" 
+                                        class="sr-only peer"
+                                        checked
+                                    />
+                                    <div class="w-9 h-5 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="p-4">
+                            {boardData ? (
+                                <div class="flex justify-center overflow-x-auto" id="board-container">
+                                    <TFTBoardFromData
+                                        boardSize="large"
+                                        boardData={boardData}
+                                        fullWidth={false}
+                                        showNames={true}
+                                    />
+                                </div>
+                            ) : (
+                                <div class="text-center py-12">
+                                    <i class="fa-solid fa-chess-board text-3xl text-slate-700 mb-2" />
+                                    <p class="text-slate-500 text-sm">Configuración de tablero pendiente</p>
+                                </div>
+                            )}
+                        </div>
+                        
+                        {championsList.length > 0 && (
+                            <div class="p-4 bg-slate-900/30 border-t border-white/5">
+                                <h3 class="text-xs font-medium text-slate-400 mb-3">Sinergias Activas</h3>
+                                <TraitsDisplay champions={championsList} />
                             </div>
                         )}
-                    </div>
-                    
-                    {championsList.length > 0 && (
-                        <div class="p-4 bg-slate-900/50 border-t border-white/5">
-                            <h3 class="text-sm font-medium text-slate-400 mb-3">Sinergias Activas</h3>
-                            <TraitsDisplay champions={championsList} />
+                    </Card>
+
+                    <!-- Strategy Guide - Only shown when there IS right column content -->
+                    {hasRightColumnContent && (
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <Card variant="glass" padding="md">
+                                <h3 class="text-sm font-medium text-white mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-lightbulb text-yellow-500 text-xs"></i>
+                                    Cuándo jugarla
+                                </h3>
+                                <div class="text-slate-300 text-sm leading-relaxed prose prose-invert max-w-none">
+                                    <Fragment set:html={parseImages(currentComposition.description)} />
+                                </div>
+                            </Card>
+
+                            <Card variant="glass" padding="md">
+                                <h3 class="text-sm font-medium text-white mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-gamepad text-blue-500 text-xs"></i>
+                                    Modo de juego
+                                </h3>
+                                <div class="text-slate-300 text-sm leading-relaxed prose prose-invert max-w-none">
+                                    <Fragment set:html={parseImages(currentComposition.gameplayMode)} />
+                                </div>
+                            </Card>
                         </div>
                     )}
-                </Card>
+                </div>
 
-                <!-- Strategy Guide -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card variant="glass" padding="lg">
-                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-lightbulb text-yellow-500"></i>
-                            Cuándo jugarla
-                        </h3>
-                        <div class="text-slate-300 text-sm leading-relaxed prose prose-invert max-w-none">
-                            <Fragment set:html={parseImages(currentComposition.description)} />
-                        </div>
-                    </Card>
+                <!-- Right Column -->
+                <div class="lg:col-span-4 space-y-4">
+                    {hasRightColumnContent ? (
+                        <>
+                            {coreItemsData && Array.isArray(coreItemsData) && coreItemsData.length > 0 && (
+                                <Card variant="surface" padding="md">
+                                    <h2 class="text-sm font-medium text-white mb-3 flex items-center gap-2">
+                                        <i class="fa-solid fa-gem text-purple-500 text-xs"></i>
+                                        Core Items
+                                    </h2>
+                                    <div class="space-y-2">
+                                        {coreItemsData.map((item: any) => (
+                                            <ItemWithImage
+                                                itemName={item.name}
+                                                description={item.description}
+                                                size="medium"
+                                            />
+                                        ))}
+                                    </div>
+                                </Card>
+                            )}
 
-                    <Card variant="glass" padding="lg">
-                        <h3 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-gamepad text-blue-500"></i>
-                            Modo de juego
-                        </h3>
-                        <div class="text-slate-300 text-sm leading-relaxed prose prose-invert max-w-none">
-                            <Fragment set:html={parseImages(currentComposition.gameplayMode)} />
-                        </div>
-                    </Card>
+                            {augmentsData && Array.isArray(augmentsData) && augmentsData.length > 0 && (
+                                <Card variant="surface" padding="md">
+                                    <h2 class="text-sm font-medium text-white mb-3 flex items-center gap-2">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-amber-500 text-xs"></i>
+                                        Aumentos
+                                    </h2>
+                                    <AugmentGrid augments={augmentsData} />
+                                </Card>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <Card variant="glass" padding="md">
+                                <h3 class="text-sm font-medium text-white mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-lightbulb text-yellow-500 text-xs"></i>
+                                    Cuándo jugarla
+                                </h3>
+                                <div class="text-slate-300 text-sm leading-relaxed prose prose-invert max-w-none">
+                                    <Fragment set:html={parseImages(currentComposition.description)} />
+                                </div>
+                            </Card>
+
+                            <Card variant="glass" padding="md">
+                                <h3 class="text-sm font-medium text-white mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-gamepad text-blue-500 text-xs"></i>
+                                    Modo de juego
+                                </h3>
+                                <div class="text-slate-300 text-sm leading-relaxed prose prose-invert max-w-none">
+                                    <Fragment set:html={parseImages(currentComposition.gameplayMode)} />
+                                </div>
+                            </Card>
+                        </>
+                    )}
                 </div>
             </div>
-
-            <!-- Right Column -->
-            {hasRightColumn && (
-                <div class="lg:col-span-4 space-y-6">
-                    {coreItemsData && Array.isArray(coreItemsData) && coreItemsData.length > 0 && (
-                        <Card variant="surface" padding="lg">
-                            <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-gem text-purple-500"></i>
-                                Core Items
-                            </h2>
-                            <div class="space-y-2">
-                                {coreItemsData.map((item: any) => (
-                                    <div class="p-2 rounded-lg hover:bg-white/5 transition-colors">
-                                        <ItemWithImage
-                                            itemName={item.name}
-                                            description={item.description}
-                                            size="medium"
-                                        />
-                                    </div>
-                                ))}
-                            </div>
-                        </Card>
-                    )}
-
-                    {augmentsData && Array.isArray(augmentsData) && augmentsData.length > 0 && (
-                        <Card variant="surface" padding="lg">
-                            <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                                <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i>
-                                Aumentos
-                            </h2>
-                            <AugmentGrid augments={augmentsData} />
-                        </Card>
-                    )}
-                </div>
-            )}
-        </div>
-    </Section>
+        </Container>
+    </div>
 </Layout>
 
 <style>
@@ -338,13 +361,13 @@ if (championsList.length > 0) {
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+        // Copy button functionality
         const copyBtn = document.getElementById("copy-btn") as HTMLButtonElement;
         const copyText = document.getElementById("copy-text");
 
         if (copyBtn && copyText) {
             copyBtn.addEventListener("click", async () => {
                 const compCode = copyBtn.getAttribute("data-comp-code");
-
                 if (!compCode) {
                     alert("No se encontró el código de la composición.");
                     return;
@@ -372,6 +395,42 @@ if (championsList.length > 0) {
                         copyText.textContent = "Copiar código";
                     }, 2000);
                 }
+            });
+        }
+
+        // Toggle names functionality
+        const toggleNames = document.getElementById("toggle-names") as HTMLInputElement;
+        const boardContainer = document.getElementById("board-container");
+        const STORAGE_KEY = 'tft-board-show-names';
+
+        if (toggleNames && boardContainer) {
+            // Load saved preference from localStorage
+            const savedPreference = localStorage.getItem(STORAGE_KEY);
+            
+            // Default to true (show names) if no preference saved
+            const shouldShowNames = savedPreference === null ? true : savedPreference === 'true';
+            
+            // Apply saved preference
+            toggleNames.checked = shouldShowNames;
+            const characters = boardContainer.querySelectorAll('.champion-name');
+            characters.forEach((char) => {
+                const el = char as HTMLElement;
+                el.style.display = shouldShowNames ? 'block' : 'none';
+            });
+
+            // Listen for changes and save preference
+            toggleNames.addEventListener("change", () => {
+                const showNames = toggleNames.checked;
+                
+                // Save to localStorage
+                localStorage.setItem(STORAGE_KEY, showNames.toString());
+                
+                // Apply to all champion names
+                const characters = boardContainer.querySelectorAll('.champion-name');
+                characters.forEach((char) => {
+                    const el = char as HTMLElement;
+                    el.style.display = showNames ? 'block' : 'none';
+                });
             });
         }
     });

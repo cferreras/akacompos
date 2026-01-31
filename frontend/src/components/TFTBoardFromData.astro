@@ -1,6 +1,5 @@
 ---
 import TFTBoardCharacter from "./TFTBoardCharacter.astro";
-import ItemWithImage from "./ItemWithImage.astro";
 import {championRarity} from "../utils/assets.ts";
 
 interface ChampionData {
@@ -22,7 +21,6 @@ interface Props {
 
 const { boardData, boardSize = 'medium', fullWidth = false } = Astro.props;
 
-// Función para determinar el color del borde basado en las estrellas
 const getBorderColor = (champ : ChampionData): "purple" | "blue" | "yellow" | "green" | "gray" | "empty" => {
     switch (championRarity[champ.name]) {
         case 5: return "yellow";
@@ -34,7 +32,6 @@ const getBorderColor = (champ : ChampionData): "purple" | "blue" | "yellow" | "g
     }
 };
 
-// Convertir los datos de Markdown al formato esperado por el componente
 const champions = boardData.champions.map(champ => {
     return {
         champion: champ.name,
@@ -45,232 +42,121 @@ const champions = boardData.champions.map(champ => {
     };
 });
 
-// Crear grid 4x7 para el board TFT
 const createBoard = () => {
     const board = Array(4).fill(null).map(() => Array(7).fill(null));
-
     champions.forEach(champion => {
         if (champion.position.row < 4 && champion.position.col < 7) {
             board[champion.position.row][champion.position.col] = champion;
         }
     });
-
     return board;
 };
 
 const board = createBoard();
 ---
 
-<div class={`responsive-tft-board board-size-${boardSize} ${fullWidth ? 'is-full-width' : ''}`}>
-    <div class="board-perspective">
-        <div class="board-container">
-            <div class="board-grid">
-                {board.map((row, rowIndex) => (
-                        <div 
-                            class={`board-row ${rowIndex % 2 === 1 ? 'offset' : ''}`}
-                            style={`z-index: ${10 - rowIndex}; position: relative;`}
-                        >
-                            {row.map((cell, colIndex) => (
-                                    <div class="board-cell" data-row={rowIndex} data-col={colIndex}>
-                                        {cell ? (
-                                                <TFTBoardCharacter
-                                                        champion={cell.champion as any}
-                                                        borderColor={cell.borderColor}
-                                                        items={cell.items as any}
-                                                        size="var(--hex-size)"
-                                                        stars={cell.stars}
-                                                />
-                                        ) : (
-                                                <TFTBoardCharacter
-                                                        borderColor="empty"
-                                                        size="var(--hex-size)"
-                                                />
-                                        )}
-                                    </div>
-                            ))}
-                        </div>
+<div class={`tft-board board-size-${boardSize} ${fullWidth ? 'is-full-width' : ''}`}>
+    <div class="board-container">
+        {board.map((row, rowIndex) => (
+            <div 
+                class={`board-row ${rowIndex % 2 === 1 ? 'offset' : ''}`}
+                style={`z-index: ${10 - rowIndex};`}
+            >
+                {row.map((cell, colIndex) => (
+                    <div class="board-cell" data-row={rowIndex} data-col={colIndex}>
+                        {cell ? (
+                            <TFTBoardCharacter
+                                champion={cell.champion as any}
+                                borderColor={cell.borderColor}
+                                items={cell.items as any}
+                                size="var(--hex-size)"
+                                stars={cell.stars}
+                            />
+                        ) : (
+                            <TFTBoardCharacter
+                                borderColor="empty"
+                                size="var(--hex-size)"
+                            />
+                        )}
+                    </div>
                 ))}
             </div>
-        </div>
+        ))}
     </div>
 </div>
 
 <style>
     :root {
-        --hex-size: 85px;
-        --board-gap: 16px;
-        --board-offset: 44px;
+        --hex-size: 72px;
+        --board-gap: 8px;
+        --board-offset: 40px;
     }
 
-    /* Versión para cuando ocupa todo el ancho */
     @media (min-width: 1024px) {
         .is-full-width {
-            --hex-size: 100px;
-            --board-gap: 12px;
-            --board-offset: 56px;
+            --hex-size: 88px;
+            --board-gap: 10px;
+            --board-offset: 50px;
         }
     }
 
     @media (min-width: 1400px) {
         .is-full-width {
-            --hex-size: 110px;
-            --board-gap: 16px;
-            --board-offset: 63px;
+            --hex-size: 96px;
+            --board-gap: 12px;
+            --board-offset: 55px;
         }
     }
 
-    @media (min-width: 1600px) {
-        .is-full-width {
-            --hex-size: 120px;
-            --board-gap: 20px;
-            --board-offset: 70px;
-        }
-    }
-
-    @media (min-width: 1920px) {
-        .is-full-width {
-            --hex-size: 130px;
-            --board-gap: 24px;
-            --board-offset: 77px;
-        }
-    }
-
-    .board-perspective {
-        perspective: 2000px;
-        width: 100%;
-        display: flex;
-        justify-content: center;
+    .tft-board {
+        padding: 1rem;
     }
 
     .board-container {
         display: flex;
-        justify-content: center;
-        margin-top: 25px;
-        margin-bottom: 2rem;
-        transform: scale(var(--board-scale, 1));
-        transition: transform 0.5s ease;
-    }
-
-    .board-container:hover {
-        transform: scale(var(--board-scale));
-    }
-
-    .board-grid {
-        display: flex;
         flex-direction: column;
         align-items: center;
-        min-width: fit-content;
-        background: radial-gradient(circle at center, rgba(164, 107, 255, 0.05) 0%, transparent 70%);
-        padding: 2rem;
-        border-radius: 50%;
-        /* Centrado compensando el offset de las filas: mitad del translateX de .offset */
-        margin-left: calc(calc(calc(var(--hex-size) / 2) + calc(var(--board-gap) / 2)) * -0.5);
+        gap: var(--board-gap);
     }
 
     .board-row {
         display: flex;
         gap: var(--board-gap);
         justify-content: center;
-        align-items: center;
-        flex-shrink: 0;
+        align-items: flex-start;
+        position: relative;
     }
 
     .board-row.offset {
-        transform: translateX(calc(calc(var(--hex-size) / 2) + calc(var(--board-gap) / 2)));
+        transform: translateX(calc(var(--hex-size) / 2 + var(--board-gap) / 2));
     }
 
     .board-cell {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         width: var(--hex-size);
-        height: var(--hex-size);
+        /* Altura fija para evitar saltos: hexágono + espacio para nombre */
+        height: calc(var(--hex-size) + 20px);
         flex-shrink: 0;
     }
 
-    .responsive-tft-board {
-        padding: 1.5rem 1rem 4rem;
-    }
-
-    @media (min-width: 1024px) {
-        .responsive-tft-board {
-            padding: 1.5rem 2rem 4rem;
-        }
-    }
-
-
-
-    /* Responsive breakpoints */
-    @media (max-width: 1536px){
-        :root {
-            --hex-size: 76px;
-            --board-gap: 8px;
-            --board-offset: 42px;
-        }
-
-        .responsive-tft-board {
-            padding: 1.25rem;
-        }
-    }
-
-    @media (max-width: 1180px) {
+    /* Responsive */
+    @media (max-width: 1280px) {
         :root {
             --hex-size: 64px;
             --board-gap: 6px;
-            --board-offset: 35px;
-        }
-
-        .responsive-tft-board {
-            padding: 1rem;
         }
     }
 
     @media (max-width: 768px) {
         :root {
-            --hex-size: 64px;
-            --board-gap: 6px;
-            --board-offset: 35px;
+            --hex-size: 56px;
+            --board-gap: 5px;
         }
-
-        .responsive-tft-board {
-            padding: 1rem;
-        }
-
-
     }
 
     @media (max-width: 640px) {
         :root {
-            --hex-size: 56px;
-            --board-gap: 5px;
-            --board-offset: 30px;
-        }
-
-        .responsive-tft-board {
-            padding: 0.75rem;
-        }
-
-        .board-container {
-            margin-bottom: 1.5rem;
-            padding: 0.5rem 0;
-        }
-    }
-
-    @media (max-width: 580px) {
-        :root {
             --hex-size: 44px;
             --board-gap: 4px;
-            --board-offset: 28px;
-        }
-
-        .responsive-tft-board {
-            padding: 0.75rem;
-        }
-
-        .board-container {
-            margin-bottom: 1.5rem;
-            padding: 0.5rem 0;
         }
     }
 
@@ -278,40 +164,6 @@ const board = createBoard();
         :root {
             --hex-size: 36px;
             --board-gap: 3px;
-            --board-offset: 26px;
-        }
-
-        .responsive-tft-board {
-            padding: 0.5rem;
-        }
-
-
-    }
-
-    @media (max-width: 360px) {
-        :root {
-            --hex-size: 42px;
-            --board-gap: 3px;
-            --board-offset: 23px;
-        }
-
-        .board-container {
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .board-grid {
-            min-width: 320px;
-        }
-    }
-
-
-
-    /* Ensure board is always centered and scrollable on very small screens */
-    @media (max-width: 320px) {
-        .board-container {
-            justify-content: flex-start;
-            padding-left: calc(50vw - 160px);
         }
     }
 </style>

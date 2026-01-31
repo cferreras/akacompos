@@ -1,23 +1,16 @@
 ---
-// Importar assets centralizados
 import { championAssets, itemAssets, championImagePositions } from "../utils/assets";
 import StarsComponent from "./StarsComponent.astro";
 import { Image } from "astro:assets";
 
-// Colores predefinidos para los bordes
 const borderColors = {
-    purple: "#8b5cf6", // Morado
-    blue: "#3b82f6", // Azul
-    yellow: "#eab308", // Amarillo
-    green: "#22c55e", // Verde
+    purple: "#8b5cf6",
+    blue: "#3b82f6",
+    yellow: "#eab308",
+    green: "#22c55e",
     gray: "#6b7280",
-    empty: "#2a2a3a", // Gris
+    empty: "#1e293b",
 } as const;
-
-// Objeto con todos los campeones para fácil acceso
-// Using centralized championAssets from utils/assets.ts
-
-// Using centralized itemAssets from utils/assets.ts
 
 interface Props {
     champion?: keyof typeof championAssets;
@@ -32,70 +25,60 @@ const {
     champion,
     imageUrl,
     borderColor = "gray",
-    size = "96px",
+    size = "72px",
     items = [],
     stars = 1,
 } = Astro.props;
 
-// Usar la imagen del campeón si se especifica, si no usar imageUrl, sino mostrar vacío
 const finalImageSrc = champion ? championAssets[champion] : null;
 const imagePosition = champion ? (championImagePositions[champion] || championImagePositions["Default"]) : championImagePositions["Default"];
 const showEmptySlot = !champion && !imageUrl;
-
-// Obtener el color final del borde
 const finalBorderColor = borderColors[borderColor as keyof typeof borderColors];
-
-// Filtrar y limitar los items a máximo 3
 const validItems = items.slice(0, 3).filter((item) => item in itemAssets);
 
-// Calcular tamaño numérico para el componente Image
-const numericSize = size.includes("px") ? parseInt(size.replace("px", "")) : 96;
+const numericSize = size.includes("px") ? parseInt(size.replace("px", "")) : 72;
 
-// Determinar tamaño optimizado para Image basado en el size prop
 const getOptimizedSize = (size: string): number => {
-    if (size.includes("var(")) return 192;
+    if (size.includes("var(")) return 128;
     const num = parseInt(size.replace("px", ""));
-    if (isNaN(num)) return 128;
-    if (num <= 64) return 64;
+    if (isNaN(num)) return 96;
+    if (num <= 48) return 48;
+    if (num <= 72) return 72;
     if (num <= 96) return 96;
-    if (num <= 128) return 128;
-    if (num <= 160) return 160;
-    return 192;
+    return 128;
 };
 
 const optimizedSize = getOptimizedSize(size);
 const optimizedItemSize = size.includes("var(") 
-    ? 48 
-    : Math.max(
-        16,
-        Math.min(48, Math.floor(numericSize * 0.25)),
-    );
+    ? 32 
+    : Math.max(12, Math.min(32, Math.floor(numericSize * 0.25)));
 
 // Calcular escala de fuente basada en la longitud del nombre
 const nameLength = champion ? champion.length : 0;
-let fontScale = 1;
+let fontSize = "0.65rem";
 if (nameLength > 12) {
-    fontScale = 0.7; // Nombres muy largos (ej. Heimerdinger, Twisted Fate)
+    fontSize = "0.55rem";
 } else if (nameLength > 8) {
-    fontScale = 0.85; // Nombres medios (ej. Blitzcrank)
+    fontSize = "0.6rem";
 }
 ---
 
 <div
-    class="character-container select-none group"
+    class="character"
     style={`--border-color: ${finalBorderColor}; --size: ${size};`}
 >
-    <div class="stars-container">
+    <div class="stars">
         <StarsComponent stars={stars} />
     </div>
-    <div class="hexagon-container">
+    
+    <div class="hexagon-wrapper">
         <div class="hexagon">
             {
                 finalImageSrc ? (
                     <Image
                         src={finalImageSrc}
-                        alt={champion ? `${champion} champion` : "Champion"}
-                        class="hexagon-image"
+                        alt={champion ? `${champion}` : "Champion"}
+                        class="hexagon-img"
                         style={`object-position: ${imagePosition};`}
                         width={optimizedSize}
                         height={optimizedSize}
@@ -105,33 +88,23 @@ if (nameLength > 12) {
                         quality={80}
                     />
                 ) : imageUrl ? (
-                    <img src={imageUrl} alt="Champion" class="hexagon-image" style={`object-position: ${imagePosition};`} />
+                    <img src={imageUrl} alt="Champion" class="hexagon-img" style={`object-position: ${imagePosition};`} />
                 ) : (
-                    <div class="empty-slot" />
+                    <div class="empty" />
                 )
             }
         </div>
     </div>
 
     {
-        champion && (
-            <div class="champion-name-container">
-                <span class="champion-name" style={`--font-scale: ${fontScale}`}>
-                    {champion}
-                </span>
-            </div>
-        )
-    }
-
-    {
         validItems.length > 0 && (
-            <div class="items-container">
+            <div class="items">
                 {validItems.map((item) => (
-                    <div class="item-slot">
+                    <div class="item">
                         <Image
                             src={itemAssets[item]}
-                            alt={`${item} item`}
-                            class="item-image"
+                            alt={`${item}`}
+                            class="item-img"
                             width={optimizedItemSize}
                             height={optimizedItemSize}
                             loading="lazy"
@@ -144,167 +117,107 @@ if (nameLength > 12) {
             </div>
         )
     }
+
+    {
+        champion && (
+            <div class="champion-name" style={`font-size: ${fontSize};`}>
+                {champion}
+            </div>
+        )
+    }
 </div>
 
 <style>
-    .character-container {
+    .character {
         position: relative;
         width: var(--size);
-        height: var(--size);
+        /* Altura fija: hexágono + espacio para nombre */
+        height: calc(var(--size) + 20px);
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
-        flex-shrink: 0;
     }
 
-    .character-container:hover {
-        transform: translateY(-8px) scale(1.1);
-        filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.7));
-        z-index: 50;
-    }
-
-    .hexagon-container {
+    .hexagon-wrapper {
         position: relative;
-        width: 100%;
-        height: 100%;
+        width: var(--size);
+        height: var(--size);
         clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
         background: var(--border-color);
         padding: 2px;
-        transition: all 0.3s ease;
-    }
-
-    .character-container:hover .hexagon-container {
-        background: white;
-        box-shadow: 0 0 20px var(--border-color);
+        flex-shrink: 0;
     }
 
     .hexagon {
         width: 100%;
         height: 100%;
-        background: #1a1a2e;
+        background: #0f172a;
         clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-        position: relative;
     }
 
-    .hexagon::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(
-            180deg,
-            rgba(255, 255, 255, 0.1) 0%,
-            transparent 50%,
-            rgba(0, 0, 0, 0.4) 100%
-        );
-        pointer-events: none;
-        z-index: 3;
-    }
-
-    .hexagon-image {
+    .hexagon-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        /* object-position is now set dynamically */
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        z-index: 2;
     }
 
-    .character-container:hover .hexagon-image {
-        transform: scale(1.25);
-    }
-
-    .empty-slot {
+    .empty {
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.03);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0.4;
-        z-index: 2;
+        background: rgba(255, 255, 255, 0.02);
     }
 
-    .items-container {
+    .items {
         position: absolute;
-        bottom: calc(var(--size) * -0.1);
+        /* Posicionado desde arriba, justo debajo del hexágono */
+        top: calc(var(--size) - 8px);
         left: 50%;
         transform: translateX(-50%);
         display: flex;
-        gap: 4px;
-        z-index: 20;
+        gap: 2px;
+        z-index: 10;
     }
 
-    .item-slot {
-        width: clamp(16px, calc(var(--size) * 0.28), 48px);
-        height: clamp(16px, calc(var(--size) * 0.28), 48px);
-        border-radius: 6px;
+    .item {
+        width: clamp(12px, calc(var(--size) * 0.22), 24px);
+        height: clamp(12px, calc(var(--size) * 0.22), 24px);
+        border-radius: 3px;
         border: 1px solid rgba(255, 255, 255, 0.2);
         background: #000;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
         overflow: hidden;
-        transition: all 0.2s ease;
     }
 
-    .character-container:hover .item-slot {
-        transform: scale(1.2);
-        border-color: var(--color-primary);
-    }
-
-    .item-image {
+    .item-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
     }
 
-    .champion-name-container {
+    .stars {
         position: absolute;
-        top: 100%;
+        top: -6px;
         left: 50%;
         transform: translateX(-50%);
-        background: rgba(15, 15, 26, 0.98);
-        backdrop-filter: blur(12px);
-        padding: 6px 12px;
-        border-radius: 8px;
-        border: 1px solid rgba(164, 107, 255, 0.3);
-        margin-top: 10px;
-        white-space: nowrap;
-        opacity: 0;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        pointer-events: none;
-        z-index: 100;
-        box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.8), 0 0 15px rgba(164, 107, 255, 0.1);
-    }
-
-    .character-container:hover .champion-name-container {
-        opacity: 1;
-        transform: translateX(-50%) translateY(4px);
+        z-index: 10;
     }
 
     .champion-name {
-        color: white;
-        font-size: clamp(10px, calc(var(--size) * 0.12), 16px);
-        font-weight: 900;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        display: block;
-    }
-
-    .stars-container {
         position: absolute;
-        top: calc(var(--size) * -0.12);
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 20;
-        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
-        width: 100%;
-        display: flex;
-        justify-content: center;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        text-align: center;
+        color: white;
+        font-weight: 600;
+        line-height: 1.2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+        padding: 0 2px;
     }
 </style>

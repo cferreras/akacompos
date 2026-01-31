@@ -1,6 +1,5 @@
 ---
 import { getAugment } from "../utils/augments.ts";
-
 import Tooltip from "./ui/Tooltip.astro";
 import { Image } from "astro:assets";
 
@@ -17,14 +16,11 @@ interface Props {
 
 const { augments } = Astro.props;
 
-// Handle both array of strings (IDs/names) and array of objects
 const augmentsWithImages =
     augments
         ?.map((aug) => {
-            // If it's a string, it could be an augment ID or name
             if (typeof aug === "string") {
                 const foundAugment = getAugment(aug);
-
                 if (foundAugment) {
                     return {
                         name: foundAugment.name,
@@ -34,15 +30,12 @@ const augmentsWithImages =
                         hasImage: true,
                     };
                 }
-                // Debug: log when augment is not found
                 console.warn(`Augment not found: ${aug}`);
                 return null;
             }
 
-            // If it's an object, try to match by name similarity
             if (aug && aug.name) {
                 const foundAugment = getAugment(aug.name);
-
                 if (foundAugment) {
                     return {
                         name: foundAugment.name,
@@ -52,8 +45,6 @@ const augmentsWithImages =
                         hasImage: true,
                     };
                 }
-
-                // Fallback if not found in database
                 return {
                     ...aug,
                     image: undefined,
@@ -61,40 +52,47 @@ const augmentsWithImages =
                     hasImage: false,
                 };
             }
-
             return null;
         })
         .filter((aug): aug is NonNullable<typeof aug> => aug !== null) || [];
+
+const getTierBorder = (tier: string) => {
+    switch (tier) {
+        case "silver": return "border-slate-400";
+        case "gold": return "border-amber-400";
+        case "prismatic": return "border-purple-400";
+        default: return "border-slate-600";
+    }
+};
+
+const getTierBg = (tier: string) => {
+    switch (tier) {
+        case "silver": return "bg-slate-400/10";
+        case "gold": return "bg-amber-400/10";
+        case "prismatic": return "bg-purple-400/10";
+        default: return "bg-slate-800";
+    }
+};
 ---
 
-<div class="grid grid-cols-3 md:grid-cols-5 lg:grid-cols-3 gap-4">
+<div class="grid grid-cols-3 gap-2">
     {
         augmentsWithImages.map((augment) => (
             <Tooltip
                 position="top"
-                className="w-full h-full"
-                tooltipClassName="w-[280px]"
+                className="w-full"
+                tooltipClassName="w-[240px]"
             >
-                <div slot="content" class="flex flex-col gap-3 p-2">
-                    <div class="flex items-center gap-3 border-b border-white/10 pb-3">
-                        <div
-                            class={`flex-shrink-0 w-12 h-12 rounded-xl overflow-hidden p-1.5 bg-slate-900/80 border-2 ${
-                                augment.tier === "silver"
-                                    ? "border-slate-400 shadow-[0_0_10px_rgba(148,163,184,0.3)]"
-                                    : augment.tier === "gold"
-                                      ? "border-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.3)]"
-                                      : augment.tier === "prismatic"
-                                        ? "border-purple-400 shadow-[0_0_10px_rgba(192,132,252,0.3)]"
-                                        : "border-slate-600"
-                            }`}
-                        >
+                <div slot="content" class="flex flex-col gap-2 p-2">
+                    <div class="flex items-center gap-2 border-b border-white/10 pb-2">
+                        <div class={`w-10 h-10 rounded-lg overflow-hidden p-1 bg-slate-900 border ${getTierBorder(augment.tier)}`}>
                             {augment.hasImage ? (
                                 <Image
                                     src={augment.image}
                                     alt={augment.name}
                                     class="w-full h-full object-contain"
-                                    width={48}
-                                    height={48}
+                                    width={40}
+                                    height={40}
                                     loading="eager"
                                     decoding="async"
                                     format="webp"
@@ -109,86 +107,46 @@ const augmentsWithImages =
                             )}
                         </div>
                         <div>
-                            <h4 class="font-black text-white text-base leading-tight tracking-tight">
+                            <h4 class="font-semibold text-white text-sm">
                                 {augment.name}
                             </h4>
-                            <div class="flex items-center gap-1.5">
-                                <span
-                                    class={`text-[10px] font-black uppercase tracking-widest ${
-                                        augment.tier === "silver"
-                                            ? "text-slate-400"
-                                            : augment.tier === "gold"
-                                              ? "text-amber-400"
-                                              : augment.tier === "prismatic"
-                                                ? "text-purple-400"
-                                                : "text-slate-600"
-                                    }`}
-                                >
-                                    {augment.tier}
-                                </span>
-                                <div class="w-1 h-1 rounded-full bg-white/20"></div>
-                                <span class="text-[10px] text-white/40 font-bold uppercase tracking-widest">Augment</span>
-                            </div>
+                            <span class={`text-[10px] uppercase font-medium ${getTierBorder(augment.tier).replace('border-', 'text-')}`}>
+                                {augment.tier}
+                            </span>
                         </div>
                     </div>
-                    <p class="text-xs text-slate-300 leading-relaxed font-medium">
+                    <p class="text-xs text-slate-300 leading-relaxed">
                         {augment.description}
                     </p>
                 </div>
 
-                <div class="augment-card group relative h-full">
-                    <div class="flex flex-col items-center gap-3 p-3 rounded-xl bg-slate-900/40 border border-white/5 hover:bg-slate-800/60 hover:border-white/20 hover:shadow-2xl hover:shadow-black/50 hover:-translate-y-1 cursor-pointer h-full transition-all duration-300 backdrop-blur-sm">
-                        {/* Tier Indicator Dot */}
-                        <div class={`absolute top-2 right-2 w-2 h-2 rounded-full blur-[1px] ${
-                            augment.tier === "silver" ? "bg-slate-400" : 
-                            augment.tier === "gold" ? "bg-amber-400" : 
-                            augment.tier === "prismatic" ? "bg-purple-400" : "bg-slate-600"
-                        }`}></div>
-
-                        {/* Augment Image */}
-                        <div
-                            class={`aspect-square rounded-xl overflow-hidden transition-all w-full p-2 bg-slate-950/50 border-2 ${
-                                augment.tier === "silver"
-                                    ? "border-slate-400/30 group-hover:border-slate-400 shadow-lg shadow-slate-900/50"
-                                    : augment.tier === "gold"
-                                      ? "border-amber-400/30 group-hover:border-amber-400 shadow-lg shadow-amber-900/20"
-                                      : augment.tier === "prismatic"
-                                        ? "border-purple-400/30 group-hover:border-purple-400 shadow-lg shadow-purple-900/20"
-                                        : "border-slate-600/30 group-hover:border-slate-600 shadow-lg shadow-slate-900/50"
-                            }`}
-                        >
-                            {augment.hasImage ? (
-                                <Image
-                                    src={augment.image}
-                                    alt={augment.name}
-                                    class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
-                                    width={120}
-                                    height={120}
-                                    loading="lazy"
-                                    decoding="async"
-                                    format="webp"
-                                    quality={80}
-                                />
-                            ) : (
-                                <div class="w-full h-full bg-slate-800 flex items-center justify-center">
-                                    <span class="text-slate-500 text-[10px] font-black text-center uppercase tracking-tighter">
-                                        {augment.name}
-                                    </span>
-                                </div>
-                            )}
-                        </div>
-
-                        {/* Augment Name */}
-                        <p class="text-[11px] md:text-xs font-black text-slate-300 group-hover:text-white text-center line-clamp-2 min-h-[2.5rem] flex items-center justify-center w-full transition-colors duration-300 uppercase tracking-tight">
-                            {augment.name}
-                        </p>
+                <div class={`group cursor-pointer rounded-lg p-2 border border-white/5 hover:border-white/20 hover:bg-slate-800/50 transition-colors ${getTierBg(augment.tier)}`}>
+                    <div class={`aspect-square rounded-lg overflow-hidden mb-1.5 border ${getTierBorder(augment.tier)} bg-slate-950`}>
+                        {augment.hasImage ? (
+                            <Image
+                                src={augment.image}
+                                alt={augment.name}
+                                class="w-full h-full object-contain"
+                                width={80}
+                                height={80}
+                                loading="lazy"
+                                decoding="async"
+                                format="webp"
+                                quality={80}
+                            />
+                        ) : (
+                            <div class="w-full h-full bg-slate-800 flex items-center justify-center">
+                                <span class="text-slate-500 text-[8px] font-bold text-center uppercase">
+                                    {augment.name}
+                                </span>
+                            </div>
+                        )}
                     </div>
+                    <p class="text-[10px] font-medium text-slate-300 text-center line-clamp-2 uppercase">
+                        {augment.name}
+                    </p>
                 </div>
             </Tooltip>
         ))
     }
 </div>
-
-<style>
-    /* Additional styles if needed, but most are handled by Tailwind and Tooltip component */
-</style>

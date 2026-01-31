@@ -1,5 +1,4 @@
 ---
-// Importar helper function from centralized assets
 import { itemAssets } from "../utils/assets";
 import { Image } from "astro:assets";
 
@@ -14,236 +13,46 @@ const { itemName, description, size = "small", showLabel = true } = Astro.props;
 
 const itemImage = itemAssets[itemName as keyof typeof itemAssets];
 const sizeClasses = {
-  small: "w-6 h-6",
-  medium: "w-10 h-10",
-  large: "w-16 h-16",
+  small: "w-5 h-5",
+  medium: "w-8 h-8",
+  large: "w-12 h-12",
 };
 const sizePixels = {
-  small: 24,
-  medium: 40,
-  large: 64,
+  small: 20,
+  medium: 32,
+  large: 48,
 };
 ---
 
-<div class="item-with-image group">
-  <div class="item-image-container">
-    {
-      itemImage ? (
-        <Image
-          src={itemImage}
-          alt={itemName}
-          class={`item-image ${sizeClasses[size]}`}
-          width={sizePixels[size]}
-          height={sizePixels[size]}
-          loading="lazy"
-          decoding="async"
-          format="webp"
-          quality={75}
-        />
-      ) : (
-        <div class={`item-placeholder ${sizeClasses[size]}`} />
-      )
-    }
-    {
-      !showLabel && (
-        <div class="item-tooltip">
-          <span class="tooltip-text">{itemName}</span>
-          {description && (
-            <span class="tooltip-description">{description}</span>
-          )}
-        </div>
-      )
-    }
-  </div>
-  {
-    showLabel && (
-      <div class="item-info">
-        <span class="item-name">{itemName}</span>
-        {description && (
-          <div
-            class="item-description-container"
-            title="Click to expand/collapse"
-          >
-            <span class="item-description">{description}</span>
-          </div>
-        )}
-      </div>
-    )
-  }
-</div>
-
-<style>
-  .item-with-image {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.875rem;
-    position: relative;
-    transition: all 0.3s ease;
-  }
-
-  .item-image-container {
-    position: relative;
-    flex-shrink: 0;
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .item-with-image:hover .item-image-container {
-    transform: scale(1.1) rotate(3deg);
-  }
-
-  .item-image {
-    object-fit: cover;
-    border-radius: 10px;
-    border: 2px solid rgba(164, 107, 255, 0.3);
-    background: linear-gradient(
-      135deg,
-      rgba(30, 27, 47, 0.9) 0%,
-      rgba(15, 15, 26, 1) 100%
-    );
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
-  }
-
-  .item-with-image:hover .item-image {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 15px rgba(164, 107, 255, 0.4);
-  }
-
-  .item-placeholder {
-    background: #2a2a3a;
-    border-radius: 10px;
-    border: 2px dashed rgba(255, 255, 255, 0.1);
-  }
-
-  .item-info {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    min-width: 0;
-    flex: 1;
-  }
-
-  .item-name {
-    color: white;
-    font-weight: 900;
-    font-size: 1rem;
-    letter-spacing: -0.01em;
-    transition: color 0.3s ease;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .item-with-image:hover .item-name {
-    color: var(--color-primary);
-  }
-
-  .item-description-container {
-    cursor: pointer;
-    position: relative;
-  }
-
-  .item-description {
-    color: #94a3b8;
-    font-size: 0.8rem;
-    line-height: 1.4;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    transition: all 0.3s ease;
-  }
-
-  .item-description.expanded {
-    -webkit-line-clamp: unset;
-    color: #cbd5e1;
-  }
-
-  .item-with-image:hover .item-description:not(.expanded) {
-    color: #cbd5e1;
-  }
-
-  /* Tooltip styles */
-  .item-tooltip {
-    position: absolute;
-    bottom: 120%;
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background: rgba(15, 15, 26, 0.95);
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    padding: 0.75rem;
-    border-radius: 12px;
-    width: 220px;
-    z-index: 100;
-    opacity: 0;
-    visibility: hidden;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-    pointer-events: none;
-  }
-
-  .item-image-container:hover .item-tooltip {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  .tooltip-text {
-    display: block;
-    color: white;
-    font-weight: 800;
-    margin-bottom: 0.25rem;
-    font-size: 0.9rem;
-  }
-
-  .tooltip-description {
-    display: block;
-    color: #94a3b8;
-    font-size: 0.75rem;
-    line-height: 1.4;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 640px) {
-    .item-with-image {
-      gap: 0.75rem;
-    }
-
-    .item-name {
-      font-size: 0.9rem;
-    }
-
-    .item-description {
-      font-size: 0.75rem;
-    }
-  }
-</style>
-
-<script>
-  // Handle description expansion
-  document.addEventListener("astro:page-load", () => {
-    setupItemDescriptions();
-  });
-
-  // Also run on initial load in case view transitions aren't used or for first load
-  document.addEventListener("DOMContentLoaded", () => {
-    setupItemDescriptions();
-  });
-
-  function setupItemDescriptions() {
-    const descriptions = document.querySelectorAll(
-      ".item-description-container",
-    );
-
-    descriptions.forEach((container) => {
-      container.addEventListener("click", () => {
-        const text = container.querySelector(".item-description");
-        if (text) {
-          text.classList.toggle("expanded");
+<div class="flex items-center gap-3 py-1">
+    <div class="flex-shrink-0">
+        {
+            itemImage ? (
+                <Image
+                    src={itemImage}
+                    alt={itemName}
+                    class={`${sizeClasses[size]} rounded border border-slate-600 bg-slate-800`}
+                    width={sizePixels[size]}
+                    height={sizePixels[size]}
+                    loading="lazy"
+                    decoding="async"
+                    format="webp"
+                    quality={75}
+                />
+            ) : (
+                <div class={`${sizeClasses[size]} rounded border border-slate-700 bg-slate-800`} />
+            )
         }
-      });
-    });
-  }
-</script>
+    </div>
+    
+    {
+        showLabel && (
+            <div class="flex flex-col min-w-0 flex-1">
+                <span class="text-sm font-medium text-white truncate">{itemName}</span>
+                {description && (
+                    <span class="text-xs text-slate-400 line-clamp-2">{description}</span>
+                )}
+            </div>
+        )
+    }
+</div>
