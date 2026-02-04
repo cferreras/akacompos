@@ -2,10 +2,10 @@
 import Layout from "../layouts/Layout.astro";
 import Container from "../components/ui/Container.astro";
 import Card from "../components/ui/Card.astro";
-import Badge from "../components/ui/Badge.astro";
 import { Image } from "astro:assets";
 import akaWonderImage from "../assets/akawonder.png";
 import { getCompositionsByTier, getCompositionsCount } from "../lib/strapi";
+import { tierStyles, type TierLevel } from "../utils/tierStyles.ts";
 
 export const prerender = true;
 
@@ -13,7 +13,7 @@ const { data: featuredCompositions } = await getCompositionsByTier("S Tier");
 const topCompositions = featuredCompositions?.slice(0, 3) || [];
 const { data: totalCompositions } = await getCompositionsCount();
 
-const lastUpdate = featuredCompositions?.[0]?.updatedAt 
+const lastUpdate = featuredCompositions?.[0]?.updatedAt
     ? new Date(featuredCompositions[0].updatedAt).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })
     : null;
 ---
@@ -26,7 +26,7 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
     <section class="relative py-16 md:py-24 lg:py-32 overflow-hidden">
         <!-- Subtle background -->
         <div class="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-950"></div>
-        
+
         <Container maxWidth="xl" className="relative">
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                 <!-- Content -->
@@ -45,8 +45,8 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
 
                     <!-- Subtitle -->
                     <p class="text-lg md:text-xl text-slate-400 leading-relaxed max-w-xl">
-                        Bienvenido a <span class="text-white font-medium">AKACompos</span>, 
-                        tu fuente de referencia para las composiciones más potentes de 
+                        Bienvenido a <span class="text-white font-medium">AKACompos</span>,
+                        tu fuente de referencia para las composiciones más potentes de
                         Teamfight Tactics, directamente de <span class="text-white font-medium">AKAWonder</span>.
                     </p>
 
@@ -75,7 +75,7 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
                     <div class="relative">
                         <!-- Subtle glow -->
                         <div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-75"></div>
-                        
+
                         <Image
                             src={akaWonderImage}
                             alt="AKAWonder"
@@ -100,7 +100,7 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
                     <div class="text-sm text-slate-500 mt-1">Composiciones</div>
                 </div>
                 <div>
-                    <div class="text-3xl md:text-4xl font-bold text-white">S Tier</div>
+                    <div class="text-3xl md:text-4xl font-bold text-purple-300">S Tier</div>
                     <div class="text-sm text-slate-500 mt-1">Estrategias Top</div>
                 </div>
                 <div>
@@ -153,9 +153,9 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
                                     )}
                                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
                                     <div class="absolute top-3 left-3">
-                                        <Badge variant="primary" size="sm">
+                                        <span class={`px-2 py-0.5 rounded-full text-xs font-medium border border-white/10 ${tierStyles[comp.tier as TierLevel]?.bgSoft || 'bg-slate-500/30'} ${tierStyles[comp.tier as TierLevel]?.text || 'text-slate-300'}`}>
                                             {comp.tier}
-                                        </Badge>
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="p-5">

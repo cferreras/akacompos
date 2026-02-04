@@ -19,6 +19,7 @@ import {
     getItemNames,
 } from "../../utils/assets.ts";
 import { getTraitByName } from "../../utils/traits.ts";
+import { tierStyles, type TierLevel } from "../../utils/tierStyles.ts";
 dayjs.locale(es);
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -89,12 +90,11 @@ const hasRightColumnContent =
     (augmentsData && Array.isArray(augmentsData) && augmentsData.length > 0);
 
 function getTierBadgeVariant(tier: string): "primary" | "success" | "warning" | "default" {
-    switch (tier) {
-        case "S Tier": return "primary";
-        case "A Tier": return "success";
-        case "B Tier": return "warning";
-        default: return "default";
-    }
+    return tierStyles[tier as TierLevel]?.badge || "default";
+}
+
+function getTierStyle(tier: string) {
+    return tierStyles[tier as TierLevel] || tierStyles["C Tier"];
 }
 
 function getTagIcon(tag: string) {
@@ -103,9 +103,9 @@ function getTagIcon(tag: string) {
 
     const trait = getTraitByName(tag);
     if (trait && trait.icon) {
-        return { 
-            src: typeof trait.icon === "string" ? trait.icon : trait.icon.src, 
-            isTrait: true 
+        return {
+            src: typeof trait.icon === "string" ? trait.icon : trait.icon.src,
+            isTrait: true
         };
     }
     return null;
@@ -152,9 +152,14 @@ if (championsList.length > 0) {
             <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
                 <div class="flex-1 space-y-3">
                     <div class="flex flex-wrap items-center gap-2">
-                        <Badge variant={getTierBadgeVariant(currentComposition.tier)} size="sm">
-                            {currentComposition.tier}
-                        </Badge>
+                        {(() => {
+                            const tierStyle = getTierStyle(currentComposition.tier);
+                            return (
+                                <span class={`px-2 py-0.5 rounded-full text-xs font-medium border border-white/10 ${tierStyle.bgSoft} ${tierStyle.text}`}>
+                                    {currentComposition.tier}
+                                </span>
+                            );
+                        })()}
                         {
                             currentComposition.tags && (
                                 (Array.isArray(currentComposition.tags)
@@ -167,9 +172,9 @@ if (championsList.length > 0) {
                                     return (
                                         <Badge variant="default" size="xs">
                                             {tagIcon && (
-                                                <img 
-                                                    src={tagIcon.src} 
-                                                    alt={tag} 
+                                                <img
+                                                    src={tagIcon.src}
+                                                    alt={tag}
                                                     class={`w-3 h-3 rounded-full object-cover mr-1 ${tagIcon.isTrait ? 'invert brightness-200' : ''}`}
                                                 />
                                             )}
@@ -180,11 +185,11 @@ if (championsList.length > 0) {
                             )
                         }
                     </div>
-                    
+
                     <h1 class="text-2xl md:text-4xl font-bold text-white">
                         {currentComposition.title}
                     </h1>
-                    
+
                     <div class="flex flex-wrap items-center gap-3 text-sm text-slate-400">
                         <span>Actualizado {lastModified}</span>
                         <span class="text-slate-600">•</span>
@@ -219,14 +224,14 @@ if (championsList.length > 0) {
                                 <i class="fa-solid fa-chess-board text-primary text-sm"></i>
                                 Tablero Final
                             </h2>
-                            
+
                             <!-- Toggle Names -->
                             <label class="flex items-center gap-2 cursor-pointer select-none">
                                 <span class="text-xs text-slate-400">Nombres</span>
                                 <div class="relative">
-                                    <input 
-                                        type="checkbox" 
-                                        id="toggle-names" 
+                                    <input
+                                        type="checkbox"
+                                        id="toggle-names"
                                         class="sr-only peer"
                                         checked
                                     />
@@ -234,7 +239,7 @@ if (championsList.length > 0) {
                                 </div>
                             </label>
                         </div>
-                        
+
                         <div class="p-4">
                             {boardData ? (
                                 <div class="flex justify-center overflow-x-auto" id="board-container">
@@ -252,7 +257,7 @@ if (championsList.length > 0) {
                                 </div>
                             )}
                         </div>
-                        
+
                         {championsList.length > 0 && (
                             <div class="p-4 bg-slate-900/30 border-t border-white/5">
                                 <h3 class="text-xs font-medium text-slate-400 mb-3">Sinergias Activas</h3>
@@ -406,10 +411,10 @@ if (championsList.length > 0) {
         if (toggleNames && boardContainer) {
             // Load saved preference from localStorage
             const savedPreference = localStorage.getItem(STORAGE_KEY);
-            
+
             // Default to true (show names) if no preference saved
             const shouldShowNames = savedPreference === null ? true : savedPreference === 'true';
-            
+
             // Apply saved preference
             toggleNames.checked = shouldShowNames;
             const characters = boardContainer.querySelectorAll('.champion-name');
@@ -421,10 +426,10 @@ if (championsList.length > 0) {
             // Listen for changes and save preference
             toggleNames.addEventListener("change", () => {
                 const showNames = toggleNames.checked;
-                
+
                 // Save to localStorage
                 localStorage.setItem(STORAGE_KEY, showNames.toString());
-                
+
                 // Apply to all champion names
                 const characters = boardContainer.querySelectorAll('.champion-name');
                 characters.forEach((char) => {
