@@ -2,9 +2,15 @@
 
 const STRAPI_URL = import.meta.env.STRAPI_URL;
 const STRAPI_TOKEN = import.meta.env.STRAPI_TOKEN;
+const STRAPI_PREVIEW = import.meta.env.STRAPI_PREVIEW === "true";
 
 if (!STRAPI_URL) {
   throw new Error("STRAPI_URL environment variable is required");
+}
+
+// Helper para determinar el estado de publicación
+function getPublicationState(): "live" | "preview" {
+  return STRAPI_PREVIEW ? "preview" : "live";
 }
 
 // Función helper para hacer requests a Strapi
@@ -140,7 +146,7 @@ export async function getCompositions() {
   try {
     const response = await strapiRequest("compositions", {
       populate: "*",
-      publicationState: "live",
+      publicationState: getPublicationState(),
       "sort[0]": "createdAt:desc",
     });
 
@@ -168,7 +174,7 @@ export async function getComposition(slug: string) {
     const response = await strapiRequest("compositions", {
       populate: "*",
       "filters[slug][$eq]": slug,
-      publicationState: "live",
+      publicationState: getPublicationState(),
     });
 
     const composition = response.data?.[0]
@@ -185,7 +191,7 @@ export async function getCompositionsByTier(tier?: string) {
   try {
     const params: Record<string, any> = {
       populate: "*",
-      publicationState: "live",
+      publicationState: getPublicationState(),
       "sort[0]": "createdAt:desc",
       "fields[0]": "id",
       "fields[1]": "title",
@@ -214,7 +220,7 @@ export async function getCompositionsCount() {
   try {
     const response = await strapiRequest("compositions", {
       "pagination[pageSize]": 1,
-      publicationState: "live",
+      publicationState: getPublicationState(),
     });
 
     return { data: response.meta.pagination.total, error: null };
