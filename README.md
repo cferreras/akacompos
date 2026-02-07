@@ -4,7 +4,16 @@ Plataforma web donde [AKAWonder](https://twitch.tv/akawonder), jugador profesion
 
 ## Sobre el proyecto
 
-AKACompos permite a los jugadores de TFT consultar composiciones actualizadas organizadas por tier (S, A, B, C), con tableros interactivos, items core, aumentos y guías de juego. Todo el contenido es gestionado por AKAWonder a través de un CMS headless.
+AKACompos permite a los jugadores de TFT consultar composiciones actualizadas organizadas por tier (S, A, B, C), con tableros interactivos, items core, aumentos y guias de juego. Todo el contenido es gestionado por AKAWonder a traves de un CMS headless.
+
+## Modo Preview
+
+El proyecto incluye un modo preview que permite ver las composiciones en borrador junto a las publicadas. Las composiciones en draft se muestran con indicadores visuales:
+
+- **Lista de composiciones**: badge ambar "PREVIEW" en la esquina superior derecha de la tarjeta.
+- **Pagina de detalle**: banner superior indicando que la composicion no esta publicada.
+
+Para activarlo, establece `STRAPI_PREVIEW=true` en `frontend/.env`. Sin esta variable (o con valor `false`), solo se muestran las composiciones publicadas.
 
 ## Stack tecnologico
 
@@ -43,15 +52,14 @@ akacompos/
 ## Instalacion
 
 ```bash
-# Clonar el repositorio
 git clone https://github.com/cferreras/akacompos.git
 cd akacompos
 
-# Instalar dependencias del frontend
+# Frontend
 cd frontend
 pnpm install
 
-# Instalar dependencias del backend
+# Backend
 cd ../backend
 npm install
 ```
@@ -66,6 +74,9 @@ Crea un archivo `frontend/.env`:
 STRAPI_URL=http://localhost:1337
 STRAPI_TOKEN=tu_api_token_de_strapi
 PORT=3000
+
+# Activar para ver composiciones en borrador (opcional)
+# STRAPI_PREVIEW=true
 ```
 
 ### Backend
@@ -105,10 +116,3 @@ cd frontend
 pnpm build
 pnpm start
 ```
-
-## Ramas
-
-| Rama | Proposito |
-|------|-----------|
-| `master` | Produccion. Solo muestra composiciones publicadas |
-| `preview` | Pre-visualizacion. Muestra composiciones publicadas y en borrador, con marcas visuales para identificar las que aun no estan publicadas |

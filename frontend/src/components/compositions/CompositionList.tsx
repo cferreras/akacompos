@@ -25,6 +25,7 @@ interface Composition {
   cover?: string;
   updatedAt?: string;
   createdAt?: string;
+  status?: "draft" | "published";
   [key: string]: any;
 }
 
@@ -227,6 +228,13 @@ export const CompositionList: React.FC<CompositionListProps> = ({
                       </div>
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/50 to-transparent" />
+
+                    {/* Preview Badge */}
+                    {comp.status === "draft" && (
+                      <div className="absolute top-2 right-2 px-2 py-1 bg-amber-500/90 text-white text-xs font-bold rounded-md shadow-lg backdrop-blur-sm border border-amber-400/50">
+                        PREVIEW
+                      </div>
+                    )}
 
                     {/* Content Overlay */}
                     <div className="absolute inset-0 flex flex-col justify-end p-4">
