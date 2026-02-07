@@ -8,11 +8,6 @@ if (!STRAPI_URL) {
   throw new Error("STRAPI_URL environment variable is required");
 }
 
-// Helper para determinar el estado de publicación
-function getPublicationState(): "live" | "preview" {
-  return STRAPI_PREVIEW ? "preview" : "live";
-}
-
 // Función helper para hacer requests a Strapi
 async function strapiRequest(
   endpoint: string,
@@ -119,7 +114,7 @@ function getImageUrl(imageData: any, preferredFormat: 'thumbnail' | 'small' | 'm
 }
 
 // Función helper para transformar datos de Strapi al formato esperado
-function transformComposition(item: any): Composition {
+function transformComposition(item: any, forcedStatus?: "draft" | "published"): Composition {
   return {
     id: item.id,
     title: item.title,
@@ -132,7 +127,7 @@ function transformComposition(item: any): Composition {
     description: item.description,
     gameplayMode: item.gameplayMode,
     compCode: item.compCode,
-    status: item.publishedAt ? "published" : "draft",
+    status: forcedStatus ?? (item.publishedAt ? "published" : "draft"),
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
     board: item.board,
@@ -141,17 +136,60 @@ function transformComposition(item: any): Composition {
   };
 }
 
+// Helper: Fetch published + drafts y mergear (Strapi 5 requiere dos peticiones)
+async function fetchWithPreview(
+  endpoint: string,
+  baseParams: Record<string, any>,
+): Promise<{ data: Composition[]; meta: any }> {
+  // Siempre traer las publicadas
+  const publishedRes = await strapiRequest(endpoint, {
+    ...baseParams,
+    status: "published",
+  });
+  const published: Composition[] = publishedRes.data.map((item: any) =>
+    transformComposition(item, "published"),
+  );
+
+  if (!STRAPI_PREVIEW) {
+    return { data: published, meta: publishedRes.meta };
+  }
+
+  // En modo preview, traer tambien los drafts
+  const draftRes = await strapiRequest(endpoint, {
+    ...baseParams,
+    status: "draft",
+  });
+  const drafts: Composition[] = draftRes.data.map((item: any) =>
+    transformComposition(item, "draft"),
+  );
+
+  // Filtrar drafts que ya tienen version publicada (mismo slug)
+  const publishedSlugs = new Set(published.map((c) => c.slug));
+  const uniqueDrafts = drafts.filter((d) => !publishedSlugs.has(d.slug));
+
+  const merged = [...published, ...uniqueDrafts];
+
+  return {
+    data: merged,
+    meta: {
+      ...publishedRes.meta,
+      pagination: {
+        ...publishedRes.meta?.pagination,
+        total: merged.length,
+      },
+    },
+  };
+}
+
 // Funciones helper para obtener composiciones de Strapi
 export async function getCompositions() {
   try {
-    const response = await strapiRequest("compositions", {
+    const { data } = await fetchWithPreview("compositions", {
       populate: "*",
-      publicationState: getPublicationState(),
       "sort[0]": "createdAt:desc",
     });
 
-    const compositions = response.data.map(transformComposition);
-    return { data: compositions, error: null };
+    return { data, error: null };
   } catch (error: any) {
     console.error("Error fetching compositions:", error);
 
@@ -171,14 +209,31 @@ export async function getCompositions() {
 
 export async function getComposition(slug: string) {
   try {
-    const response = await strapiRequest("compositions", {
+    // En modo preview, intentar primero draft y luego published
+    if (STRAPI_PREVIEW) {
+      const draftRes = await strapiRequest("compositions", {
+        populate: "*",
+        "filters[slug][$eq]": slug,
+        status: "draft",
+      });
+
+      if (draftRes.data?.[0]) {
+        return {
+          data: transformComposition(draftRes.data[0], "draft"),
+          error: null,
+        };
+      }
+    }
+
+    // Buscar publicada
+    const publishedRes = await strapiRequest("compositions", {
       populate: "*",
       "filters[slug][$eq]": slug,
-      publicationState: getPublicationState(),
+      status: "published",
     });
 
-    const composition = response.data?.[0]
-      ? transformComposition(response.data[0])
+    const composition = publishedRes.data?.[0]
+      ? transformComposition(publishedRes.data[0], "published")
       : null;
     return { data: composition, error: null };
   } catch (error) {
@@ -191,7 +246,6 @@ export async function getCompositionsByTier(tier?: string) {
   try {
     const params: Record<string, any> = {
       populate: "*",
-      publicationState: getPublicationState(),
       "sort[0]": "createdAt:desc",
       "fields[0]": "id",
       "fields[1]": "title",
@@ -207,9 +261,8 @@ export async function getCompositionsByTier(tier?: string) {
       params["filters[tier][$eq]"] = tier;
     }
 
-    const response = await strapiRequest("compositions", params);
-    const compositions = response.data.map(transformComposition);
-    return { data: compositions, error: null };
+    const { data } = await fetchWithPreview("compositions", params);
+    return { data, error: null };
   } catch (error) {
     console.error("Error fetching compositions by tier:", error);
     return { data: [], error };
@@ -220,10 +273,20 @@ export async function getCompositionsCount() {
   try {
     const response = await strapiRequest("compositions", {
       "pagination[pageSize]": 1,
-      publicationState: getPublicationState(),
+      status: "published",
     });
 
-    return { data: response.meta.pagination.total, error: null };
+    let total = response.meta.pagination.total;
+
+    if (STRAPI_PREVIEW) {
+      const draftRes = await strapiRequest("compositions", {
+        "pagination[pageSize]": 1,
+        status: "draft",
+      });
+      total += draftRes.meta.pagination.total;
+    }
+
+    return { data: total, error: null };
   } catch (error) {
     console.error("Error fetching compositions count:", error);
     return { data: 0, error };
