@@ -56,19 +56,27 @@ const augmentsWithImages =
 
 const getTierColor = (tier: string) => {
     switch (tier) {
-        case "silver": return "text-slate-400";
-        case "gold": return "text-amber-400";
-        case "prismatic": return "text-purple-400";
-        default: return "text-slate-500";
+        case "silver":
+            return "text-slate-400";
+        case "gold":
+            return "text-amber-400";
+        case "prismatic":
+            return "text-purple-400";
+        default:
+            return "text-slate-500";
     }
 };
 
 const getTierBg = (tier: string) => {
     switch (tier) {
-        case "silver": return "bg-slate-400/20";
-        case "gold": return "bg-amber-400/20";
-        case "prismatic": return "bg-purple-400/20";
-        default: return "bg-slate-700";
+        case "silver":
+            return "bg-slate-400/20";
+        case "gold":
+            return "bg-amber-400/20";
+        case "prismatic":
+            return "bg-purple-400/20";
+        default:
+            return "bg-slate-700";
     }
 };
 ---
@@ -77,7 +85,9 @@ const getTierBg = (tier: string) => {
     {
         augmentsWithImages.map((augment) => (
             <div class="group flex items-center gap-3 p-2 rounded-lg bg-slate-800/30 hover:bg-slate-800/60 transition-colors">
-                <div class={`w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 ${getTierBg(augment.tier)}`}>
+                <div
+                    class={`w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 ${getTierBg(augment.tier)}`}
+                >
                     {augment.hasImage ? (
                         <Image
                             src={augment.image}
@@ -98,13 +108,15 @@ const getTierBg = (tier: string) => {
                         </div>
                     )}
                 </div>
-                
+
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2">
                         <h4 class="text-sm font-medium text-white truncate">
                             {augment.name}
                         </h4>
-                        <span class={`text-[10px] font-semibold uppercase ${getTierColor(augment.tier)}`}>
+                        <span
+                            class={`text-[10px] font-semibold uppercase ${getTierColor(augment.tier)}`}
+                        >
                             {augment.tier}
                         </span>
                     </div>
