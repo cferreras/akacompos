@@ -2539,6 +2539,7 @@ export const getAugmentsByTier = (tier: AugmentTier): Augment[] => {
 };
 
 export const getAugment = (idOrName: string): Augment | undefined => {
+  if (!idOrName) return undefined;
   const allAugments = [...tier1Augments, ...tier2Augments, ...tier3Augments];
   const search = idOrName.toLowerCase();
   return allAugments.find(
@@ -2546,5 +2547,34 @@ export const getAugment = (idOrName: string): Augment | undefined => {
       augment.id.toLowerCase() === search ||
       augment.name.toLowerCase() === search
   );
+};
+
+export const getAugmentTierColor = (tier: AugmentTier) => {
+  switch (tier) {
+    case "silver":
+      return {
+        bg: "bg-slate-700/30",
+        border: "border-slate-500",
+        text: "text-slate-300",
+      };
+    case "gold":
+      return {
+        bg: "bg-yellow-500/20",
+        border: "border-yellow-500",
+        text: "text-yellow-400",
+      };
+    case "prismatic":
+      return {
+        bg: "bg-purple-500/20",
+        border: "border-purple-500",
+        text: "text-purple-400",
+      };
+    default:
+      return {
+        bg: "bg-slate-700/30",
+        border: "border-slate-500",
+        text: "text-slate-300",
+      };
+  }
 };
 
