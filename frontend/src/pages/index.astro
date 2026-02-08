@@ -1,7 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Container from "../components/ui/Container.astro";
-import Card from "../components/ui/Card.astro";
 import { Image } from "astro:assets";
 import akaWonderImage from "../assets/akawonder.png";
 import { getCompositionsByTier, getCompositionsCount } from "../lib/strapi";
@@ -22,255 +21,310 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
     title="AKACompos - Las mejores composiciones de TFT"
     description="Descubre las mejores composiciones de Teamfight Tactics (TFT) actualizadas para el meta actual. Estrategias probadas por AKAWonder."
 >
-    <!-- Hero Section -->
-    <section class="relative py-16 md:py-24 lg:py-32 overflow-hidden">
-        <!-- Subtle background -->
-        <div class="absolute inset-0 bg-gradient-to-b from-slate-900 to-slate-950"></div>
+    <!-- ═══════════════════════════════════════════
+         HERO — Asymmetric editorial layout
+         ═══════════════════════════════════════════ -->
+    <section class="relative min-h-[90vh] flex items-center overflow-hidden">
+        <!-- Background layers -->
+        <div class="absolute inset-0 bg-[rgb(10,10,12)]"></div>
+        <!-- Radial glow behind image area -->
+        <div class="absolute top-1/2 right-0 w-[600px] h-[600px] -translate-y-1/2 bg-amber-500/[0.04] rounded-full blur-[120px]"></div>
+        <!-- Diagonal line accent -->
+        <div class="absolute top-0 right-[40%] w-px h-full bg-gradient-to-b from-transparent via-amber-500/10 to-transparent hidden lg:block"></div>
+        <!-- Grid pattern overlay -->
+        <div class="absolute inset-0 opacity-[0.015]" style="background-image: linear-gradient(rgba(255,255,255,.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.1) 1px, transparent 1px); background-size: 60px 60px;"></div>
 
-        <Container maxWidth="xl" className="relative">
-            <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <!-- Content -->
-                <div class="text-center lg:text-left space-y-6">
-                    <!-- Badge -->
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-medium">
-                        <span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-                        {lastUpdate ? `Actualizado el ${lastUpdate}` : 'Meta actual'}
+        <Container maxWidth="xl" className="relative z-10">
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-6 items-center py-20 md:py-28">
+                <!-- Content — takes 7 columns on desktop -->
+                <div class="lg:col-span-7 space-y-8">
+                    <!-- Eyebrow -->
+                    <div class="animate-fade-in-up flex items-center gap-3">
+                        {lastUpdate && (
+                            <span class="inline-flex items-center gap-2 text-xs font-medium tracking-widest uppercase text-amber-400/80">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                                Actualizado {lastUpdate}
+                            </span>
+                        )}
                     </div>
 
-                    <!-- Title -->
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                        Las mejores composiciones de
-                        <span class="text-gradient"> TFT</span>
-                    </h1>
+                    <!-- Headline — oversized, editorial -->
+                    <div class="animate-fade-in-up stagger-1">
+                        <h1 class="font-display text-[clamp(2.5rem,6vw,5rem)] leading-[0.95] tracking-tight text-[rgb(245,245,245)]">
+                            Domina el meta
+                            <br />
+                            <span class="text-gradient-warm">de TFT</span>
+                        </h1>
+                    </div>
 
-                    <!-- Subtitle -->
-                    <p class="text-lg md:text-xl text-slate-400 leading-relaxed max-w-xl">
-                        Bienvenido a <span class="text-white font-medium">AKACompos</span>,
-                        tu fuente de referencia para las composiciones más potentes de
-                        Teamfight Tactics, directamente de <span class="text-white font-medium">AKAWonder</span>.
-                    </p>
+                    <!-- Subhead — clean, restrained -->
+                    <div class="animate-fade-in-up stagger-2">
+                        <p class="text-base md:text-lg leading-relaxed text-[rgb(113,113,122)] max-w-lg">
+                            Composiciones probadas por <span class="text-[rgb(245,245,245)] font-medium">AKAWonder</span>,
+                            actualizadas cada parche. Sin teorías, solo lo que funciona para subir de elo.
+                        </p>
+                    </div>
 
-                    <!-- CTA Buttons -->
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-2">
+                    <!-- CTAs -->
+                    <div class="animate-fade-in-up stagger-3 flex flex-col sm:flex-row gap-3 pt-2">
                         <a
                             href="/compositions"
-                            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark transition-colors"
+                            class="group inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-md bg-amber-500 text-[rgb(10,10,12)] text-sm font-semibold hover:bg-amber-400 transition-all hover:shadow-[0_0_24px_-4px_rgba(234,179,8,0.4)]"
                         >
-                            Ver Composiciones
-                            <i class="fa-solid fa-arrow-right text-sm"></i>
+                            Ver composiciones
+                            <i class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-0.5"></i>
                         </a>
                         <a
                             href="https://www.twitch.tv/akawonder"
                             target="_blank"
-                            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white/5 text-white font-medium border border-white/10 hover:bg-white/10 transition-colors"
+                            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md text-sm font-medium text-[rgb(163,163,170)] border border-white/[0.08] hover:border-white/20 hover:text-[rgb(245,245,245)] transition-all"
                         >
-                            <i class="fa-brands fa-twitch text-purple-400"></i>
-                            Canal de Twitch
+                            <i class="fa-brands fa-twitch text-purple-400 text-xs"></i>
+                            Ver en Twitch
                         </a>
+                    </div>
+
+                    <!-- Inline stats — editorial row -->
+                    <div class="animate-fade-in-up stagger-4 flex items-center gap-8 pt-6 border-t border-white/[0.04]">
+                        <div>
+                            <span class="font-display text-2xl text-[rgb(245,245,245)]">{totalCompositions}+</span>
+                            <span class="block text-[11px] uppercase tracking-widest text-[rgb(82,82,91)] mt-0.5">Composiciones</span>
+                        </div>
+                        <div class="w-px h-8 bg-white/[0.06]"></div>
+                        <div>
+                            <span class="font-display text-2xl text-amber-400">S Tier</span>
+                            <span class="block text-[11px] uppercase tracking-widest text-[rgb(82,82,91)] mt-0.5">Estrategias top</span>
+                        </div>
+                        <div class="w-px h-8 bg-white/[0.06] hidden sm:block"></div>
+                        <div class="hidden sm:block">
+                            <span class="font-display text-2xl text-[rgb(245,245,245)]">Pro</span>
+                            <span class="block text-[11px] uppercase tracking-widest text-[rgb(82,82,91)] mt-0.5">Nivel</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Image -->
-                <div class="relative flex justify-center">
-                    <div class="relative">
-                        <!-- Subtle glow -->
-                        <div class="absolute inset-0 bg-primary/20 blur-3xl rounded-full scale-75"></div>
+                <!-- Image — takes 5 columns, overlapping composition -->
+                <div class="lg:col-span-5 relative flex justify-center lg:justify-end">
+                    <div class="relative animate-fade-in-up stagger-2">
+                        <!-- Decorative frame -->
+                        <div class="absolute -inset-3 rounded-2xl border border-amber-500/[0.08]"></div>
+                        <div class="absolute -inset-6 rounded-3xl border border-white/[0.03] hidden md:block"></div>
+
+                        <!-- Corner accents -->
+                        <div class="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-amber-500/30 rounded-tl-lg"></div>
+                        <div class="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-amber-500/30 rounded-br-lg"></div>
 
                         <Image
                             src={akaWonderImage}
-                            alt="AKAWonder"
-                            class="relative w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 object-cover rounded-2xl shadow-2xl object-top"
+                            alt="AKAWonder — Jugador profesional de TFT"
+                            class="relative w-64 h-72 md:w-72 md:h-80 lg:w-80 lg:h-[380px] object-cover object-top rounded-xl"
                             width={400}
-                            height={400}
+                            height={480}
                             quality={95}
                             loading="eager"
                         />
+
+                        <!-- Name label overlapping image -->
+                        <div class="absolute -bottom-4 left-4 right-4 bg-[rgb(18,18,22)] border border-white/[0.06] rounded-lg px-4 py-2.5 flex items-center justify-between">
+                            <div>
+                                <span class="text-sm font-semibold text-[rgb(245,245,245)]">AKAWonder</span>
+                                <span class="block text-[11px] text-[rgb(82,82,91)]">Pro Player & Streamer</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <a href="https://www.twitch.tv/akawonder" target="_blank" class="w-7 h-7 rounded-md bg-purple-500/10 flex items-center justify-center text-purple-400 hover:bg-purple-500/20 transition-colors">
+                                    <i class="fa-brands fa-twitch text-xs"></i>
+                                </a>
+                                <a href="https://x.com/aka_wonder" target="_blank" class="w-7 h-7 rounded-md bg-white/5 flex items-center justify-center text-[rgb(163,163,170)] hover:bg-white/10 transition-colors">
+                                    <i class="fa-brands fa-x-twitter text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </Container>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-12 border-y border-white/5 bg-slate-900/50">
-        <Container maxWidth="xl">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-                <div>
-                    <div class="text-3xl md:text-4xl font-bold text-white">{totalCompositions}+</div>
-                    <div class="text-sm text-slate-500 mt-1">Composiciones</div>
-                </div>
-                <div>
-                    <div class="text-3xl md:text-4xl font-bold text-purple-300">S Tier</div>
-                    <div class="text-sm text-slate-500 mt-1">Estrategias Top</div>
-                </div>
-                <div>
-                    <div class="text-3xl md:text-4xl font-bold text-white">Pro</div>
-                    <div class="text-sm text-slate-500 mt-1">Consejos</div>
-                </div>
-                <div>
-                    <div class="text-3xl md:text-4xl font-bold text-white">24/7</div>
-                    <div class="text-sm text-slate-500 mt-1">Actualizado</div>
-                </div>
-            </div>
-        </Container>
-    </section>
+    <!-- ═══════════════════════════════════════════
+         DIVIDER
+         ═══════════════════════════════════════════ -->
+    <div class="divider-glow"></div>
 
-    <!-- Featured Compositions -->
+    <!-- ═══════════════════════════════════════════
+         FEATURED COMPOSITIONS — Magazine-style cards
+         ═══════════════════════════════════════════ -->
     {topCompositions.length > 0 && (
-        <section class="py-16 md:py-24">
+        <section class="relative py-20 md:py-28">
             <Container maxWidth="xl">
-                <div class="text-center mb-12">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                        Composiciones Destacadas
-                    </h2>
-                    <p class="text-slate-400 max-w-2xl mx-auto">
-                        Las estrategias más dominantes del meta actual, seleccionadas por AKAWonder.
-                    </p>
+                <!-- Section header — left-aligned editorial -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-12">
+                    <div>
+                        <span class="text-[11px] font-medium uppercase tracking-[0.2em] text-amber-400/70 mb-3 block">Selección del meta</span>
+                        <h2 class="font-display text-3xl md:text-4xl text-[rgb(245,245,245)] tracking-tight">
+                            Composiciones destacadas
+                        </h2>
+                    </div>
+                    <a
+                        href="/compositions"
+                        class="group inline-flex items-center gap-2 text-sm font-medium text-[rgb(113,113,122)] hover:text-amber-400 transition-colors"
+                    >
+                        Ver todas
+                        <i class="fa-solid fa-arrow-right text-xs transition-transform group-hover:translate-x-0.5"></i>
+                    </a>
                 </div>
 
-                <div class="grid md:grid-cols-3 gap-6">
-                    {topCompositions.map((comp) => (
+                <!-- Cards grid — first card larger -->
+                <div class="grid md:grid-cols-12 gap-5">
+                    {topCompositions.map((comp, i) => (
                         <a
                             href={`/compositions/${comp.slug}`}
-                            class="group block"
+                            class={`group block ${i === 0 ? 'md:col-span-6' : 'md:col-span-3'}`}
                         >
-                            <Card
-                                variant="default"
-                                padding="none"
-                                className="overflow-hidden hover-lift"
-                            >
-                                <div class="aspect-video relative overflow-hidden">
+                            <div class="relative h-full rounded-xl overflow-hidden bg-[rgb(18,18,22)] border border-white/[0.04] hover:border-amber-500/20 transition-all duration-300 hover:shadow-[0_0_40px_-12px_rgba(234,179,8,0.1)]">
+                                <!-- Cover image -->
+                                <div class={`relative overflow-hidden ${i === 0 ? 'aspect-[16/10]' : 'aspect-video'}`}>
                                     {comp.cover ? (
                                         <img
                                             src={comp.cover}
                                             alt={comp.title}
-                                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                                            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                                         />
                                     ) : (
-                                        <div class="w-full h-full bg-slate-800 flex items-center justify-center">
-                                            <i class="fa-solid fa-image text-3xl text-slate-700"></i>
+                                        <div class="w-full h-full bg-[rgb(26,26,32)] flex items-center justify-center">
+                                            <i class="fa-solid fa-chess text-2xl text-[rgb(42,42,52)]"></i>
                                         </div>
                                     )}
-                                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent"></div>
+                                    <!-- Gradient overlay -->
+                                    <div class="absolute inset-0 bg-gradient-to-t from-[rgb(18,18,22)] via-[rgb(18,18,22)]/30 to-transparent"></div>
+
+                                    <!-- Tier badge -->
                                     <div class="absolute top-3 left-3">
-                                        <span class={`px-2 py-0.5 rounded-full text-xs font-medium border border-white/10 ${tierStyles[comp.tier as TierLevel]?.bgSoft || 'bg-slate-500/30'} ${tierStyles[comp.tier as TierLevel]?.text || 'text-slate-300'}`}>
+                                        <span class={`px-2.5 py-1 rounded-md text-[11px] font-bold uppercase tracking-wider border ${tierStyles[comp.tier as TierLevel]?.bgSoft || 'bg-white/5'} ${tierStyles[comp.tier as TierLevel]?.text || 'text-[rgb(163,163,170)]'} border-white/10`}>
                                             {comp.tier}
                                         </span>
                                     </div>
                                 </div>
+
+                                <!-- Content -->
                                 <div class="p-5">
-                                    <h3 class="text-lg font-semibold text-white group-hover:text-primary transition-colors mb-2">
+                                    <h3 class={`font-display tracking-tight text-[rgb(245,245,245)] group-hover:text-amber-400 transition-colors mb-2 ${i === 0 ? 'text-xl' : 'text-base'}`}>
                                         {comp.title}
                                     </h3>
-                                    <p class="text-sm text-slate-400 line-clamp-2">
+                                    <p class={`text-[rgb(82,82,91)] leading-relaxed ${i === 0 ? 'text-sm line-clamp-3' : 'text-xs line-clamp-2'}`}>
                                         {comp.description}
                                     </p>
-                                    <div class="mt-4 flex items-center text-sm text-primary font-medium">
-                                        Ver detalles
-                                        <i class="fa-solid fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                                    <div class="mt-4 flex items-center gap-1.5 text-xs font-medium text-amber-400/70 group-hover:text-amber-400 transition-colors">
+                                        <span>Ver detalles</span>
+                                        <i class="fa-solid fa-arrow-right text-[10px] transition-transform group-hover:translate-x-0.5"></i>
                                     </div>
                                 </div>
-                            </Card>
+                            </div>
                         </a>
                     ))}
-                </div>
-
-                <div class="mt-12 text-center">
-                    <a
-                        href="/compositions"
-                        class="inline-flex items-center gap-2 px-6 py-3 rounded-lg border border-white/10 text-white font-medium hover:bg-white/5 transition-colors"
-                    >
-                        Ver todas las composiciones
-                        <i class="fa-solid fa-table-cells-large"></i>
-                    </a>
                 </div>
             </Container>
         </section>
     )}
 
-    <!-- Features Section -->
-    <section class="py-16 md:py-24 bg-slate-900/30">
-        <Container maxWidth="xl">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl md:text-4xl font-bold text-white mb-4">
-                    ¿Por qué AKACompos?
+    <!-- ═══════════════════════════════════════════
+         FEATURES — Horizontal editorial blocks
+         ═══════════════════════════════════════════ -->
+    <section class="relative py-20 md:py-28 overflow-hidden">
+        <!-- Subtle background shift -->
+        <div class="absolute inset-0 bg-[rgb(14,14,16)]"></div>
+        <!-- Accent line -->
+        <div class="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent"></div>
+        <div class="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/[0.04] to-transparent"></div>
+
+        <Container maxWidth="xl" className="relative">
+            <!-- Section header -->
+            <div class="mb-16">
+                <span class="text-[11px] font-medium uppercase tracking-[0.2em] text-amber-400/70 mb-3 block">Ventajas</span>
+                <h2 class="font-display text-3xl md:text-4xl text-[rgb(245,245,245)] tracking-tight max-w-md">
+                    Todo lo que necesitas para subir de elo
                 </h2>
-                <p class="text-slate-400 max-w-2xl mx-auto">
-                    La herramienta definitiva para subir de elo en Teamfight Tactics.
-                </p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-6">
+            <!-- Feature blocks — asymmetric grid -->
+            <div class="grid md:grid-cols-3 gap-px bg-white/[0.04] rounded-xl overflow-hidden">
                 <!-- Feature 1 -->
-                <Card variant="glass" padding="xl" className="text-center">
-                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
-                        <i class="fa-solid fa-chess text-2xl text-primary"></i>
+                <div class="bg-[rgb(14,14,16)] p-8 md:p-10 group hover:bg-[rgb(18,18,22)] transition-colors">
+                    <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center mb-6 group-hover:bg-amber-500/15 transition-colors">
+                        <i class="fa-solid fa-chess text-amber-400 text-sm"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-white mb-2">
-                        Composiciones Expertas
+                    <h3 class="font-display text-lg text-[rgb(245,245,245)] mb-3">
+                        Nivel profesional
                     </h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">
-                        Estrategias probadas y optimizadas por AKAWonder para dominar el meta actual.
+                    <p class="text-sm text-[rgb(82,82,91)] leading-relaxed">
+                        Composiciones creadas y probadas por AKAWonder en partidas de alto elo. No son teorías, son resultados.
                     </p>
-                </Card>
+                </div>
 
                 <!-- Feature 2 -->
-                <Card variant="glass" padding="xl" className="text-center">
-                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
-                        <i class="fa-solid fa-clock-rotate-left text-2xl text-primary"></i>
+                <div class="bg-[rgb(14,14,16)] p-8 md:p-10 group hover:bg-[rgb(18,18,22)] transition-colors">
+                    <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center mb-6 group-hover:bg-amber-500/15 transition-colors">
+                        <i class="fa-solid fa-bolt text-amber-400 text-sm"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-white mb-2">
-                        Siempre Actualizado
+                    <h3 class="font-display text-lg text-[rgb(245,245,245)] mb-3">
+                        Siempre al día
                     </h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">
-                        Contenido actualizado constantemente para reflejar los últimos parches.
+                    <p class="text-sm text-[rgb(82,82,91)] leading-relaxed">
+                        Cada parche trae cambios. Las composiciones se actualizan para que siempre juegues lo más fuerte del momento.
                     </p>
-                </Card>
+                </div>
 
                 <!-- Feature 3 -->
-                <Card variant="glass" padding="xl" className="text-center">
-                    <div class="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-5">
-                        <i class="fa-solid fa-trophy text-2xl text-primary"></i>
+                <div class="bg-[rgb(14,14,16)] p-8 md:p-10 group hover:bg-[rgb(18,18,22)] transition-colors">
+                    <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center mb-6 group-hover:bg-amber-500/15 transition-colors">
+                        <i class="fa-solid fa-graduation-cap text-amber-400 text-sm"></i>
                     </div>
-                    <h3 class="text-lg font-semibold text-white mb-2">
-                        Nivel Competitivo
+                    <h3 class="font-display text-lg text-[rgb(245,245,245)] mb-3">
+                        Aprende jugando
                     </h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">
-                        Aprende de un jugador profesional y mejora tu toma de decisiones.
+                    <p class="text-sm text-[rgb(82,82,91)] leading-relaxed">
+                        Cada composición incluye posicionamiento, items y variantes. Entiende el porqué, no solo el qué.
                     </p>
-                </Card>
+                </div>
             </div>
         </Container>
     </section>
 
-    <!-- CTA Section -->
-    <section class="py-16 md:py-24">
+    <!-- ═══════════════════════════════════════════
+         CTA — Minimal, high-contrast band
+         ═══════════════════════════════════════════ -->
+    <section class="relative py-20 md:py-28">
         <Container maxWidth="xl">
-            <div class="relative rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 p-8 md:p-12 lg:p-16 text-center border border-white/5">
-                <div class="relative z-10 max-w-2xl mx-auto space-y-6">
-                    <h2 class="text-3xl md:text-4xl font-bold text-white">
-                        Únete a la comunidad
-                    </h2>
-                    <p class="text-lg text-slate-400">
-                        No te pierdas ninguna actualización y aprende en directo con AKAWonder en su canal de Twitch.
-                    </p>
-                    <div class="flex flex-col sm:flex-row justify-center gap-4 pt-2">
-                        <a
-                            href="https://www.twitch.tv/akawonder"
-                            target="_blank"
-                            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-purple-600 text-white font-medium hover:bg-purple-700 transition-colors"
-                        >
-                            <i class="fa-brands fa-twitch"></i>
-                            Ver en Twitch
-                        </a>
-                        <a
-                            href="https://x.com/aka_wonder"
-                            target="_blank"
-                            class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-white/5 text-white font-medium border border-white/10 hover:bg-white/10 transition-colors"
-                        >
-                            <i class="fa-brands fa-x-twitter"></i>
-                            Seguir en X
-                        </a>
+            <div class="relative overflow-hidden rounded-2xl bg-[rgb(18,18,22)] border border-white/[0.04]">
+                <!-- Inner glow -->
+                <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[400px] h-[200px] bg-amber-500/[0.06] blur-[100px] rounded-full"></div>
+
+                <div class="relative px-8 py-16 md:px-16 md:py-20">
+                    <div class="max-w-2xl mx-auto text-center space-y-6">
+                        <span class="text-[11px] font-medium uppercase tracking-[0.2em] text-amber-400/70">Comunidad</span>
+                        <h2 class="font-display text-3xl md:text-4xl text-[rgb(245,245,245)] tracking-tight">
+                            Aprende en directo con AKAWonder
+                        </h2>
+                        <p class="text-[rgb(82,82,91)] text-base md:text-lg leading-relaxed max-w-lg mx-auto">
+                            Cada stream es una clase magistral de TFT. No te pierdas las explicaciones en directo de cada jugada.
+                        </p>
+                        <div class="flex flex-col sm:flex-row justify-center gap-3 pt-4">
+                            <a
+                                href="https://www.twitch.tv/akawonder"
+                                target="_blank"
+                                class="group inline-flex items-center justify-center gap-2.5 px-6 py-3 rounded-md bg-purple-600 text-white text-sm font-semibold hover:bg-purple-500 transition-all hover:shadow-[0_0_24px_-4px_rgba(147,51,234,0.4)]"
+                            >
+                                <i class="fa-brands fa-twitch text-sm"></i>
+                                Twitch
+                            </a>
+                            <a
+                                href="https://x.com/aka_wonder"
+                                target="_blank"
+                                class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-md text-sm font-medium text-[rgb(163,163,170)] border border-white/[0.08] hover:border-white/20 hover:text-[rgb(245,245,245)] transition-all"
+                            >
+                                <i class="fa-brands fa-x-twitter text-xs"></i>
+                                X / Twitter
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
