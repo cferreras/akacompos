@@ -282,9 +282,12 @@ export const TFTBoardReact: React.FC<TFTBoardReactProps> = ({
     <div className="tft-board-react">
       <style>{`
         .tft-board-react {
-          --hex-size: 48px;
+          --hex-size: 46px;
           --board-gap: 2px;
-          padding: 0.5rem;
+          width: fit-content;
+          max-width: 100%;
+          margin-inline: auto;
+          padding: 0.5rem 0.25rem;
         }
         @media (min-width: 640px) {
           .tft-board-react { --hex-size: 56px; --board-gap: 2px; }
@@ -299,15 +302,20 @@ export const TFTBoardReact: React.FC<TFTBoardReactProps> = ({
           .tft-board-react { --hex-size: 80px; --board-gap: 4px; }
         }
         @media (max-width: 480px) {
-          .tft-board-react { --hex-size: 40px; --board-gap: 2px; }
+          .tft-board-react { --hex-size: 34px; --board-gap: 1px; padding: 0.25rem; }
+        }
+        @media (max-width: 360px) {
+          .tft-board-react { --hex-size: 32px; --board-gap: 1px; padding: 0.2rem; }
         }
       `}</style>
       <div
         style={{
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
+          alignItems: "flex-start",
           gap: "var(--board-gap)",
+          transform:
+            "translateX(calc((var(--hex-size) / 2 + var(--board-gap) / 2) / -2))",
         }}
       >
         {board.map((row, rowIndex) => (
@@ -331,7 +339,7 @@ export const TFTBoardReact: React.FC<TFTBoardReactProps> = ({
                 key={colIndex}
                 style={{
                   width: "var(--hex-size)",
-                  height: "calc(var(--hex-size) + 12px)",
+                  height: "calc(var(--hex-size) + 22px)",
                   flexShrink: 0,
                 }}
               >

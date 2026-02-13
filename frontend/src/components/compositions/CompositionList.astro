@@ -6,6 +6,7 @@ import { CompositionList as CompositionListReact } from "./CompositionList";
 
 // Obtener composiciones desde Strapi
 const { data: compositions, error } = await getCompositions();
+const { initialExpandedSlug } = Astro.props;
 ---
 
 {
@@ -46,6 +47,10 @@ const { data: compositions, error } = await getCompositions();
 
 {
     compositions && (
-        <CompositionListReact compositions={compositions} client:load />
+        <CompositionListReact
+            compositions={compositions}
+            initialExpandedSlug={initialExpandedSlug}
+            client:load
+        />
     )
 }

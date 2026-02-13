@@ -177,7 +177,7 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
                 <div class="grid md:grid-cols-12 gap-5">
                     {topCompositions.map((comp, i) => (
                         <a
-                            href={`/compositions/${comp.slug}`}
+                            href={`/compositions/${encodeURIComponent(comp.slug)}`}
                             class={`group block ${i === 0 ? 'md:col-span-6' : 'md:col-span-3'}`}
                         >
                             <div class="relative h-full rounded-xl overflow-hidden bg-[rgb(18,18,22)] border border-white/[0.04] hover:border-amber-500/20 transition-all duration-300 hover:shadow-[0_0_40px_-12px_rgba(234,179,8,0.1)]">
