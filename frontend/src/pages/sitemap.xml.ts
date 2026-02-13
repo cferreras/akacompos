@@ -3,16 +3,16 @@ import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ site }) => {
   const baseUrl = site ? site.href : 'https://akacompos.com/';
-  
+
   const { data: compositions } = await getCompositions();
-  
+
   const pages = [
     '',
     'compositions',
   ];
 
-  const compositionUrls = compositions 
-    ? compositions.map((c: any) => `compositions/${c.slug}`) 
+  const compositionUrls = compositions
+    ? compositions.map((c: any) => `compositions/${c.slug}`)
     : [];
 
   const allPages = [...pages, ...compositionUrls];

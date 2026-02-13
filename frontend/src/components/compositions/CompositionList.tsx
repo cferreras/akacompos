@@ -3,6 +3,7 @@ import React, {
   useMemo,
   useRef,
   useEffect,
+  useLayoutEffect,
   useCallback,
   memo,
 } from "react";
@@ -31,7 +32,7 @@ dayjs.locale("es");
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// --- Types -------------------------------------------------------------------
 
 interface Champion {
   name: string;
@@ -60,7 +61,7 @@ interface Composition {
   title: string;
   slug: string;
   tier: string;
-  tags: string | string[];
+  tags?: string | string[];
   cover?: string;
   updatedAt?: string;
   createdAt?: string;
@@ -76,13 +77,14 @@ interface Composition {
 
 interface CompositionListProps {
   compositions: Composition[];
+  initialExpandedSlug?: string;
 }
 
-// ─── Constants ───────────────────────────────────────────────────────────────
+// --- Constants ---------------------------------------------------------------
 
 const tierOrder: TierLevel[] = ["S Tier", "A Tier", "B Tier", "C Tier"];
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// --- Helpers -----------------------------------------------------------------
 
 function getImgSrc(asset: any): string | null {
   if (!asset) return null;
@@ -199,10 +201,17 @@ function getTraitBgClass(tierIndex: number, totalTiers: number): string {
   return "rgba(232,121,249,0.2)";
 }
 
-// ─── Champion Avatar Row (compact preview) ───────────────────────────────────
+// --- Champion Avatar Row (compact preview) -----------------------------------
 
 const ChampionAvatarRow = memo<{ board?: Board }>(({ board }) => {
-  if (!board?.champions?.length) return null;
+  if (!board?.champions?.length) {
+    return (
+      <div className="rounded-xl border border-dashed border-slate-700 bg-slate-900/50 px-3 py-2 text-sm text-slate-500">
+        Sin tablero cargado
+      </div>
+    );
+  }
+
   const sorted = useMemo(
     () =>
       [...board.champions].sort(
@@ -210,9 +219,13 @@ const ChampionAvatarRow = memo<{ board?: Board }>(({ board }) => {
       ),
     [board.champions],
   );
+
+  const visible = sorted.slice(0, 9);
+  const hiddenCount = Math.max(0, sorted.length - visible.length);
+
   return (
-    <div className="flex items-center -space-x-1.5">
-      {sorted.map((champ, i) => {
+    <div className="flex flex-wrap items-center gap-2">
+      {visible.map((champ, i) => {
         const src = getImgSrc(championThumbs[champ.name]);
         const rarity = championRarity[champ.name] || 1;
         const borderColor =
@@ -227,8 +240,8 @@ const ChampionAvatarRow = memo<{ board?: Board }>(({ board }) => {
                   : "border-slate-600";
         return (
           <div
-            key={i}
-            className={`w-7 h-7 rounded-full border-2 ${borderColor} overflow-hidden bg-slate-800 flex-shrink-0`}
+            key={`${champ.name}-${i}`}
+            className={`h-9 w-9 md:h-10 md:w-10 rounded-full border-2 ${borderColor} overflow-hidden bg-slate-900 shadow-md`}
             title={champ.name}
           >
             {src && (
@@ -242,11 +255,16 @@ const ChampionAvatarRow = memo<{ board?: Board }>(({ board }) => {
           </div>
         );
       })}
+      {hiddenCount > 0 && (
+        <span className="inline-flex h-9 min-w-9 items-center justify-center rounded-full border border-slate-600 bg-slate-900 px-2 text-xs font-semibold text-slate-300 md:h-10 md:min-w-10">
+          +{hiddenCount}
+        </span>
+      )}
     </div>
   );
 });
 
-// ─── Inline Traits Display (React) ──────────────────────────────────────────
+// --- Inline Traits Display (React) ------------------------------------------
 
 const TraitsDisplayReact = memo<{ champions: string[]; compact?: boolean }>(
   ({ champions, compact = false }) => {
@@ -258,8 +276,8 @@ const TraitsDisplayReact = memo<{ champions: string[]; compact?: boolean }>(
 
     if (activeTraits.length === 0) {
       return (
-        <div className="p-3 bg-slate-800/30 rounded-lg text-center">
-          <p className="text-slate-400 text-xs">
+        <div className="p-3 bg-slate-800/30 rounded-lg text-center border border-white/10">
+          <p className="text-slate-400 text-sm">
             No se encontraron traits activos
           </p>
         </div>
@@ -277,8 +295,8 @@ const TraitsDisplayReact = memo<{ champions: string[]; compact?: boolean }>(
         <div
           className={
             compact
-              ? "flex flex-col gap-1"
-              : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2"
+              ? "flex flex-col gap-2"
+              : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2.5"
           }
         >
           {visibleTraits.map(({ trait, count, activeTier, tierIndex }) => {
@@ -293,16 +311,18 @@ const TraitsDisplayReact = memo<{ champions: string[]; compact?: boolean }>(
             return (
               <div
                 key={trait.id}
-                className={`group ${compact ? "py-1 px-1.5" : "p-2"} rounded flex items-center gap-1.5 ${activeTier ? "bg-slate-800/40" : "bg-slate-800/20 opacity-60"}`}
+                className={`group ${compact ? "py-1.5 px-2" : "p-2.5"} rounded-lg border border-white/10 flex items-center gap-2 ${activeTier ? "bg-slate-800/55" : "bg-slate-800/25 opacity-75"}`}
               >
                 <div className="relative flex-shrink-0">
                   <div
-                    className={`${compact ? "w-6 h-6" : "w-8 h-8"} rounded flex items-center justify-center`}
+                    className={`${compact ? "w-7 h-7" : "w-9 h-9"} rounded flex items-center justify-center`}
                     style={{ background: bgColor }}
                   >
                     {iconSrc && (
                       <div
-                        className={compact ? "w-4 h-4" : "w-5 h-5"}
+                        className={
+                          compact ? "w-[18px] h-[18px]" : "w-[22px] h-[22px]"
+                        }
                         style={{
                           maskImage: `url(${iconSrc})`,
                           maskSize: "contain",
@@ -318,19 +338,19 @@ const TraitsDisplayReact = memo<{ champions: string[]; compact?: boolean }>(
                     )}
                   </div>
                   <span
-                    className={`absolute -bottom-0.5 -right-0.5 ${compact ? "w-3.5 h-3.5 text-[9px]" : "w-4 h-4 text-[10px]"} flex items-center justify-center font-semibold rounded-full border border-slate-900 ${activeTier ? "bg-primary text-white" : "bg-slate-700 text-slate-400"}`}
+                    className={`absolute -bottom-1 -right-1 ${compact ? "w-4 h-4 text-[9px]" : "w-[18px] h-[18px] text-[10px]"} flex items-center justify-center font-semibold rounded-full border border-slate-900 ${activeTier ? "bg-primary text-white" : "bg-slate-700 text-slate-300"}`}
                   >
                     {count}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p
-                    className={`font-medium ${compact ? "text-sm" : "text-sm"} truncate ${activeTier ? "text-white" : "text-slate-400"}`}
+                    className={`font-medium text-sm truncate ${activeTier ? "text-white" : "text-slate-300"}`}
                   >
                     {trait.name}
                   </p>
                   {!compact && (
-                    <p className="text-[10px] text-slate-500 uppercase">
+                    <p className="text-[11px] text-slate-500 uppercase">
                       {trait.type}
                     </p>
                   )}
@@ -342,7 +362,7 @@ const TraitsDisplayReact = memo<{ champions: string[]; compact?: boolean }>(
         {hiddenCount > 0 && !showAll && (
           <button
             onClick={() => setShowAll(true)}
-            className="mt-2 text-xs text-slate-500 hover:text-slate-300 transition-colors"
+            className="mt-2 text-sm text-slate-400 hover:text-slate-200 transition-colors"
           >
             +{hiddenCount} más...
           </button>
@@ -350,7 +370,7 @@ const TraitsDisplayReact = memo<{ champions: string[]; compact?: boolean }>(
         {showAll && hiddenCount > 0 && (
           <button
             onClick={() => setShowAll(false)}
-            className="mt-2 text-xs text-slate-500 hover:text-slate-300 transition-colors"
+            className="mt-2 text-sm text-slate-400 hover:text-slate-200 transition-colors"
           >
             Mostrar menos
           </button>
@@ -360,20 +380,20 @@ const TraitsDisplayReact = memo<{ champions: string[]; compact?: boolean }>(
   },
 );
 
-// ─── Inline Core Items Display ──────────────────────────────────────────────
+// --- Inline Core Items Display ----------------------------------------------
 
 const CoreItemsDisplay = memo<{ items: CoreItem[] }>(({ items }) => {
   if (!items?.length) return null;
   return (
-    <div className="space-y-2">
+    <div className="space-y-2.5">
       {items.map((item, i) => {
         const src = getImgSrc(itemAssets[item.name]);
         return (
           <div
             key={i}
-            className="flex items-center gap-3 p-2 rounded-lg bg-slate-800/40"
+            className="flex items-start gap-3 p-2.5 rounded-xl bg-slate-800/45"
           >
-            <div className="w-9 h-9 rounded-lg border border-white/10 bg-slate-900 overflow-hidden flex-shrink-0">
+            <div className="w-11 h-11 rounded-lg bg-slate-900 overflow-hidden flex-shrink-0">
               {src ? (
                 <img
                   src={src}
@@ -388,11 +408,11 @@ const CoreItemsDisplay = memo<{ items: CoreItem[] }>(({ items }) => {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">
+              <p className="text-sm font-semibold text-white truncate">
                 {item.name}
               </p>
               {item.description && (
-                <p className="text-xs text-slate-400">
+                <p className="text-sm text-slate-400 leading-snug">
                   {item.description}
                 </p>
               )}
@@ -404,7 +424,7 @@ const CoreItemsDisplay = memo<{ items: CoreItem[] }>(({ items }) => {
   );
 });
 
-// ─── Inline Augments Display ────────────────────────────────────────────────
+// --- Inline Augments Display ------------------------------------------------
 
 const AugmentsDisplay = memo<{ augments: any[] }>(({ augments }) => {
   if (!augments || augments.length === 0) {
@@ -426,7 +446,7 @@ const AugmentsDisplay = memo<{ augments: any[] }>(({ augments }) => {
   }
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2.5">
       {processedAugments.map((aug, i) => {
         const resolved = getAugment(aug.name);
         const imgSrc = resolved ? getImgSrc(resolved.image) : aug.icon || null;
@@ -435,9 +455,9 @@ const AugmentsDisplay = memo<{ augments: any[] }>(({ augments }) => {
         return (
           <div
             key={i}
-            className={`flex items-center gap-2 p-2 rounded-lg border ${colors.border}/30 ${colors.bg}`}
+            className={`flex items-start gap-3 p-2.5 rounded-xl ${colors.bg}`}
           >
-            <div className="w-7 h-7 rounded overflow-hidden flex-shrink-0 bg-slate-900 border border-white/5">
+            <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-slate-900">
               {imgSrc ? (
                 <img
                   src={imgSrc}
@@ -452,10 +472,12 @@ const AugmentsDisplay = memo<{ augments: any[] }>(({ augments }) => {
               )}
             </div>
             <div className="flex-1 min-w-0">
-              <p className={`text-sm font-medium truncate ${colors.text}`}>
+              <p className={`text-sm font-semibold truncate ${colors.text}`}>
                 {aug.name}
               </p>
-              <p className="text-xs text-slate-500 capitalize">{tier}</p>
+              <p className="text-xs uppercase tracking-[0.1em] text-slate-500">
+                {tier}
+              </p>
             </div>
           </div>
         );
@@ -464,14 +486,13 @@ const AugmentsDisplay = memo<{ augments: any[] }>(({ augments }) => {
   );
 });
 
-// ─── Expanded Detail Panel ──────────────────────────────────────────────────
+// --- Expanded Detail Panel --------------------------------------------------
 
 const ExpandedDetail = memo<{
   comp: Composition;
-  onClose: () => void;
-}>(({ comp, onClose }) => {
+}>(({ comp }) => {
   const [showNames, setShowNames] = useState(true);
-  const [copyText, setCopyText] = useState("Copiar código");
+  const [copyText, setCopyText] = useState("Copiar codigo");
   const panelRef = useRef<HTMLDivElement>(null);
 
   // Parse JSON fields once with useMemo
@@ -507,10 +528,10 @@ const ExpandedDetail = memo<{
     try {
       await navigator.clipboard.writeText(comp.compCode);
       setCopyText("Copiado!");
-      setTimeout(() => setCopyText("Copiar código"), 2000);
+      setTimeout(() => setCopyText("Copiar codigo"), 2000);
     } catch {
       setCopyText("Error");
-      setTimeout(() => setCopyText("Copiar código"), 2000);
+      setTimeout(() => setCopyText("Copiar codigo"), 2000);
     }
   }, [comp.compCode]);
 
@@ -527,17 +548,17 @@ const ExpandedDetail = memo<{
       className="animate-fadeInUp"
       style={{ animationDuration: "0.3s" }}
     >
-      <div className="px-4 pb-3 pt-1 space-y-3">
+      <div className="px-4 pb-5 pt-2 md:px-6 md:pb-6 space-y-5">
         {/* Board + Traits row */}
         {boardData && (
-          <div className="rounded-lg border border-white/5 bg-slate-800/30 overflow-hidden">
-            <div className="flex items-center justify-between px-3 py-1.5 border-b border-white/5">
-              <h4 className="text-xs font-medium text-white flex items-center gap-1.5">
-                <i className="fa-solid fa-chess-board text-primary text-[10px]" />
-                Tablero Final
+          <div className="bg-slate-900/75 overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3">
+              <h4 className="text-sm font-semibold uppercase tracking-[0.12em] text-white flex items-center gap-2">
+                <i className="fa-solid fa-chess-board text-primary text-xs" />
+                Tablero final
               </h4>
-              <label className="flex items-center gap-1.5 cursor-pointer select-none">
-                <span className="text-[10px] text-slate-400">Nombres</span>
+              <label className="flex items-center gap-2 cursor-pointer select-none rounded-full bg-slate-800/70 px-3 py-1.5">
+                <span className="text-xs text-slate-300">Nombres</span>
                 <div className="relative">
                   <input
                     type="checkbox"
@@ -545,18 +566,20 @@ const ExpandedDetail = memo<{
                     onChange={(e) => setShowNames(e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-8 h-4 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[16px] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-primary" />
+                  <div className="w-10 h-5 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-[19px] peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary" />
                 </div>
               </label>
             </div>
-            <div className="flex flex-col lg:flex-row lg:items-start">
-              <div className="flex justify-center overflow-x-auto p-3 lg:flex-shrink-0 lg:flex-grow">
-                <TFTBoardReact boardData={boardData} showNames={showNames} />
+            <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_300px]">
+              <div className="rounded-2xl p-3 md:p-4 bg-slate-950/35">
+                <div className="w-full flex justify-center overflow-hidden">
+                  <TFTBoardReact boardData={boardData} showNames={showNames} />
+                </div>
               </div>
               {championsList.length > 0 && (
-                <div className="px-3 pb-3 pt-1 border-t border-white/5 lg:border-t-0 lg:border-l lg:pt-3 lg:w-56 xl:w-64 lg:flex-shrink-0 lg:min-w-0">
-                  <h4 className="text-sm font-medium text-white mb-1.5 uppercase tracking-wider">
-                    Sinergias
+                <div className="px-4 pb-4 pt-3 xl:pt-4 bg-slate-900/65">
+                  <h4 className="text-sm font-semibold text-white mb-2 uppercase tracking-[0.12em]">
+                    Sinergias activas
                   </h4>
                   <TraitsDisplayReact champions={championsList} compact />
                 </div>
@@ -566,13 +589,15 @@ const ExpandedDetail = memo<{
         )}
 
         {/* Items + Augments + Strategy — dense 3-col grid on desktop, full width when only strategy */}
-        <div className={`grid grid-cols-1 gap-4 ${(coreItemsData?.length || 0) + (augmentsData?.length || 0) > 0 ? 'lg:grid-cols-3' : 'lg:grid-cols-1'}`}>
+        <div
+          className={`grid grid-cols-1 gap-4 ${(coreItemsData?.length || 0) + (augmentsData?.length || 0) > 0 ? "xl:grid-cols-3" : "xl:grid-cols-1"}`}
+        >
           {/* Core Items */}
           {coreItemsData &&
             Array.isArray(coreItemsData) &&
             coreItemsData.length > 0 && (
-              <div className="rounded-lg border border-white/5 bg-slate-800/30 p-4">
-                <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-1.5">
+              <div className="rounded-2xl bg-slate-900/70 p-4 md:p-5">
+                <h4 className="text-sm font-semibold uppercase tracking-[0.12em] text-white mb-3 flex items-center gap-2">
                   <i className="fa-solid fa-gem text-purple-500 text-xs" />
                   Core Items
                 </h4>
@@ -584,8 +609,8 @@ const ExpandedDetail = memo<{
           {augmentsData &&
             Array.isArray(augmentsData) &&
             augmentsData.length > 0 && (
-              <div className="rounded-lg border border-white/5 bg-slate-800/30 p-4">
-                <h4 className="text-sm font-medium text-white mb-2 flex items-center gap-1.5">
+              <div className="rounded-2xl bg-slate-900/70 p-4 md:p-5">
+                <h4 className="text-sm font-semibold uppercase tracking-[0.12em] text-white mb-3 flex items-center gap-2">
                   <i className="fa-solid fa-wand-magic-sparkles text-amber-500 text-xs" />
                   Aumentos
                 </h4>
@@ -595,27 +620,29 @@ const ExpandedDetail = memo<{
 
           {/* Strategy (description + gameplay merged) */}
           {(descriptionHtml || gameplayHtml) && (
-            <div className={`rounded-lg border border-white/5 bg-slate-800/30 p-4 space-y-3 ${(coreItemsData?.length || 0) + (augmentsData?.length || 0) === 0 ? 'lg:col-span-1' : ''}`}>
+            <div
+              className={`rounded-2xl bg-slate-900/70 p-4 md:p-5 space-y-4 ${(coreItemsData?.length || 0) + (augmentsData?.length || 0) === 0 ? "xl:col-span-1" : ""}`}
+            >
               {descriptionHtml && (
                 <div>
-                  <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-1.5">
+                  <h4 className="text-sm font-semibold uppercase tracking-[0.12em] text-white mb-2 flex items-center gap-2">
                     <i className="fa-solid fa-lightbulb text-yellow-500 text-xs" />
                     Cuando jugarla
                   </h4>
                   <div
-                    className="text-slate-300 text-sm leading-relaxed prose prose-invert max-w-none [&_b]:text-primary [&_b]:font-semibold [&_img]:inline [&_img]:mx-0.5"
+                    className="text-slate-300 text-[15px] leading-7 prose prose-invert max-w-none [&_b]:text-primary [&_b]:font-semibold [&_img]:inline [&_img]:mx-0.5"
                     dangerouslySetInnerHTML={{ __html: descriptionHtml }}
                   />
                 </div>
               )}
               {gameplayHtml && (
                 <div>
-                  <h4 className="text-sm font-medium text-white mb-1 flex items-center gap-1.5">
+                  <h4 className="text-sm font-semibold uppercase tracking-[0.12em] text-white mb-2 flex items-center gap-2">
                     <i className="fa-solid fa-gamepad text-blue-500 text-xs" />
                     Modo de juego
                   </h4>
                   <div
-                    className="text-slate-300 text-sm leading-relaxed prose prose-invert max-w-none [&_b]:text-primary [&_b]:font-semibold [&_img]:inline [&_img]:mx-0.5"
+                    className="text-slate-300 text-[15px] leading-7 prose prose-invert max-w-none [&_b]:text-primary [&_b]:font-semibold [&_img]:inline [&_img]:mx-0.5"
                     dangerouslySetInnerHTML={{ __html: gameplayHtml }}
                   />
                 </div>
@@ -625,11 +652,11 @@ const ExpandedDetail = memo<{
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           {comp.compCode ? (
             <button
               onClick={handleCopy}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/20 text-primary text-[11px] font-medium hover:bg-primary/30 transition-colors"
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/20 text-primary text-sm font-medium hover:bg-primary/30 transition-colors"
             >
               <i
                 className={`fa-solid ${copyText === "Copiado!" ? "fa-check" : "fa-copy"} text-[10px]`}
@@ -640,11 +667,11 @@ const ExpandedDetail = memo<{
             <div />
           )}
           <a
-            href={`/compositions/${comp.slug}`}
-            className="text-[11px] text-slate-500 hover:text-primary transition-colors flex items-center gap-1"
+            href={`/compositions/${encodeURIComponent(comp.slug)}`}
+            className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/70 text-sm text-slate-300 hover:text-white transition-colors"
           >
-            Ver pagina completa
-            <i className="fa-solid fa-arrow-right text-[9px]" />
+            Ver en listado
+            <i className="fa-solid fa-arrow-right text-xs" />
           </a>
         </div>
       </div>
@@ -652,7 +679,7 @@ const ExpandedDetail = memo<{
   );
 });
 
-// ─── Compact Composition Row ────────────────────────────────────────────────
+// --- Compact Composition Row ------------------------------------------------
 
 const CompositionRow = memo<{
   comp: Composition;
@@ -675,66 +702,96 @@ const CompositionRow = memo<{
   );
 
   return (
-    <div
-      className={`transition-all duration-200 ${
-        isExpanded ? "bg-slate-800/60 rounded-xl border border-white/5" : ""
+    <article
+      id={`comp-${comp.slug}`}
+      className={`overflow-hidden rounded-2xl transition-all duration-300 ${
+        isExpanded
+          ? "bg-slate-900/95 shadow-[0_14px_35px_rgba(0,0,0,0.35)]"
+          : "bg-slate-900/60 hover:bg-slate-900/80"
       }`}
     >
-      {/* Clickable Row */}
       <button
         onClick={handleClick}
-        className={`w-full text-left group transition-all duration-200 ${
-          isExpanded
-            ? "rounded-t-xl"
-            : "bg-slate-800/20 hover:bg-slate-800/40 rounded-xl"
-        }`}
+        aria-expanded={isExpanded}
+        className="w-full text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
       >
-        <div className="flex items-center gap-3 px-5 py-4">
-          {/* Expand indicator */}
-          <div
-            className={`w-5 h-5 flex items-center justify-center flex-shrink-0 transition-transform duration-200 ${isExpanded ? "rotate-90" : ""}`}
-          >
-            <i className="fa-solid fa-chevron-right text-xs text-slate-500 group-hover:text-slate-300" />
-          </div>
+        <div className="p-4 md:p-5">
+          <div className="flex flex-col gap-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 flex items-start gap-3">
+                <div
+                  className={`mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full transition-colors ${
+                    isExpanded
+                      ? "bg-primary/20 text-primary"
+                      : "bg-slate-800/85 text-slate-400"
+                  }`}
+                >
+                  <i
+                    className={`fa-solid fa-chevron-right text-xs transition-transform duration-200 ${
+                      isExpanded ? "rotate-90" : ""
+                    }`}
+                  />
+                </div>
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h4 className="truncate text-lg font-semibold text-white md:text-xl">
+                      {comp.title}
+                    </h4>
+                    {comp.status === "draft" && (
+                      <span className="inline-flex items-center rounded-md border border-amber-400/35 bg-amber-400/15 px-2 py-0.5 text-xs font-bold uppercase tracking-[0.08em] text-amber-300">
+                        Preview
+                      </span>
+                    )}
+                    <span
+                      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium sm:hidden ${tierConfig.bgSoft} ${tierConfig.text}`}
+                    >
+                      {comp.tier}
+                    </span>
+                  </div>
+                  <p className="mt-1 text-sm text-slate-400">
+                    Actualizado {updateTime}
+                  </p>
+                </div>
+              </div>
 
-          {/* Champion Avatars */}
-          <div className="flex-shrink-0">
-            <ChampionAvatarRow board={boardData || undefined} />
-          </div>
-
-          {/* Title */}
-          <div className="flex-1 min-w-0 flex items-center gap-3">
-            <h4 className="text-base font-semibold text-white truncate group-hover:text-primary transition-colors">
-              {comp.title}
-            </h4>
-
-            {/* Draft badge */}
-            {comp.status === "draft" && (
-              <span className="px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs font-bold rounded flex-shrink-0">
-                PREVIEW
+              <span
+                className={`hidden sm:inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] ${tierConfig.bgSoft} ${tierConfig.text}`}
+              >
+                {comp.tier}
               </span>
-            )}
-          </div>
+            </div>
 
-          {/* Update time */}
-          <span className="text-sm text-slate-500 flex-shrink-0 hidden sm:block">
-            {updateTime}
-          </span>
+            <div className="flex flex-col gap-3">
+              <ChampionAvatarRow board={boardData || undefined} />
+            </div>
+
+            <p className="text-xs text-slate-500 sm:text-sm">
+              {isExpanded
+                ? "Pulsa para ocultar detalle de esta composicion."
+                : "Pulsa para abrir tablero, sinergias y guia completa."}
+            </p>
+          </div>
         </div>
       </button>
 
-      {/* Expanded Detail */}
-      {isExpanded && <ExpandedDetail comp={comp} onClose={handleClick} />}
-    </div>
+      {isExpanded && (
+        <div className="border-t border-white/10">
+          <ExpandedDetail comp={comp} />
+        </div>
+      )}
+    </article>
   );
 });
 
-// ─── Main CompositionList Component ─────────────────────────────────────────
+// --- Main CompositionList Component -----------------------------------------
 
 export const CompositionList: React.FC<CompositionListProps> = ({
   compositions,
+  initialExpandedSlug,
 }) => {
-  const [expandedSlug, setExpandedSlug] = useState<string | null>(null);
+  const [expandedSlug, setExpandedSlug] = useState<string | null>(
+    initialExpandedSlug ?? null,
+  );
 
   const compositionsByTier = useMemo(() => {
     return compositions.reduce(
@@ -750,53 +807,183 @@ export const CompositionList: React.FC<CompositionListProps> = ({
     );
   }, [compositions]);
 
-  // Stable callback that doesn't change between renders
+  const selectedComp = useMemo(
+    () =>
+      initialExpandedSlug
+        ? compositions.find((comp) => comp.slug === initialExpandedSlug)
+        : null,
+    [compositions, initialExpandedSlug],
+  );
+
+  const displayTierOrder = useMemo(() => {
+    if (!selectedComp) return tierOrder;
+    const selectedTier = selectedComp.tier as TierLevel;
+    if (!tierOrder.includes(selectedTier)) return tierOrder;
+    return [selectedTier, ...tierOrder.filter((tier) => tier !== selectedTier)];
+  }, [selectedComp]);
+
+  const openFromUrl = useCallback(() => {
+    if (typeof window === "undefined") return;
+    if (initialExpandedSlug) return;
+
+    const pathMatch = window.location.pathname.match(/^\/compositions\/([^/]+)\/?$/);
+    const pathSlug = pathMatch ? decodeURIComponent(pathMatch[1]) : null;
+    const params = new URLSearchParams(window.location.search);
+    const querySlug = params.get("comp");
+    const hashSlug = window.location.hash
+      ? window.location.hash.replace(/^#/, "").replace(/^comp-/, "")
+      : null;
+    const targetSlug = initialExpandedSlug || pathSlug || querySlug || hashSlug;
+    if (!targetSlug) return;
+
+    const exists = compositions.some((comp) => comp.slug === targetSlug);
+    if (!exists) return;
+
+    setExpandedSlug((prev) => (prev === targetSlug ? prev : targetSlug));
+
+    const scrollToTarget = () => {
+      const target = document.getElementById(`comp-${targetSlug}`);
+      if (target) {
+        target.scrollIntoView({ behavior: "auto", block: "start" });
+        return true;
+      }
+      return false;
+    };
+
+    if (!scrollToTarget()) {
+      let tries = 0;
+      const tick = () => {
+        tries += 1;
+        if (scrollToTarget() || tries > 20) return;
+        requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }
+  }, [compositions, initialExpandedSlug]);
+
+  useLayoutEffect(() => {
+    openFromUrl();
+  }, [openFromUrl]);
+
   const handleToggle = useCallback((slug: string) => {
-    setExpandedSlug((prev) => (prev === slug ? null : slug));
+    setExpandedSlug((prev) => {
+      const next = prev === slug ? null : slug;
+
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        if (next) {
+          url.pathname = `/compositions/${encodeURIComponent(next)}`;
+        } else {
+          url.pathname = "/compositions";
+        }
+        url.search = "";
+        url.hash = "";
+
+        window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+      }
+
+      return next;
+    });
   }, []);
 
+  const totalCompositions = compositions.length;
+
   return (
-    <div className="space-y-6">
-      {/* Compositions by Tier */}
-      {tierOrder.map((tier) => {
-        const tieredComps = compositionsByTier[tier] || [];
+    <div className="space-y-8">
+      <section className="rounded-3xl bg-gradient-to-br from-slate-900/95 via-slate-900/85 to-slate-800/70 p-4 md:p-6">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">
+              Resumen del meta
+            </p>
+            <h2 className="mt-2 text-2xl font-display text-white md:text-3xl">
+              Explora composiciones por tier
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm md:text-base text-slate-300">
+              Abre cualquier composicion para ver tablero final, sinergias y
+              plan de juego en una vista clara.
+            </p>
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+            <i className="fa-solid fa-layer-group text-xs" />
+            {totalCompositions} composiciones activas
+          </div>
+        </div>
+
+        <div className="mt-5 flex flex-wrap gap-2">
+          {tierOrder.map((tier) => {
+            const tieredComps = compositionsByTier[tier] || [];
+            const config = tierStyles[tier];
+            const sectionId = tier.toLowerCase().replace(" ", "-");
+            return (
+              <a
+                key={tier}
+                href={`#${sectionId}`}
+                className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm transition-colors ${tieredComps.length > 0 ? "bg-slate-800/70 text-white hover:bg-slate-700/70" : "bg-slate-900/60 text-slate-500"}`}
+              >
+                <span>{config.icon}</span>
+                <span>{tier}</span>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-xs ${config.bgSoft} ${config.text}`}
+                >
+                  {tieredComps.length}
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+
+      {displayTierOrder.map((tier) => {
+        const rawTieredComps = compositionsByTier[tier] || [];
+        const tieredComps =
+          selectedComp && tier === selectedComp.tier
+            ? [
+                ...rawTieredComps.filter((comp) => comp.slug === selectedComp.slug),
+                ...rawTieredComps.filter((comp) => comp.slug !== selectedComp.slug),
+              ]
+            : rawTieredComps;
         if (tieredComps.length === 0) return null;
 
         const config = tierStyles[tier];
+        const sectionId = tier.toLowerCase().replace(" ", "-");
 
         return (
-          <div
+          <section
             key={tier}
-            id={tier.toLowerCase().replace(" ", "-")}
-            className="relative"
+            id={sectionId}
+            className="relative overflow-hidden rounded-3xl bg-slate-900/45 p-3 md:p-4 backdrop-blur-sm"
           >
-            {/* Tier Header */}
-            <div
-              className={`flex items-center gap-3 mb-3 ${getTierHeaderBg(tier)} ${config?.border || "border-l-4 border-slate-500"} rounded-r-xl py-2.5 px-4 backdrop-blur-sm`}
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+            <header
+              className={`mb-4 rounded-2xl px-4 py-3 ${getTierHeaderBg(tier)}`}
             >
-              <span className="text-xl filter drop-shadow-lg">
-                {config?.icon || ""}
-              </span>
-              <div className="flex items-center gap-2">
-                <h3
-                  className={`text-base font-bold tracking-wide ${config?.text || "text-slate-300"}`}
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900/70 text-xl">
+                    {config?.icon || ""}
+                  </div>
+                  <div>
+                    <h3
+                      className={`text-lg font-bold tracking-wide ${config?.text || "text-slate-300"}`}
+                    >
+                      {tier}
+                    </h3>
+                    <p className="text-sm text-slate-300">
+                      {tieredComps.length} composicion
+                      {tieredComps.length !== 1 ? "es" : ""} en este tier
+                    </p>
+                  </div>
+                </div>
+                <div
+                  className={`hidden sm:flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.08em] ${config?.bgSoft} ${config?.text}`}
                 >
-                  {tier}
-                </h3>
-                <span
-                  className={`text-xs px-2 py-0.5 rounded-full font-medium ${config?.bgSoft} ${config?.text}`}
-                >
-                  {tieredComps.length} comp
-                  {tieredComps.length !== 1 ? "s" : ""}
-                </span>
+                  Prioridad {tier}
+                </div>
               </div>
-              <div
-                className={`hidden sm:block flex-1 h-px ml-4 bg-gradient-to-r ${config?.gradientFrom} to-transparent`}
-              />
-            </div>
+            </header>
 
-            {/* Composition Rows */}
-            <div className="space-y-1.5">
+            <div className="space-y-3">
               {tieredComps.map((comp) => (
                 <CompositionRow
                   key={comp.id}
@@ -807,15 +994,14 @@ export const CompositionList: React.FC<CompositionListProps> = ({
                 />
               ))}
             </div>
-          </div>
+          </section>
         );
       })}
 
-      {/* Empty State */}
       {compositions.length === 0 && (
-        <div className="text-center py-16">
+        <div className="text-center py-16 rounded-2xl bg-slate-900/45">
           <i className="fa-solid fa-folder-open text-4xl text-slate-700 mb-4" />
-          <h3 className="text-lg font-medium text-white mb-2">
+          <h3 className="text-xl font-medium text-white mb-2">
             No hay composiciones disponibles
           </h3>
           <p className="text-slate-400 text-sm">
