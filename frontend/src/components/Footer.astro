@@ -2,99 +2,63 @@
 import Container from "./ui/Container.astro";
 import { getLatestCommit } from "../utils/github";
 
-const version = await getLatestCommit();
+const version = await getLatestCommit().catch(() => "v1.0.0");
 const year = new Date().getFullYear();
 ---
 
-<footer class="relative mt-auto">
-    <!-- Top accent line -->
-    <div class="h-px bg-gradient-to-r from-transparent via-amber-500/20 to-transparent"></div>
+<footer class="border-t border-[#292524] bg-[#0c0a09] pt-24 pb-12 mt-20 relative overflow-hidden">
+    <!-- Decorative magical glow -->
+    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[300px] bg-[#d4af37] opacity-[0.03] blur-[150px] rounded-[100%] pointer-events-none"></div>
+    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.05] pointer-events-none"></div>
 
-    <div class="bg-[rgb(10,10,12)]">
-        <Container maxWidth="xl" paddingX="md">
-            <!-- Main footer content -->
-            <div class="py-12 md:py-16">
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
-                    <!-- Brand — wider column -->
-                    <div class="md:col-span-5 space-y-4">
-                        <a href="/" class="inline-flex items-center gap-2.5 group">
-                            <div class="w-7 h-7 rounded-md bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-                                <span class="font-display text-amber-400 text-xs font-bold">A</span>
-                            </div>
-                            <span class="font-display text-base tracking-tight">
-                                <span class="text-[rgb(245,245,245)] font-semibold">AKA</span><span class="text-amber-400 font-semibold">COMPOS</span>
-                            </span>
-                        </a>
-                        <p class="text-sm text-[rgb(82,82,91)] leading-relaxed max-w-xs">
-                            Composiciones de TFT seleccionadas por AKAWonder.
-                            Estrategias actualizadas para cada parche.
-                        </p>
-                    </div>
+    <Container maxWidth="xl" className="relative z-10">
+        <div class="flex flex-col items-center text-center max-w-3xl mx-auto mb-20">
+            <h2 class="font-serif text-4xl text-[#f5f5f4] mb-6 ornament-line w-full">AKACOMPOS</h2>
+            <p class="text-[#a8a29e] font-light leading-relaxed text-lg">
+                Forjado en el fuego de la competición. Las estrategias más refinadas y efectivas de Teamfight Tactics, documentadas minuciosamente por el Gran Maestro AKAWonder.
+            </p>
+        </div>
 
-                    <!-- Nav links -->
-                    <div class="md:col-span-3">
-                        <h3 class="text-[11px] font-medium uppercase tracking-[0.15em] text-[rgb(82,82,91)] mb-4">Navegación</h3>
-                        <ul class="space-y-2.5">
-                            <li>
-                                <a href="/" class="text-sm text-[rgb(113,113,122)] hover:text-[rgb(245,245,245)] transition-colors">
-                                    Inicio
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/compositions" class="text-sm text-[rgb(113,113,122)] hover:text-[rgb(245,245,245)] transition-colors">
-                                    Composiciones
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Social -->
-                    <div class="md:col-span-2">
-                        <h3 class="text-[11px] font-medium uppercase tracking-[0.15em] text-[rgb(82,82,91)] mb-4">Social</h3>
-                        <ul class="space-y-2.5">
-                            <li>
-                                <a href="https://www.twitch.tv/akawonder" target="_blank" class="inline-flex items-center gap-2 text-sm text-[rgb(113,113,122)] hover:text-purple-400 transition-colors">
-                                    <i class="fa-brands fa-twitch text-xs w-4"></i>
-                                    Twitch
-                                </a>
-                            </li>
-                            <li>
-                                <a href="https://x.com/aka_wonder" target="_blank" class="inline-flex items-center gap-2 text-sm text-[rgb(113,113,122)] hover:text-[rgb(245,245,245)] transition-colors">
-                                    <i class="fa-brands fa-x-twitter text-xs w-4"></i>
-                                    X / Twitter
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Info -->
-                    <div class="md:col-span-2">
-                        <h3 class="text-[11px] font-medium uppercase tracking-[0.15em] text-[rgb(82,82,91)] mb-4">Info</h3>
-                        <div class="space-y-2.5 text-sm text-[rgb(113,113,122)]">
-                            <p>
-                                Hecho por <a href="https://www.carlosferreras.com" target="_blank" class="text-[rgb(163,163,170)] hover:text-amber-400 transition-colors">Carlos Ferreras</a>
-                            </p>
-                            <a
-                                href={`https://github.com/cferreras/akacompos/commit/${version}`}
-                                target="_blank"
-                                class="inline-flex items-center gap-1.5 text-xs font-mono text-[rgb(52,52,58)] hover:text-amber-400/60 transition-colors"
-                            >
-                                <i class="fa-solid fa-code-branch text-[10px]"></i>
-                                <span>{version}</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-12 border-t border-[#292524] pt-12">
+            <div>
+                <h3 class="font-serif text-xl text-[#d4af37] mb-6">El Tomo</h3>
+                <ul class="space-y-4">
+                    <li><a href="/" class="text-sm tracking-wider text-[#a8a29e] hover:text-[#f5f5f4] hover:pl-2 transition-all block">Portada</a></li>
+                    <li><a href="/compositions" class="text-sm tracking-wider text-[#a8a29e] hover:text-[#f5f5f4] hover:pl-2 transition-all block">Estrategias</a></li>
+                </ul>
             </div>
-
-            <!-- Bottom bar -->
-            <div class="py-5 border-t border-white/[0.04] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[rgb(52,52,58)]">
-                <span>&copy; {year} AKACompos</span>
-                <div class="flex items-center gap-5">
-                    <a href="/privacy" class="hover:text-[rgb(113,113,122)] transition-colors">Privacidad</a>
-                    <a href="/terms" class="hover:text-[rgb(113,113,122)] transition-colors">Términos</a>
-                </div>
+            <div>
+                <h3 class="font-serif text-xl text-[#d4af37] mb-6">La Taberna</h3>
+                <ul class="space-y-4">
+                    <li><a href="https://www.twitch.tv/akawonder" target="_blank" class="text-sm tracking-wider text-[#a8a29e] hover:text-[#9146FF] hover:pl-2 transition-all flex items-center gap-2">Twitch <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a></li>
+                    <li><a href="https://x.com/aka_wonder" target="_blank" class="text-sm tracking-wider text-[#a8a29e] hover:text-[#f5f5f4] hover:pl-2 transition-all flex items-center gap-2">X / Twitter <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a></li>
+                </ul>
             </div>
-        </Container>
-    </div>
+            <div>
+                <h3 class="font-serif text-xl text-[#d4af37] mb-6">Forja</h3>
+                <ul class="space-y-4 text-sm tracking-wider text-[#a8a29e]">
+                    <li>Artífice: <a href="https://www.carlosferreras.com" class="text-[#f5f5f4] hover:text-[#d4af37] transition-colors">Carlos Ferreras</a></li>
+                    <li>Edición: <span class="font-mono text-xs text-[#d4af37]/70 border border-[#d4af37]/30 px-2 py-1 rounded-sm bg-[#1c1917]">{version}</span></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="font-serif text-xl text-[#d4af37] mb-6">Legado</h3>
+                <ul class="space-y-4">
+                    <li><a href="/privacy" class="text-sm tracking-wider text-[#a8a29e] hover:text-[#f5f5f4] hover:pl-2 transition-all block">Privacidad</a></li>
+                    <li><a href="/terms" class="text-sm tracking-wider text-[#a8a29e] hover:text-[#f5f5f4] hover:pl-2 transition-all block">Términos</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="mt-24 pt-8 border-t border-[#292524]/50 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="text-[10px] text-[#57534e] tracking-[0.2em] uppercase">
+                &copy; {year} AKACOMPOS. TODOS LOS DERECHOS RESERVADOS.
+            </div>
+            <div class="flex gap-2">
+                <div class="w-2 h-2 rounded-full border border-[#d4af37]/50"></div>
+                <div class="w-2 h-2 rounded-full border border-[#d4af37]/50"></div>
+                <div class="w-2 h-2 rounded-full border border-[#d4af37]/50"></div>
+            </div>
+        </div>
+    </Container>
 </footer>

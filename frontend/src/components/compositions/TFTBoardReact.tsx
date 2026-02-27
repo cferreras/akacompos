@@ -27,14 +27,14 @@ interface TFTBoardReactProps {
 // ─── Constants ───────────────────────────────────────────────────────────────
 
 const borderColors: Record<string, string> = {
-  purple: "#8b5cf6",
-  blue: "#3b82f6",
-  yellow: "#eab308",
-  green: "#22c55e",
-  gray: "#6b7280",
-  orange: "#f97316",
-  red: "#ef4444",
-  empty: "#1e293b",
+  purple: "#7f1d1d", // Magic Crimson
+  blue: "#0284c7",   // Deep Blue
+  yellow: "#d4af37", // Gold
+  green: "#166534",  // Deep Green
+  gray: "#57534e",   // Stone Gray
+  orange: "#b45309", // Bronze
+  red: "#991b1b",    // Blood Red
+  empty: "#1c1917",  // Dark Surface
 };
 
 function getBorderColor(name: string): string {
@@ -64,21 +64,23 @@ const Stars: React.FC<{ count: number }> = ({ count }) => {
     <div
       style={{
         position: "absolute",
-        top: -6,
+        top: -8,
         left: "50%",
         transform: "translateX(-50%)",
         zIndex: 10,
       }}
     >
       <span
-        className="text-yellow-400"
         style={{
-          fontSize: "0.6rem",
-          fontWeight: 700,
-          background: "rgba(0,0,0,0.7)",
-          borderRadius: 4,
-          padding: "0 3px",
+          color: "#d4af37",
+          fontSize: "0.55rem",
+          letterSpacing: "2px",
+          background: "rgba(12,10,9,0.85)",
+          border: "1px solid rgba(212,175,55,0.3)",
+          borderRadius: 2,
+          padding: "1px 4px",
           whiteSpace: "nowrap",
+          backdropFilter: "blur(4px)",
         }}
       >
         {"★".repeat(count)}
@@ -107,18 +109,17 @@ const HexCharacter: React.FC<{
     .filter((item) => item in itemAssets);
 
   const nameLen = champion ? champion.length : 0;
-  // Font size scales with hex size, with length-based adjustments
-  let fontSize = "calc(var(--hex-size) * 0.18)";
-  if (nameLen > 12) fontSize = "calc(var(--hex-size) * 0.14)";
-  else if (nameLen > 8) fontSize = "calc(var(--hex-size) * 0.16)";
+  let fontSize = "calc(var(--hex-size) * 0.16)";
+  if (nameLen > 12) fontSize = "calc(var(--hex-size) * 0.12)";
+  else if (nameLen > 8) fontSize = "calc(var(--hex-size) * 0.14)";
 
   return (
     <div
-      className="tft-hex-char"
+      className="tft-hex-char group"
       style={{
         position: "relative",
         width: "var(--hex-size)",
-        height: "calc(var(--hex-size) + 22px)",
+        height: "calc(var(--hex-size) + 12px)",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -134,41 +135,51 @@ const HexCharacter: React.FC<{
           height: "var(--hex-size)",
           clipPath: hexClip,
           background: color,
-          padding: 2,
+          padding: 1.5,
           flexShrink: 0,
+          transition: "all 0.3s ease",
         }}
+        className={champion ? "shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:scale-[1.03]" : ""}
       >
         {/* Inner hex */}
         <div
           style={{
             width: "100%",
             height: "100%",
-            background: "#0f172a",
+            background: "#0c0a09",
             clipPath: hexClip,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             overflow: "hidden",
+            position: "relative",
           }}
         >
           {imgSrc ? (
-            <img
-              src={imgSrc}
-              alt={champion || ""}
-              loading="lazy"
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                objectPosition: imgPos,
-              }}
-            />
+            <>
+              <img
+                src={imgSrc}
+                alt={champion || ""}
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: imgPos,
+                  filter: "contrast(1.1) grayscale(10%)",
+                  transition: "all 0.5s ease",
+                }}
+                className="group-hover:grayscale-0 group-hover:contrast-125"
+              />
+              <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at center, rgba(12,10,9,0.7) 0%, transparent 70%)" }}></div>
+            </>
           ) : (
             <div
               style={{
                 width: "100%",
                 height: "100%",
-                background: "rgba(255,255,255,0.02)",
+                background: "url('https://www.transparenttextures.com/patterns/stardust.png')",
+                opacity: 0.05,
               }}
             />
           )}
@@ -180,11 +191,11 @@ const HexCharacter: React.FC<{
         <div
           style={{
             position: "absolute",
-            top: "calc(var(--hex-size) - 6px)",
+            top: "calc(var(--hex-size) - 8px)",
             left: "50%",
             transform: "translateX(-50%)",
             display: "flex",
-            gap: 3,
+            gap: 2,
             zIndex: 10,
           }}
         >
@@ -194,13 +205,15 @@ const HexCharacter: React.FC<{
               <div
                 key={i}
                 style={{
-                  width: "clamp(14px, calc(var(--hex-size) * 0.30), 28px)",
-                  height: "clamp(14px, calc(var(--hex-size) * 0.30), 28px)",
-                  borderRadius: 3,
-                  border: "1px solid rgba(255,255,255,0.3)",
-                  background: "#000",
+                  width: "clamp(14px, calc(var(--hex-size) * 0.28), 26px)",
+                  height: "clamp(14px, calc(var(--hex-size) * 0.28), 26px)",
+                  borderRadius: 1,
+                  border: "1px solid rgba(212,175,55,0.4)",
+                  background: "#0c0a09",
                   overflow: "hidden",
+                  transitionDelay: `${i * 50}ms`,
                 }}
+                className="group-hover:-translate-y-0.5 transition-transform duration-300"
               >
                 {itemSrc && (
                   <img
@@ -225,22 +238,28 @@ const HexCharacter: React.FC<{
         <div
           style={{
             position: "absolute",
-            top: "40%",
+            top: "50%",
+            transform: "translateY(-50%)",
             left: 0,
             right: 0,
-            transform: "translateY(-50%)",
             textAlign: "center",
-            color: "white",
-            fontWeight: 700,
+            color: "#f5f5f4",
+            fontFamily: "'Cormorant', serif",
+            fontWeight: 600,
+            letterSpacing: "0.05em",
+            textTransform: "uppercase",
             lineHeight: 1.1,
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
-            textShadow: "0 2px 6px rgba(0,0,0,0.9), 0 0 12px rgba(0,0,0,0.6)",
+            textShadow: "0 2px 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.9)",
             padding: "0 4px",
             fontSize,
             zIndex: 5,
+            transition: "color 0.3s ease",
+            pointerEvents: "none",
           }}
+          className="group-hover:text-[#d4af37]"
         >
           {champion}
         </div>
@@ -283,29 +302,29 @@ export const TFTBoardReact: React.FC<TFTBoardReactProps> = ({
       <style>{`
         .tft-board-react {
           --hex-size: 46px;
-          --board-gap: 2px;
+          --board-gap: 4px;
           width: fit-content;
           max-width: 100%;
           margin-inline: auto;
-          padding: 0.5rem 0.25rem;
+          padding: 1rem 0.5rem;
         }
         @media (min-width: 640px) {
-          .tft-board-react { --hex-size: 56px; --board-gap: 2px; }
+          .tft-board-react { --hex-size: 56px; --board-gap: 4px; }
         }
         @media (min-width: 768px) {
-          .tft-board-react { --hex-size: 64px; --board-gap: 3px; }
+          .tft-board-react { --hex-size: 68px; --board-gap: 6px; }
         }
         @media (min-width: 1024px) {
-          .tft-board-react { --hex-size: 72px; --board-gap: 3px; }
+          .tft-board-react { --hex-size: 76px; --board-gap: 6px; }
         }
         @media (min-width: 1280px) {
-          .tft-board-react { --hex-size: 80px; --board-gap: 4px; }
+          .tft-board-react { --hex-size: 84px; --board-gap: 8px; }
         }
         @media (max-width: 480px) {
-          .tft-board-react { --hex-size: 34px; --board-gap: 1px; padding: 0.25rem; }
+          .tft-board-react { --hex-size: 36px; --board-gap: 2px; padding: 0.5rem; }
         }
         @media (max-width: 360px) {
-          .tft-board-react { --hex-size: 32px; --board-gap: 1px; padding: 0.2rem; }
+          .tft-board-react { --hex-size: 32px; --board-gap: 2px; padding: 0.25rem; }
         }
       `}</style>
       <div
@@ -339,7 +358,7 @@ export const TFTBoardReact: React.FC<TFTBoardReactProps> = ({
                 key={colIndex}
                 style={{
                   width: "var(--hex-size)",
-                  height: "calc(var(--hex-size) + 22px)",
+                  height: "calc(var(--hex-size) + 12px)",
                   flexShrink: 0,
                 }}
               >

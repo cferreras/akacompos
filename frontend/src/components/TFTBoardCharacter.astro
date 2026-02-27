@@ -4,12 +4,14 @@ import StarsComponent from "./StarsComponent.astro";
 import { Image } from "astro:assets";
 
 const borderColors = {
-    purple: "#8b5cf6",
-    blue: "#3b82f6",
-    yellow: "#eab308",
-    green: "#22c55e",
-    gray: "#6b7280",
-    empty: "#1e293b",
+    purple: "#7f1d1d", // Magic Crimson
+    blue: "#0284c7",   // Deep Blue
+    yellow: "#d4af37", // Gold
+    green: "#166534",  // Deep Green
+    gray: "#57534e",   // Stone Gray
+    orange: "#b45309", // Bronze
+    red: "#991b1b",    // Blood Red
+    empty: "#1c1917",  // Dark Surface
 } as const;
 
 interface Props {
@@ -33,7 +35,7 @@ const {
 const finalImageSrc = champion ? championAssets[champion] : null;
 const imagePosition = champion ? (championImagePositions[champion] || championImagePositions["Default"]) : championImagePositions["Default"];
 const showEmptySlot = !champion && !imageUrl;
-const finalBorderColor = borderColors[borderColor as keyof typeof borderColors];
+const finalBorderColor = borderColors[borderColor as keyof typeof borderColors] || borderColors.empty;
 const validItems = items.slice(0, 3).filter((item) => item in itemAssets);
 
 const numericSize = size.includes("px") ? parseInt(size.replace("px", "")) : 72;
@@ -53,18 +55,14 @@ const optimizedItemSize = size.includes("var(")
     ? 32 
     : Math.max(12, Math.min(32, Math.floor(numericSize * 0.25)));
 
-// Calcular escala de fuente basada en la longitud del nombre
 const nameLength = champion ? champion.length : 0;
-let fontSize = "0.65rem";
-if (nameLength > 12) {
-    fontSize = "0.55rem";
-} else if (nameLength > 8) {
-    fontSize = "0.6rem";
-}
+let fontSize = "calc(var(--size) * 0.16)";
+if (nameLength > 12) fontSize = "calc(var(--size) * 0.12)";
+else if (nameLength > 8) fontSize = "calc(var(--size) * 0.14)";
 ---
 
 <div
-    class="character"
+    class="character group"
     style={`--border-color: ${finalBorderColor}; --size: ${size};`}
 >
     <div class="stars">
@@ -75,20 +73,26 @@ if (nameLength > 12) {
         <div class="hexagon">
             {
                 finalImageSrc ? (
-                    <Image
-                        src={finalImageSrc}
-                        alt={champion ? `${champion}` : "Champion"}
-                        class="hexagon-img"
-                        style={`object-position: ${imagePosition};`}
-                        width={optimizedSize}
-                        height={optimizedSize}
-                        loading="lazy"
-                        decoding="async"
-                        format="webp"
-                        quality={80}
-                    />
+                    <>
+                        <Image
+                            src={finalImageSrc}
+                            alt={champion ? `${champion}` : "Champion"}
+                            class="hexagon-img"
+                            style={`object-position: ${imagePosition};`}
+                            width={optimizedSize}
+                            height={optimizedSize}
+                            loading="lazy"
+                            decoding="async"
+                            format="webp"
+                            quality={80}
+                        />
+                        <div class="hexagon-overlay"></div>
+                    </>
                 ) : imageUrl ? (
-                    <img src={imageUrl} alt="Champion" class="hexagon-img" style={`object-position: ${imagePosition};`} />
+                    <>
+                        <img src={imageUrl} alt="Champion" class="hexagon-img" style={`object-position: ${imagePosition};`} />
+                        <div class="hexagon-overlay"></div>
+                    </>
                 ) : (
                     <div class="empty" />
                 )
@@ -99,8 +103,8 @@ if (nameLength > 12) {
     {
         validItems.length > 0 && (
             <div class="items">
-                {validItems.map((item) => (
-                    <div class="item">
+                {validItems.map((item, index) => (
+                    <div class="item" style={`transition-delay: ${index * 50}ms`}>
                         <Image
                             src={itemAssets[item]}
                             alt={`${item}`}
@@ -131,8 +135,7 @@ if (nameLength > 12) {
     .character {
         position: relative;
         width: var(--size);
-        /* Altura fija: hexágono + espacio para nombre */
-        height: calc(var(--size) + 20px);
+        height: calc(var(--size) + 12px);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -144,36 +147,56 @@ if (nameLength > 12) {
         height: var(--size);
         clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
         background: var(--border-color);
-        padding: 2px;
+        padding: 1.5px;
         flex-shrink: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .character:has(.hexagon-img):hover .hexagon-wrapper {
+        transform: scale(1.03);
+        box-shadow: 0 0 15px rgba(0,0,0,0.5);
     }
 
     .hexagon {
         width: 100%;
         height: 100%;
-        background: #0f172a;
+        background: #0c0a09;
         clip-path: polygon(50% 0%, 94% 25%, 94% 75%, 50% 100%, 6% 75%, 6% 25%);
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
+        position: relative;
     }
 
     .hexagon-img {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        filter: contrast(1.1) grayscale(10%);
+        transition: all 0.5s ease;
+    }
+    
+    .character:hover .hexagon-img {
+        filter: contrast(1.25) grayscale(0%);
+    }
+    
+    .hexagon-overlay {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, rgba(12,10,9,0.7) 0%, transparent 70%);
+        pointer-events: none;
     }
 
     .empty {
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.02);
+        background: url('https://www.transparenttextures.com/patterns/stardust.png');
+        opacity: 0.05;
     }
 
     .items {
         position: absolute;
-        /* Posicionado desde arriba, justo debajo del hexágono */
         top: calc(var(--size) - 8px);
         left: 50%;
         transform: translateX(-50%);
@@ -183,12 +206,17 @@ if (nameLength > 12) {
     }
 
     .item {
-        width: clamp(12px, calc(var(--size) * 0.22), 24px);
-        height: clamp(12px, calc(var(--size) * 0.22), 24px);
-        border-radius: 3px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        background: #000;
+        width: clamp(14px, calc(var(--size) * 0.28), 26px);
+        height: clamp(14px, calc(var(--size) * 0.28), 26px);
+        border-radius: 1px;
+        border: 1px solid rgba(212,175,55,0.4);
+        background: #0c0a09;
         overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+    
+    .character:hover .item {
+        transform: translateY(-2px);
     }
 
     .item-img {
@@ -199,47 +227,51 @@ if (nameLength > 12) {
 
     .stars {
         position: absolute;
-        top: -6px;
+        top: -8px;
         left: 50%;
         transform: translateX(-50%);
         z-index: 10;
     }
+    
+    :global(.stars span) {
+        color: #d4af37 !important;
+        font-size: 0.55rem !important;
+        letter-spacing: 2px !important;
+        background: rgba(12,10,9,0.85) !important;
+        border: 1px solid rgba(212,175,55,0.3) !important;
+        border-radius: 2px !important;
+        padding: 1px 4px !important;
+        white-space: nowrap !important;
+        backdrop-filter: blur(4px) !important;
+    }
 
     .champion-name {
         position: absolute;
-        bottom: 0;
+        top: 50%;
+        transform: translateY(-50%);
         left: 0;
         right: 0;
         text-align: center;
-        color: white;
+        color: #f5f5f4;
+        font-family: 'Cormorant', serif;
         font-weight: 600;
-        line-height: 1.2;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        line-height: 1.1;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-        padding: 0 2px;
+        text-shadow: 0 2px 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.9);
+        padding: 0 4px;
         display: flex;
         justify-content: center;
         align-items: center;
+        transition: color 0.3s ease;
+        z-index: 5;
+        pointer-events: none;
     }
     
-    .champion-name::before,
-    .champion-name::after {
-        content: '';
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: currentColor;
-        opacity: 0.7;
-    }
-    
-    .champion-name::before {
-        left: 4px;
-    }
-    
-    .champion-name::after {
-        right: 4px;
+    .character:hover .champion-name {
+        color: #d4af37;
     }
 </style>
