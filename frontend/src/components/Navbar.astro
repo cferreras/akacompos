@@ -2,177 +2,96 @@
 import Container from "./ui/Container.astro";
 
 const pathname = Astro.url.pathname;
-const isHome = pathname === "/";
-const isCompositions = pathname.startsWith("/compositions");
 ---
 
-<header
-    class="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
-    id="main-header"
->
-    <!-- Thin accent line at very top -->
-    <div class="h-[2px] bg-gradient-to-r from-transparent via-amber-500/60 to-transparent"></div>
+<header class="fixed top-0 w-full z-50 border-b border-[#292524] bg-[#0c0a09]/90 backdrop-blur-md transition-all duration-500" id="navbar">
+    <Container maxWidth="xl" paddingY="none" className="h-20 flex items-center justify-between relative">
+        <!-- Left Nav -->
+        <nav class="hidden md:flex items-center gap-10 flex-1">
+            <a href="/" class={`text-xs tracking-[0.2em] uppercase hover:text-[#d4af37] transition-colors relative group ${pathname === '/' ? 'text-[#d4af37]' : 'text-[#a8a29e]'}`}>
+                Inicio
+                <span class={`absolute -bottom-2 left-0 w-full h-px bg-[#d4af37] transform origin-left transition-transform duration-300 ${pathname === '/' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+            </a>
+            <a href="/compositions" class={`text-xs tracking-[0.2em] uppercase hover:text-[#d4af37] transition-colors relative group ${pathname.startsWith('/compositions') ? 'text-[#d4af37]' : 'text-[#a8a29e]'}`}>
+                El Tomo
+                <span class={`absolute -bottom-2 left-0 w-full h-px bg-[#d4af37] transform origin-left transition-transform duration-300 ${pathname.startsWith('/compositions') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+            </a>
+        </nav>
 
-    <div class="bg-[rgb(10,10,12)]/80 backdrop-blur-xl border-b border-white/[0.04]">
-        <Container maxWidth="xl" paddingX="md">
-            <nav class="flex items-center justify-between h-14 md:h-16">
-                <!-- Logo -->
-                <a href="/" class="flex items-center gap-2.5 group">
-                    <div class="w-8 h-8 rounded-md bg-amber-500/10 border border-amber-500/20 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
-                        <span class="font-display text-amber-400 text-sm font-bold tracking-tight">A</span>
-                    </div>
-                    <span class="font-display text-lg tracking-tight">
-                        <span class="text-[rgb(245,245,245)] font-semibold">AKA</span><span class="text-amber-400 font-semibold">COMPOS</span>
-                    </span>
-                </a>
+        <!-- Center Logo -->
+        <a href="/" class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center group">
+            <span class="font-serif text-3xl tracking-widest text-[#f5f5f4] group-hover:text-[#d4af37] transition-colors">AKACOMPOS</span>
+            <span class="text-[9px] tracking-[0.4em] text-[#d4af37] opacity-70 mt-1">POR AKAWONDER</span>
+        </a>
 
-                <!-- Desktop Navigation -->
-                <div class="hidden md:flex items-center gap-0.5">
-                    <a
-                        href="/"
-                        class:list={[
-                            "relative px-4 py-2 text-[13px] font-medium tracking-wide uppercase transition-colors",
-                            isHome
-                                ? "text-amber-400"
-                                : "text-[rgb(113,113,122)] hover:text-[rgb(245,245,245)]",
-                        ]}
-                    >
-                        Inicio
-                        {isHome && <span class="absolute bottom-0 left-4 right-4 h-[2px] bg-amber-400 rounded-full"></span>}
-                    </a>
-                    <a
-                        href="/compositions"
-                        class:list={[
-                            "relative px-4 py-2 text-[13px] font-medium tracking-wide uppercase transition-colors",
-                            isCompositions
-                                ? "text-amber-400"
-                                : "text-[rgb(113,113,122)] hover:text-[rgb(245,245,245)]",
-                        ]}
-                    >
-                        Composiciones
-                        {isCompositions && <span class="absolute bottom-0 left-4 right-4 h-[2px] bg-amber-400 rounded-full"></span>}
-                    </a>
-                </div>
+        <!-- Right Nav -->
+        <div class="hidden md:flex items-center gap-8 flex-1 justify-end">
+            <a href="https://www.twitch.tv/akawonder" target="_blank" class="text-xs tracking-[0.2em] uppercase text-[#a8a29e] hover:text-[#9146FF] transition-colors flex items-center gap-2">
+                <i class="fa-brands fa-twitch"></i>
+                En Directo
+            </a>
+            <a href="/compositions" class="border border-[#d4af37]/50 text-[#d4af37] px-6 py-2.5 text-[10px] tracking-[0.25em] uppercase hover:bg-[#d4af37] hover:text-[#0c0a09] transition-all duration-300 hover:shadow-[0_0_20px_rgba(212,175,55,0.3)]">
+                Ver Estrategias
+            </a>
+        </div>
 
-                <!-- Right Side -->
-                <div class="flex items-center gap-2">
-                    <!-- Twitch Link -->
-                    <a
-                        href="https://www.twitch.tv/akawonder"
-                        target="_blank"
-                        class="hidden sm:inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md text-[13px] font-medium text-[rgb(163,163,170)] border border-white/[0.06] hover:border-purple-500/30 hover:text-purple-400 transition-all"
-                    >
-                        <i class="fa-brands fa-twitch text-xs"></i>
-                        <span>Twitch</span>
-                    </a>
+        <!-- Mobile Toggle -->
+        <button id="mobile-toggle" class="md:hidden text-[#d4af37] ml-auto z-[60] relative w-8 h-8 flex flex-col justify-center items-center gap-1.5">
+            <span class="w-6 h-px bg-current transition-all duration-300 origin-center" id="line1"></span>
+            <span class="w-6 h-px bg-current transition-all duration-300" id="line2"></span>
+        </button>
+    </Container>
 
-                    <!-- CTA -->
-                    <a
-                        href="/compositions"
-                        class="hidden md:inline-flex items-center gap-1.5 px-4 py-1.5 rounded-md text-[13px] font-semibold bg-amber-500 text-[rgb(10,10,12)] hover:bg-amber-400 transition-colors"
-                    >
-                        Ver Compos
-                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                    </a>
-
-                    <!-- Mobile Menu Button -->
-                    <button
-                        id="mobile-menu-button"
-                        class="md:hidden w-9 h-9 flex items-center justify-center rounded-md border border-white/[0.06] text-[rgb(113,113,122)] hover:text-[rgb(245,245,245)] hover:border-white/10 transition-colors"
-                        aria-label="Menú"
-                    >
-                        <i id="menu-icon" class="fa-solid fa-bars text-sm"></i>
-                    </button>
-                </div>
-            </nav>
-
-            <!-- Mobile Menu -->
-            <div
-                id="mobile-menu"
-                class="md:hidden hidden border-t border-white/[0.04] py-3"
-            >
-                <div class="space-y-0.5">
-                    <a
-                        href="/"
-                        class:list={[
-                            "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
-                            isHome
-                                ? "text-amber-400 bg-amber-500/5"
-                                : "text-[rgb(163,163,170)] hover:text-[rgb(245,245,245)] hover:bg-white/[0.03]",
-                        ]}
-                    >
-                        <i class="fa-solid fa-home w-4 text-center text-xs"></i>
-                        Inicio
-                    </a>
-                    <a
-                        href="/compositions"
-                        class:list={[
-                            "flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors",
-                            isCompositions
-                                ? "text-amber-400 bg-amber-500/5"
-                                : "text-[rgb(163,163,170)] hover:text-[rgb(245,245,245)] hover:bg-white/[0.03]",
-                        ]}
-                    >
-                        <i class="fa-solid fa-chess w-4 text-center text-xs"></i>
-                        Composiciones
-                    </a>
-                    <div class="h-px bg-white/[0.04] my-2"></div>
-                    <a
-                        href="https://www.twitch.tv/akawonder"
-                        target="_blank"
-                        class="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-[rgb(163,163,170)] hover:text-purple-400 transition-colors"
-                    >
-                        <i class="fa-brands fa-twitch w-4 text-center text-xs"></i>
-                        Twitch
-                    </a>
-                </div>
-            </div>
-        </Container>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-[#0c0a09] z-50 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-opacity duration-500 backdrop-blur-xl">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-10"></div>
+        <div class="flex flex-col items-center gap-10 relative z-10">
+            <a href="/" class="font-serif text-4xl text-[#f5f5f4] hover:text-[#d4af37] transition-colors tracking-wider mobile-link">INICIO</a>
+            <a href="/compositions" class="font-serif text-4xl text-[#f5f5f4] hover:text-[#d4af37] transition-colors tracking-wider mobile-link">EL TOMO</a>
+            <a href="https://www.twitch.tv/akawonder" class="font-serif text-4xl text-[#9146FF] hover:text-white transition-colors tracking-wider mobile-link">TWITCH</a>
+        </div>
     </div>
 </header>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const menuButton = document.getElementById("mobile-menu-button");
-        const mobileMenu = document.getElementById("mobile-menu");
-        const menuIcon = document.getElementById("menu-icon");
-        const header = document.getElementById("main-header");
+    const toggle = document.getElementById('mobile-toggle');
+    const menu = document.getElementById('mobile-menu');
+    const line1 = document.getElementById('line1');
+    const line2 = document.getElementById('line2');
+    const links = document.querySelectorAll('.mobile-link');
 
-        if (menuButton && mobileMenu && menuIcon) {
-            menuButton.addEventListener("click", () => {
-                const isOpen = !mobileMenu.classList.contains("hidden");
+    const toggleMenu = () => {
+        const isOpen = menu?.classList.contains('opacity-100');
+        if (isOpen) {
+            menu?.classList.replace('opacity-100', 'opacity-0');
+            menu?.classList.add('pointer-events-none');
+            
+            line1?.classList.remove('rotate-45', 'translate-y-[3px]');
+            line2?.classList.remove('-rotate-45', '-translate-y-[4px]');
+            
+            document.body.style.overflow = '';
+        } else {
+            menu?.classList.replace('opacity-0', 'opacity-100');
+            menu?.classList.remove('pointer-events-none');
+            
+            line1?.classList.add('rotate-45', 'translate-y-[3px]');
+            line2?.classList.add('-rotate-45', '-translate-y-[4px]');
+            
+            document.body.style.overflow = 'hidden';
+        }
+    };
 
-                if (isOpen) {
-                    mobileMenu.classList.add("hidden");
-                    menuIcon.classList.remove("fa-times");
-                    menuIcon.classList.add("fa-bars");
-                } else {
-                    mobileMenu.classList.remove("hidden");
-                    menuIcon.classList.remove("fa-bars");
-                    menuIcon.classList.add("fa-times");
-                }
-            });
+    toggle?.addEventListener('click', toggleMenu);
+    links.forEach(link => link.addEventListener('click', toggleMenu));
 
-            document.addEventListener("click", (e) => {
-                if (
-                    !mobileMenu.classList.contains("hidden") &&
-                    !menuButton.contains(e.target as Node) &&
-                    !mobileMenu.contains(e.target as Node)
-                ) {
-                    mobileMenu.classList.add("hidden");
-                    menuIcon.classList.remove("fa-times");
-                    menuIcon.classList.add("fa-bars");
-                }
-            });
-
-            const mobileLinks = mobileMenu.querySelectorAll("a");
-            mobileLinks.forEach((link) => {
-                link.addEventListener("click", () => {
-                    mobileMenu.classList.add("hidden");
-                    menuIcon.classList.remove("fa-times");
-                    menuIcon.classList.add("fa-bars");
-                });
-            });
+    window.addEventListener('scroll', () => {
+        const nav = document.getElementById('navbar');
+        if (window.scrollY > 50) {
+            nav?.classList.add('py-0');
+            nav?.classList.remove('py-2');
+        } else {
+            nav?.classList.add('py-2');
+            nav?.classList.remove('py-0');
         }
     });
 </script>
