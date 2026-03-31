@@ -19,7 +19,7 @@ if (!decodedSlug || !normalizedSet) {
   return Astro.redirect("/compositions");
 }
 
-const { data: composition } = await getComposition(decodedSlug);
+const { data: composition } = await getComposition(decodedSlug, normalizedSet);
 
 if (!composition) {
   return Astro.redirect("/compositions");

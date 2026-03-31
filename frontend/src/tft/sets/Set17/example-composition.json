@@ -1,0 +1,80 @@
+{
+  "title": "Jhin Dark Star Cap",
+  "slug": "jhin-dark-star-cap",
+  "tier": "S Tier",
+  "author": "AKAWonder",
+  "date": "2026-03-31",
+  "set": "set17",
+  "isDraft": true,
+  "compCode": "0311SET17DEMOJHIN",
+  "tags": ["Jhin", "Dark Star", "Channeler"],
+  "consejos": "Juega una apertura estable con Cho'Gath, Lissandra y Mordekaiser si los ves temprano. Cuando llegues a nivel 8, busca cerrar el nucleo de Dark Star con Jhin y Karma.",
+  "desarrollo": [
+    {
+      "phase": "2-1 a 2-7",
+      "text": "Abre con frontline barata de Dark Star y prioriza componentes de AD para Jhin o AP util para Karma. Evita hacer reroll salvo que la tienda sea muy buena."
+    },
+    {
+      "phase": "3-2",
+      "text": "Sube nivel para mantener tempo y estabiliza con Mordekaiser como tanque principal. Si encuentras Kai'Sa, puedes empezar a preparar una transicion mas agresiva."
+    },
+    {
+      "phase": "4-1 a 5-1",
+      "text": "Haz rolldown controlado para encontrar a Jhin, Karma y completar seis Dark Star. Si la partida se alarga, Aurelion Sol o Bard son buenas piezas de techo."
+    }
+  ],
+  "prioridades": [
+    { "name": "Infinity Edge", "type": "item" },
+    { "name": "Last Whisper", "type": "item" },
+    { "name": "Jhin", "type": "champion" },
+    { "name": "Dark Star", "type": "trait" },
+    { "name": "Channeler", "type": "trait" }
+  ],
+  "board": {
+    "champions": [
+      {
+        "name": "Jhin",
+        "position": { "row": 3, "col": 5 },
+        "stars": 2,
+        "items": ["Infinity Edge", "Last Whisper", "Giant Slayer"]
+      },
+      {
+        "name": "Karma",
+        "position": { "row": 3, "col": 3 },
+        "stars": 2,
+        "items": ["Blue Buff", "Jeweled Gauntlet"]
+      },
+      {
+        "name": "Kai'Sa",
+        "position": { "row": 2, "col": 6 },
+        "stars": 2
+      },
+      {
+        "name": "Mordekaiser",
+        "position": { "row": 1, "col": 3 },
+        "stars": 2,
+        "items": ["Bramble Vest", "Gargoyle Stoneplate"]
+      },
+      {
+        "name": "Lissandra",
+        "position": { "row": 2, "col": 1 },
+        "stars": 2
+      },
+      {
+        "name": "Cho'Gath",
+        "position": { "row": 0, "col": 2 },
+        "stars": 2
+      },
+      {
+        "name": "Aurelion Sol",
+        "position": { "row": 2, "col": 4 },
+        "stars": 2
+      },
+      {
+        "name": "Bard",
+        "position": { "row": 0, "col": 5 },
+        "stars": 2
+      }
+    ]
+  }
+}

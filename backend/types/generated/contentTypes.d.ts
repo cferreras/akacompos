@@ -430,10 +430,39 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiComposicionesComposiciones
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'composicion';
+  info: {
+    displayName: 'composiciones';
+    pluralName: 'composicion';
+    singularName: 'composiciones';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    JSON: Schema.Attribute.JSON & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::composiciones.composiciones'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiCompositionComposition extends Struct.CollectionTypeSchema {
   collectionName: 'compositions';
   info: {
-    displayName: 'compositions';
+    displayName: 'compositions (OLD)';
     pluralName: 'compositions';
     singularName: 'composition';
   };
@@ -985,6 +1014,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::composiciones.composiciones': ApiComposicionesComposiciones;
       'api::composition.composition': ApiCompositionComposition;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;

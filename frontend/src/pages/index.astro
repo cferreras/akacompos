@@ -165,7 +165,7 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
                                 </h3>
                                 
                                 <p class="text-[#a8a29e] font-light leading-relaxed line-clamp-3 mb-8">
-                                    {comp.description}
+                                    {comp.excerpt || "Sinopsis táctica en preparación."}
                                 </p>
 
                                 <div class="flex items-center gap-4 text-[#d4af37]">
@@ -266,3 +266,4 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
         </Container>
     </section>
 </Layout>
+
