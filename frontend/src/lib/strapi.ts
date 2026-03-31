@@ -282,11 +282,16 @@ function normalizeJsonComposition(
 ): NormalizedComposition | null {
   const payload = extractJsonPayload(item);
   const normalizedSet = normalizeCompositionSet(
-    typeof payload.set === "string" ? payload.set : typeof item.set === "string" ? item.set : "set17",
-  ) ?? "set17";
+    typeof payload.set === "string" ? payload.set : typeof item.set === "string" ? item.set : null,
+  );
+  if (!normalizedSet) {
+    return null;
+  }
+  const payloadIsDraft = payload.isDraft === true || payload.isDraft === "true";
   const computedStatus =
-    forcedStatus ??
-    (payload.isDraft === true || !item.publishedAt ? "draft" : "published");
+    payloadIsDraft
+      ? "draft"
+      : forcedStatus ?? (!item.publishedAt ? "draft" : "published");
 
   const board = ensureBoard(payload.board ?? payload.tablero ?? payload.composicion);
   const tips = (payload.consejos ?? payload.consejosYTrucos ?? payload.tips) as RichTextContent;
@@ -495,5 +500,8 @@ export async function getCompositionsCount() {
 
 export type Composition = NormalizedComposition;
 export type Board = CompositionBoard;
+
+
+
 
 

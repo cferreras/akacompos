@@ -30,6 +30,11 @@ export function getCompositionPath({ set, slug }: CompositionPathInput): string 
   return `/compositions/${encodedSlug}`;
 }
 
+export function getCompositionListPath(set?: string | null): string {
+  const normalizedSet = normalizeCompositionSet(set);
+  return normalizedSet ? `/compositions/${normalizedSet}` : "/compositions";
+}
+
 export function isCompositionSectionPath(pathname: string): boolean {
   return pathname.startsWith("/compositions") || /^\/set[^/]+(?:\/|$)/i.test(pathname);
 }
