@@ -1,7 +1,15 @@
 import { createPressKitRuntime } from "../../pressKit";
 
 const championModules = import.meta.glob(
-  "../../../../../Set17/Champions/*.{png,jpg,jpeg,webp,avif}",
+  "../../../assets/Set17/Champions/*.{png,jpg,jpeg,webp,avif}",
+  {
+    eager: true,
+    import: "default",
+  },
+) as Record<string, string>;
+
+const championThumbModules = import.meta.glob(
+  "../../../assets/Set17/Champions/thumbs/*.webp",
   {
     eager: true,
     import: "default",
@@ -9,7 +17,7 @@ const championModules = import.meta.glob(
 ) as Record<string, string>;
 
 const traitModules = import.meta.glob(
-  "../../../../../Set17/Trait Icons/*/*.{png,svg}",
+  "../../../assets/Set17/TraitIcons/*/*.{png,svg}",
   {
     eager: true,
     import: "default",
@@ -50,7 +58,7 @@ const traitAliases: Record<string, string> = {
   DarkStar: "Dark Star",
   Primordiano: "Primordian",
   Psionico: "PsyOps",
-  Psiónico: "PsyOps",
+  "Psiónico": "PsyOps",
   "Onda Espacial": "Space Groove",
   SpaceGroove: "Space Groove",
   Astral: "Stargazer",
@@ -67,7 +75,7 @@ const traitAliases: Record<string, string> = {
   "Duelista divino": "Divine Duelist",
   Tejedestinos: "Fateweaver",
   Replicador: "Replicator",
-  Pícaro: "Rogue",
+  "Pícaro": "Rogue",
   Picaro: "Rogue",
   Francotirador: "Sniper",
   Vanguardia: "Vanguard",
@@ -181,6 +189,16 @@ function buildChampionAssets() {
   );
 }
 
+function buildChampionThumbs() {
+  return Object.fromEntries(
+    Object.entries(championThumbModules).map(([path, asset]) => {
+      const rawName = getBaseName(path);
+      const canonicalName = championNameOverrides[rawName] || rawName;
+      return [canonicalName, asset];
+    }),
+  );
+}
+
 function getTraitFolderName(path: string): string {
   const normalizedPath = normalizePath(path);
   const parts = normalizedPath.split("/");
@@ -223,6 +241,7 @@ export const set17Runtime = createPressKitRuntime({
   id: "set17",
   label: "Set 17",
   championAssets: buildChampionAssets(),
+  championThumbs: buildChampionThumbs(),
   traitAssets: buildTraitAssets(),
   championAliases,
   traitAliases,

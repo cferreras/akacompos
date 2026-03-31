@@ -15,6 +15,7 @@ export interface PressKitRuntimeConfig {
   id: string;
   label: string;
   championAssets: AssetRecord;
+  championThumbs?: AssetRecord;
   traitAssets: AssetRecord;
   championAliases?: Record<string, string>;
   traitAliases?: Record<string, string>;
@@ -106,6 +107,7 @@ export function createPressKitRuntime(
   const championAliases = config.championAliases || {};
   const traitAliases = config.traitAliases || {};
   const championNames = Object.keys(config.championAssets);
+  const championThumbs = config.championThumbs || config.championAssets;
   const traitNames = Object.keys(config.traitAssets);
   const itemNames = getItemNames();
   const itemIndex = buildNameIndex(itemNames, {});
@@ -189,9 +191,11 @@ export function createPressKitRuntime(
     augmentNames,
     resolveChampionName,
     getChampionAsset: (name) => config.championAssets[resolveChampionName(name)],
-    getChampionThumb: (name) => config.championAssets[resolveChampionName(name)],
+    getChampionThumb: (name) =>
+      championThumbs[resolveChampionName(name)] || config.championAssets[resolveChampionName(name)],
     getChampionRarity: (name) => championRarity[resolveChampionName(name)],
-    getChampionImagePosition: (name) => championImagePositions[resolveChampionName(name)] || championImagePositions.Default,
+    getChampionImagePosition: (name) =>
+      championImagePositions[resolveChampionName(name)] || championImagePositions.Default,
     resolveItemName,
     getItemAsset: (name) => getItemImageMeta(resolveItemName(name)),
     getTrait,
