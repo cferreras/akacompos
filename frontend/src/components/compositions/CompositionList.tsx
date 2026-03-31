@@ -26,7 +26,7 @@ import {
   type TierLevel,
   type TierStyleConfig,
 } from "../../utils/tierStyles";
-import { getCompositionPath } from "../../utils/compositionPaths";
+import { getCompositionListPath, getCompositionPath, normalizeCompositionSet } from "../../utils/compositionPaths";
 import { TFTBoardReact } from "./TFTBoardReact";
 
 dayjs.locale("es");
@@ -54,6 +54,31 @@ function getUpdateTime(composition: Composition) {
   return dayjs(composition.updatedAt || composition.createdAt || composition.date)
     .utc()
     .fromNow();
+}
+
+function getCompositionSlugFromPath(pathname: string): string | null {
+  const segments = pathname.split("/").filter(Boolean);
+
+  if (segments.length !== 2) {
+    return null;
+  }
+
+  if (segments[0] === "compositions") {
+    return normalizeCompositionSet(segments[1]) ? null : decodeURIComponent(segments[1]);
+  }
+
+  return normalizeCompositionSet(segments[0]) ? decodeURIComponent(segments[1]) : null;
+}
+
+function getCompositionListPathFromLocation(pathname: string, fallbackSet?: string | null): string {
+  const segments = pathname.split("/").filter(Boolean);
+
+  if (segments[0] === "compositions") {
+    return getCompositionListPath(normalizeCompositionSet(segments[1]));
+  }
+
+  const pathSet = normalizeCompositionSet(segments[0]);
+  return getCompositionListPath(pathSet ?? fallbackSet);
 }
 
 const ChampionAvatarRow = memo(function ChampionAvatarRow({
@@ -530,7 +555,7 @@ const ExpandedDetail = memo(function ExpandedDetail({ comp }: { comp: Compositio
 
         <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-[#292524]">
           {comp.compCode ? (
-            <button onClick={handleCopy} className="inline-flex items-center gap-3 border border-[#d4af37]/30 px-6 py-3 text-[10px] tracking-[0.2em] font-bold uppercase text-[#d4af37] hover:bg-[#d4af37] hover:text-[#0c0a09] transition-all">
+            <button type="button" onClick={handleCopy} className="inline-flex items-center gap-3 border border-[#d4af37]/30 px-6 py-3 text-[10px] tracking-[0.2em] font-bold uppercase text-[#d4af37] hover:bg-[#d4af37] hover:text-[#0c0a09] transition-all">
               <i className={`fa-solid ${copyText === "¡Sellado!" ? "fa-check" : "fa-copy"} text-xs`} />
               {copyText}
             </button>
@@ -584,7 +609,7 @@ const CompositionRow = memo(function CompositionRow({
   return (
     <article id={`comp-${comp.slug}`} className={`group relative border ${isExpanded ? "border-[#d4af37] bg-[#1c1917]" : "border-[#292524] bg-[#0c0a09] hover:border-[#d4af37]/50"} transition-all duration-500 overflow-hidden mb-4`}>
       {isExpanded && <div className="absolute top-0 left-0 w-1 h-full bg-[#d4af37]"></div>}
-      <button onClick={handleClick} aria-expanded={isExpanded} className="w-full text-left p-6 md:p-8 focus:outline-none">
+      <button type="button" onClick={handleClick} aria-expanded={isExpanded} className="w-full text-left p-6 md:p-8 focus:outline-none">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="flex-1 space-y-4">
             <div className="flex flex-wrap items-center gap-3 mb-1">
@@ -612,9 +637,11 @@ const CompositionRow = memo(function CompositionRow({
           </div>
         </div>
       </button>
-      <div className={`grid transition-all duration-500 ease-in-out ${isExpanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
-        <div className="overflow-hidden">{isExpanded && <ExpandedDetail comp={comp} />}</div>
-      </div>
+      {isExpanded ? (
+        <div className="overflow-hidden">
+          <ExpandedDetail comp={comp} />
+        </div>
+      ) : null}
     </article>
   );
 });
@@ -650,12 +677,11 @@ export const CompositionList: React.FC<CompositionListProps> = ({
     if (typeof window === "undefined") return;
     if (initialExpandedSlug) return;
 
-    const pathMatch = window.location.pathname.match(/^\/(?:(?:compositions)|(?:set[^/]+))\/([^/]+)\/?$/i);
-    const pathSlug = pathMatch ? decodeURIComponent(pathMatch[1]) : null;
+    const pathSlug = getCompositionSlugFromPath(window.location.pathname);
     const params = new URLSearchParams(window.location.search);
     const querySlug = params.get("comp");
     const hashSlug = window.location.hash ? window.location.hash.replace(/^#/, "").replace(/^comp-/, "") : null;
-    const targetSlug = initialExpandedSlug || pathSlug || querySlug || hashSlug;
+    const targetSlug = initialExpandedSlug || querySlug || pathSlug || hashSlug;
     if (!targetSlug) return;
     if (!compositions.some((composition) => composition.slug === targetSlug)) return;
 
@@ -690,17 +716,21 @@ export const CompositionList: React.FC<CompositionListProps> = ({
       const next = previous === slug ? null : slug;
       if (typeof window !== "undefined") {
         const url = new URL(window.location.href);
-        const nextComposition = compositions.find((composition) => composition.slug === next);
-        if (next && nextComposition) url.pathname = getCompositionPath(nextComposition);
-        else if (next) url.pathname = `/compositions/${encodeURIComponent(next)}`;
-        else url.pathname = "/compositions";
-        url.search = "";
+        const activeComposition = compositions.find(
+          (composition) => composition.slug === (next ?? previous ?? initialExpandedSlug ?? ""),
+        );
+
+        url.pathname = getCompositionListPathFromLocation(
+          url.pathname,
+          activeComposition?.set,
+        );
+        url.search = next ? `?comp=${encodeURIComponent(next)}` : "";
         url.hash = "";
-        window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+        window.history.replaceState({}, "", `${url.pathname}${url.search}`);
       }
       return next;
     });
-  }, [compositions]);
+  }, [compositions, initialExpandedSlug]);
 
   if (compositions.length === 0) {
     return (
@@ -785,6 +815,17 @@ export const CompositionList: React.FC<CompositionListProps> = ({
     </div>
   );
 };
+
+
+
+
+
+
+
+
+
+
+
 
 
 

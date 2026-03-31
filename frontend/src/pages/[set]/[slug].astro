@@ -72,7 +72,7 @@ const initialExpandedSlug = decodedSlug;
 
     <div class="py-20 bg-[#1c1917] min-h-screen">
         <Container maxWidth="xl">
-            <CompositionList initialExpandedSlug={initialExpandedSlug}>
+            <CompositionList initialExpandedSlug={initialExpandedSlug} setFilter={normalizedSet}>
                 <div slot="fallback" class="flex flex-col justify-center items-center py-32 gap-6">
                     <Spinner size="lg" color="primary" />
                     <p class="text-[#a8a29e] font-serif text-xl italic animate-pulse">Traduciendo runas...</p>
@@ -81,3 +81,4 @@ const initialExpandedSlug = decodedSlug;
         </Container>
     </div>
 </Layout>
+

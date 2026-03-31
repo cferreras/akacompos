@@ -1,0 +1,36 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Container from "../components/ui/Container.astro";
+import { CompositionBuilder } from "../components/generate/CompositionBuilder";
+
+Astro.response.headers.set("X-Robots-Tag", "noindex, nofollow, noarchive");
+---
+
+<Layout
+    title="Builder privado Set 17 | AKACompos"
+    description="Editor visual privado para generar el JSON de composiciones de Set 17 y subirlo a Strapi."
+    noIndex
+>
+    <Container maxWidth="5xl" paddingY="3xl" paddingX="md">
+        <section class="relative overflow-hidden border border-[#292524] bg-[#1c1917] px-6 py-10 md:px-10 md:py-12">
+            <div class="absolute -right-20 top-0 h-56 w-56 rounded-full bg-[#d4af37]/10 blur-3xl"></div>
+            <div class="absolute -left-20 bottom-0 h-48 w-48 rounded-full bg-[#7f1d1d]/20 blur-3xl"></div>
+
+            <div class="relative z-10 max-w-3xl">
+                <p class="text-[10px] font-bold uppercase tracking-[0.34em] text-[#d4af37]">
+                    Ruta Privada
+                </p>
+                <h1 class="mt-4 font-serif text-5xl leading-none text-[#f5f5f4] md:text-6xl">
+                    /generate
+                </h1>
+                <p class="mt-6 max-w-2xl text-lg leading-relaxed text-[#a8a29e]">
+                    Builder visual para montar composiciones de Set 17, organizar el tablero con drag and drop y sacar el payload exacto para Strapi sin tocar JSON a mano.
+                </p>
+            </div>
+        </section>
+
+        <section class="mt-8">
+            <CompositionBuilder client:load />
+        </section>
+    </Container>
+</Layout>

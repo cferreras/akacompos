@@ -8,4 +8,4 @@ script = ""
 [[actions]]
 name = "Ejecutar"
 icon = "run"
-command = "pnpm run dev"
+command = "cd frontend;pnpm run dev"
