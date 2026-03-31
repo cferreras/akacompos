@@ -2,19 +2,26 @@
 import Container from "./ui/Container.astro";
 
 const pathname = Astro.url.pathname;
+const isTomePath = pathname === "/compositions";
+const isSet17Path = pathname === "/compositions/set17" || pathname.startsWith("/set17/");
 ---
 
 <header class="fixed top-0 w-full z-50 border-b border-[#292524] bg-[#0c0a09]/90 backdrop-blur-md transition-all duration-500" id="navbar">
     <Container maxWidth="xl" paddingY="none" className="h-20 flex items-center justify-between relative">
         <!-- Left Nav -->
-        <nav class="hidden md:flex items-center gap-10 flex-1">
+        <nav class="hidden md:flex items-center gap-6 flex-1">
             <a href="/" class={`text-xs tracking-[0.2em] uppercase hover:text-[#d4af37] transition-colors relative group ${pathname === '/' ? 'text-[#d4af37]' : 'text-[#a8a29e]'}`}>
                 Inicio
                 <span class={`absolute -bottom-2 left-0 w-full h-px bg-[#d4af37] transform origin-left transition-transform duration-300 ${pathname === '/' ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
             </a>
-            <a href="/compositions" class={`text-xs tracking-[0.2em] uppercase hover:text-[#d4af37] transition-colors relative group ${pathname.startsWith('/compositions') ? 'text-[#d4af37]' : 'text-[#a8a29e]'}`}>
+            <a href="/compositions" class={`text-xs tracking-[0.2em] uppercase hover:text-[#d4af37] transition-colors relative group ${isTomePath ? 'text-[#d4af37]' : 'text-[#a8a29e]'}`}>
                 El Tomo
-                <span class={`absolute -bottom-2 left-0 w-full h-px bg-[#d4af37] transform origin-left transition-transform duration-300 ${pathname.startsWith('/compositions') ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+                <span class={`absolute -bottom-2 left-0 w-full h-px bg-[#d4af37] transform origin-left transition-transform duration-300 ${isTomePath ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
+            </a>
+            <a href="/compositions/set17" class={`text-xs tracking-[0.2em] uppercase transition-colors relative group inline-flex items-center gap-2 ${isSet17Path ? 'text-[#fb923c]' : 'text-[#a8a29e] hover:text-[#fb923c]'}`}>
+                <i class="fa-solid fa-fire-flame-curved text-[11px] transition-transform duration-300 group-hover:-translate-y-0.5"></i>
+                Set 17
+                <span class={`absolute -bottom-2 left-0 w-full h-px bg-[#fb923c] transform origin-left transition-transform duration-300 ${isSet17Path ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'}`}></span>
             </a>
         </nav>
 
@@ -48,6 +55,10 @@ const pathname = Astro.url.pathname;
         <div class="flex flex-col items-center gap-10 relative z-10">
             <a href="/" class="font-serif text-4xl text-[#f5f5f4] hover:text-[#d4af37] transition-colors tracking-wider mobile-link">INICIO</a>
             <a href="/compositions" class="font-serif text-4xl text-[#f5f5f4] hover:text-[#d4af37] transition-colors tracking-wider mobile-link">EL TOMO</a>
+            <a href="/compositions/set17" class="inline-flex items-center gap-4 border border-[#fb923c]/60 bg-[#7c2d12]/20 px-6 py-3 font-serif text-3xl text-[#fed7aa] shadow-[0_0_28px_rgba(251,146,60,0.2)] hover:bg-[#fb923c] hover:text-[#0c0a09] transition-all tracking-wider mobile-link">
+                <i class="fa-solid fa-fire-flame-curved text-2xl"></i>
+                SET 17
+            </a>
             <a href="https://www.twitch.tv/akawonder" class="font-serif text-4xl text-[#9146FF] hover:text-white transition-colors tracking-wider mobile-link">TWITCH</a>
         </div>
     </div>

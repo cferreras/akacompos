@@ -1,0 +1,145 @@
+---
+import Container from "../ui/Container.astro";
+
+interface LegalSection {
+    id: string;
+    title: string;
+    body: string[];
+    bullets?: string[];
+    note?: string;
+}
+
+export interface Props {
+    eyebrow: string;
+    title: string;
+    intro: string;
+    outro?: string;
+    lastUpdated?: string;
+    sections: LegalSection[];
+}
+
+const {
+    eyebrow,
+    title,
+    intro,
+    outro,
+    lastUpdated = "31 de marzo de 2026",
+    sections,
+} = Astro.props;
+---
+
+<div class="bg-[#1c1917] min-h-screen">
+    <section class="relative overflow-hidden border-b border-[#292524] bg-[#0c0a09] pt-32 pb-20">
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.05] pointer-events-none"></div>
+        <div class="absolute left-1/2 top-0 -translate-x-1/2 h-[420px] w-[840px] rounded-[100%] bg-[#d4af37] opacity-[0.05] blur-[150px] pointer-events-none"></div>
+        <div class="absolute right-[-10%] bottom-[-10%] h-[320px] w-[320px] rounded-full bg-[#7f1d1d] opacity-[0.16] blur-[120px] pointer-events-none"></div>
+
+        <Container maxWidth="xl">
+            <div class="relative mx-auto max-w-4xl space-y-8 text-center">
+                <div class="inline-flex items-center gap-3 border border-[#d4af37]/30 bg-[#1c1917]/80 px-5 py-2 backdrop-blur-md mx-auto">
+                    <i class="fa-solid fa-scroll text-[#d4af37] text-sm"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#d4af37]">{eyebrow}</span>
+                </div>
+
+                <h1 class="font-serif text-5xl leading-tight text-[#f5f5f4] md:text-7xl">
+                    {title}
+                </h1>
+
+                <p class="mx-auto max-w-3xl text-lg font-light leading-relaxed text-[#a8a29e] md:text-xl">
+                    {intro}
+                </p>
+
+                <div class="flex flex-col items-center justify-center gap-3 text-[11px] uppercase tracking-[0.22em] text-[#78716c] md:flex-row">
+                    <span class="inline-flex items-center gap-2 border border-[#292524] bg-[#1c1917]/70 px-4 py-2">
+                        <i class="fa-regular fa-calendar text-[#d4af37]"></i>
+                        Actualizado: {lastUpdated}
+                    </span>
+                    <span class="hidden h-1 w-1 rounded-full bg-[#57534e] md:block"></span>
+                    <span class="inline-flex items-center gap-2 border border-[#292524] bg-[#1c1917]/70 px-4 py-2">
+                        <i class="fa-solid fa-feather-pointed text-[#d4af37]"></i>
+                        Lectura clara y directa
+                    </span>
+                </div>
+
+                <div class="mx-auto mt-4 h-px w-24 bg-[#d4af37]/50"></div>
+            </div>
+        </Container>
+    </section>
+
+    <section class="relative py-20">
+        <div class="absolute inset-y-0 left-0 w-full bg-[radial-gradient(circle_at_top,_rgba(212,175,55,0.06),_transparent_42%)] pointer-events-none"></div>
+
+        <Container maxWidth="xl">
+            <div class="grid gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(280px,0.28fr)] lg:items-start">
+                <div class="space-y-8">
+                    {sections.map((section, index) => (
+                        <article id={section.id} class="relative overflow-hidden border border-[#292524] bg-[#0c0a09] p-8 shadow-[0_24px_50px_rgba(0,0,0,0.28)] transition-colors duration-300 hover:border-[#d4af37]/35 md:p-10">
+                            <div class="absolute inset-0 bg-[linear-gradient(135deg,rgba(212,175,55,0.06),transparent_28%,transparent_72%,rgba(127,29,29,0.08))] opacity-70 pointer-events-none"></div>
+                            <div class="relative space-y-6">
+                                <div class="flex flex-wrap items-center gap-4">
+                                    <span class="font-serif text-4xl leading-none text-[#d4af37]/85 md:text-5xl">0{index + 1}</span>
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#78716c]">Capítulo legal</p>
+                                        <h2 class="font-serif text-3xl leading-tight text-[#f5f5f4]">{section.title}</h2>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-4 text-base font-light leading-8 text-[#a8a29e] md:text-lg">
+                                    {section.body.map((paragraph) => (
+                                        <p>{paragraph}</p>
+                                    ))}
+                                </div>
+
+                                {section.bullets && section.bullets.length > 0 && (
+                                    <ul class="grid gap-3 border-t border-[#292524] pt-6 text-sm leading-7 text-[#d6d3d1] md:text-base">
+                                        {section.bullets.map((bullet) => (
+                                            <li class="flex gap-3">
+                                                <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#d4af37]"></span>
+                                                <span>{bullet}</span>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
+
+                                {section.note && (
+                                    <div class="border border-[#d4af37]/20 bg-[#d4af37]/8 px-5 py-4 text-sm italic leading-7 text-[#f0e6be] md:text-base">
+                                        {section.note}
+                                    </div>
+                                )}
+                            </div>
+                        </article>
+                    ))}
+                </div>
+
+                <aside class="space-y-6 lg:sticky lg:top-28">
+                    <div class="border border-[#292524] bg-[#0c0a09] p-6 shadow-[0_18px_40px_rgba(0,0,0,0.25)]">
+                        <p class="mb-4 text-[10px] font-bold uppercase tracking-[0.3em] text-[#d4af37]">Mapa del documento</p>
+                        <nav class="space-y-3">
+                            {sections.map((section, index) => (
+                                <a href={`#${section.id}`} class="group flex items-center gap-3 text-sm tracking-[0.16em] uppercase text-[#a8a29e] transition-colors hover:text-[#f5f5f4]">
+                                    <span class="font-serif text-xl leading-none text-[#d4af37]/80 group-hover:text-[#d4af37]">0{index + 1}</span>
+                                    <span class="leading-5">{section.title}</span>
+                                </a>
+                            ))}
+                        </nav>
+                    </div>
+
+                    <div class="border border-[#292524] bg-[#1c1917] p-6">
+                        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#d4af37]">En resumen</p>
+                        <p class="mt-4 text-sm font-light leading-7 text-[#a8a29e]">
+                            Documentos redactados para explicar con claridad cómo funciona AKACompos, qué esperamos del uso del sitio y qué hacemos con la información técnica mínima necesaria.
+                        </p>
+                    </div>
+                </aside>
+            </div>
+
+            {outro && (
+                <div class="mt-12 border-t border-[#292524] pt-10 text-center">
+                    <p class="mx-auto max-w-3xl font-serif text-2xl italic leading-relaxed text-[#d6d3d1] md:text-3xl">
+                        {outro}
+                    </p>
+                </div>
+            )}
+        </Container>
+    </section>
+</div>

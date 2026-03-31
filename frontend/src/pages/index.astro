@@ -4,6 +4,7 @@ import Container from "../components/ui/Container.astro";
 import { Image } from "astro:assets";
 import akaWonderImage from "../assets/akawonder.png";
 import { getCompositionsByTier, getCompositionsCount } from "../lib/strapi";
+import { getCompositionPath } from "../utils/compositionPaths";
 
 export const prerender = true;
 
@@ -125,7 +126,7 @@ const lastUpdate = featuredCompositions?.[0]?.updatedAt
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                     {topCompositions.map((comp, index) => (
-                        <a href={`/compositions/${encodeURIComponent(comp.slug)}`} class="group relative block bg-[#0c0a09] border border-[#292524] hover:border-[#d4af37] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
+                        <a href={getCompositionPath(comp)} class="group relative block bg-[#0c0a09] border border-[#292524] hover:border-[#d4af37] transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.5)]">
                             <!-- Number Indicator -->
                             <div class="absolute -top-6 -right-4 z-20 font-serif text-[8rem] leading-none text-[#f5f5f4]/5 font-bold italic group-hover:text-[#d4af37]/10 transition-colors pointer-events-none">
                                 0{index + 1}

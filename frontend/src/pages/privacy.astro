@@ -1,62 +1,57 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Section from "../components/ui/Section.astro";
+import LegalPage from "../components/legal/LegalPage.astro";
 
 export const prerender = true;
+
+const sections = [
+    {
+        id: "datos-minimos",
+        title: "Qué información técnica usamos",
+        body: [
+            "AKACompos está planteado para consumir la menor cantidad posible de información del visitante. No pedimos registro, no abrimos perfiles personales y no convertimos la navegación en un sistema de seguimiento invasivo.",
+            "La web puede utilizar almacenamiento local del navegador para recordar preferencias de visualización o mejoras de experiencia, y usa analítica agregada para entender qué composiciones interesan más a la comunidad.",
+        ],
+        bullets: [
+            "Preferencias guardadas en el navegador para mejorar la experiencia de uso.",
+            "Medición anónima y agregada de visitas, páginas vistas y contenidos más consultados.",
+            "Información técnica básica necesaria para servir la web con seguridad y estabilidad.",
+        ],
+    },
+    {
+        id: "lo-que-no-hacemos",
+        title: "Lo que no hacemos con tus datos",
+        body: [
+            "El objetivo del sitio es ofrecer información útil sobre TFT, no construir perfiles de usuario. Por eso evitamos prácticas que no aportan valor real a quien visita AKACompos.",
+        ],
+        bullets: [
+            "No vendemos datos a terceros.",
+            "No hacemos seguimiento publicitario fuera de AKACompos.",
+            "No te pedimos correo, contraseña ni datos personales para consultar composiciones.",
+        ],
+        note: "La filosofía general es simple: recoger lo mínimo, explicar lo necesario y no complicar al usuario con capas innecesarias de rastreo.",
+    },
+    {
+        id: "base-y-contacto",
+        title: "Finalidad y contexto del tratamiento",
+        body: [
+            "La información técnica que pueda generarse se usa exclusivamente para operar la plataforma, detectar errores, entender tendencias generales de uso y mejorar el contenido publicado por AKAWonder.",
+            "Si en el futuro se añadieran nuevas funcionalidades que cambien este alcance, la política se actualizará para reflejarlo de forma expresa y visible.",
+        ],
+        note: "AKACompos está hecho por y para la comunidad. La privacidad no se trata como letra pequeña, sino como parte del producto.",
+    },
+];
 ---
 
 <Layout 
     title="Política de Privacidad - AKACompos"
-    description="Información sobre cómo tratamos tus datos en AKACompos."
+    description="Información clara sobre cómo tratamos los datos técnicos mínimos en AKACompos."
 >
-    <Section 
-        title="Política de Privacidad" 
-        subtitle="Transparencia total sobre lo que hacemos (y lo que no)"
-        variant="gradient"
-        spacing="lg"
-    >
-        <div class="max-w-4xl mx-auto prose prose-invert space-y-8 text-slate-300">
-                <div class="glass-card p-8 rounded-2xl border border-slate-800/50">
-                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="text-primary">01.</span> ¿Qué usamos?
-                    </h2>
-                    <p>
-                        En AKACompos somos minimalistas. Solo usamos lo estrictamente necesario para que tu experiencia sea fluida:
-                    </p>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li><strong>LocalStorage:</strong> Para guardar tus preferencias de visualización y que no tengas que reconfigurarlo todo cada vez que vuelves.</li>
-                        <li><strong>Analíticas anónimas:</strong> Usamos herramientas básicas para saber cuánta gente nos visita y qué composiciones son las más populares, pero sin saber quién eres tú específicamente.</li>
-                    </ul>
-                </div>
-
-                <div class="glass-card p-8 rounded-2xl border border-slate-800/50">
-                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="text-primary">02.</span> ¿Qué NO usamos?
-                    </h2>
-                    <p>
-                        Tu privacidad es sagrada. Por eso:
-                    </p>
-                    <ul class="list-disc pl-6 space-y-2">
-                        <li><strong>NO</strong> vendemos tus datos a terceros. Ni ahora, ni nunca.</li>
-                        <li><strong>NO</strong> rastreamos tu actividad fuera de esta web.</li>
-                        <li><strong>NO</strong> te pedimos correos electrónicos ni contraseñas (a menos que seas AKAWonder intentando actualizar el meta).</li>
-                    </ul>
-                </div>
-
-                <div class="glass-card p-8 rounded-2xl border border-slate-800/50">
-                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="text-primary">03.</span> ¿Por qué somos tan geniales?
-                    </h2>
-                    <p>
-                        La respuesta es sencilla: porque esto está hecho por y para la comunidad de TFT. 
-                    </p>
-                    <p>
-                        AKACompos no es solo una web de estadísticas; es el conocimiento de <strong>AKAWonder</strong> destilado en una interfaz limpia, rápida y sin anuncios molestos. Somos geniales porque priorizamos la calidad de la información y la experiencia de usuario por encima de todo.
-                    </p>
-                    <div class="mt-6 p-4 bg-primary/10 border border-primary/20 rounded-xl text-primary-light italic text-center">
-                        "Hacemos las cosas bien porque nos apasiona el juego tanto como a ti."
-                    </div>
-                </div>
-            </div>
-    </Section>
+    <LegalPage
+        eyebrow="Privacidad"
+        title="Política de Privacidad"
+        intro="Transparencia directa sobre la información técnica mínima que utiliza AKACompos para funcionar, medir el interés del meta y mantener una experiencia limpia para la comunidad."
+        outro="Privacidad clara, sin humo y sin mecánicas innecesarias."
+        sections={sections}
+    />
 </Layout>

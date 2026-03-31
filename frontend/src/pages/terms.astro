@@ -1,58 +1,53 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Section from "../components/ui/Section.astro";
+import LegalPage from "../components/legal/LegalPage.astro";
 
 export const prerender = true;
+
+const sections = [
+    {
+        id: "uso-del-sitio",
+        title: "Uso permitido del sitio",
+        body: [
+            "AKACompos es una herramienta informativa para consultar composiciones, estudiar el meta y aprender de la curación estratégica de AKAWonder. El uso esperado es normal, respetuoso y orientado a la consulta de contenido.",
+            "No está permitido utilizar la plataforma para intentar degradar el servicio, interferir con su funcionamiento, automatizar accesos abusivos o apropiarse del contenido como si fuera propio.",
+        ],
+        bullets: [
+            "Puedes usar AKACompos para informarte, aprender y consultar estrategias.",
+            "No puedes intentar romper la web, saturarla o usarla con fines malintencionados.",
+            "No puedes redistribuir el trabajo editorial de la plataforma como si fuera tuyo.",
+        ],
+    },
+    {
+        id: "propiedad-intelectual",
+        title: "Propiedad intelectual y atribución",
+        body: [
+            "Teamfight Tactics, sus nombres, personajes, marcas y activos relacionados pertenecen a Riot Games. AKACompos funciona como proyecto de comunidad y mantiene ese marco de referencia.",
+            "La selección, curación, redacción y presentación de composiciones publicada en el sitio forma parte del trabajo propio de AKACompos y AKAWonder.",
+        ],
+        note: "Respetar la autoría del contenido y el marco de Riot es parte de usar la plataforma con buen criterio.",
+    },
+    {
+        id: "limites-y-cambios",
+        title: "Disponibilidad, cambios y sentido común",
+        body: [
+            "El meta cambia, las composiciones evolucionan y la plataforma puede actualizar su contenido, estructura o funcionamiento cuando sea necesario. AKACompos intenta mantenerse útil y preciso, pero no promete disponibilidad absoluta ni ausencia total de errores en todo momento.",
+            "Si continúas usando la web, entendemos que aceptas estas reglas básicas de uso razonable y convivencia con el trabajo de quienes mantienen el proyecto.",
+        ],
+        note: "La regla de oro sigue siendo la más simple: usa la web con respeto y deja el tryhard para la partida, no para romper el sitio.",
+    },
+];
 ---
 
 <Layout 
     title="Términos de Servicio - AKACompos"
-    description="Reglas de uso de la plataforma AKACompos."
+    description="Condiciones de uso de AKACompos explicadas con claridad y en el mismo tono editorial del sitio."
 >
-    <Section 
-        title="Términos de Servicio" 
-        subtitle="Las reglas del juego (fuera del tablero)"
-        variant="gradient"
-        spacing="lg"
-    >
-        <div class="max-w-4xl mx-auto prose prose-invert space-y-8 text-slate-300">
-                <div class="glass-card p-8 rounded-2xl border border-slate-800/50">
-                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="text-primary">01.</span> Uso de la Web
-                    </h2>
-                    <p>
-                        AKACompos es una herramienta gratuita para la comunidad de TFT. Puedes usarla para consultar composiciones, aprender estrategias y mejorar tu juego. Lo que no puedes hacer es intentar romperla, copiar el código sin permiso o usarla para fines malintencionados.
-                    </p>
-                </div>
-
-                <div class="glass-card p-8 rounded-2xl border border-slate-800/50">
-                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="text-primary">02.</span> Propiedad Intelectual
-                    </h2>
-                    <p>
-                        Teamfight Tactics y todos los activos relacionados son propiedad de <strong>Riot Games</strong>. AKACompos es un proyecto de fans que cumple con las políticas de Riot para desarrolladores. 
-                    </p>
-                    <p>
-                        El diseño de la web y la curación de las composiciones son propiedad de AKACompos y AKAWonder.
-                    </p>
-                </div>
-
-                <div class="glass-card p-8 rounded-2xl border border-slate-800/50">
-                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                        <span class="text-primary">03.</span> ¿Por qué somos tan geniales? (Parte II)
-                    </h2>
-                    <p>
-                        Somos geniales porque no te obligamos a leer 50 páginas de términos legales aburridos. Queremos que pases más tiempo en el juego y menos tiempo leyendo letra pequeña. 
-                    </p>
-                    <p>
-                        Nuestra "regla de oro" es simple: <strong>Sé un buen estratega y respeta el trabajo de los demás.</strong> Si sigues eso, nos llevaremos de maravilla.
-                    </p>
-                    <div class="mt-6 flex justify-center">
-                        <div class="px-6 py-3 bg-primary/20 border border-primary/40 rounded-full text-primary font-bold animate-pulse">
-                            ¡A por el Top 1! 🏆
-                        </div>
-                    </div>
-                </div>
-            </div>
-    </Section>
+    <LegalPage
+        eyebrow="Términos"
+        title="Términos de Servicio"
+        intro="Las reglas fuera del tablero: un marco simple para usar AKACompos con normalidad, respetar el contenido y entender los límites razonables de la plataforma."
+        outro="Menos jerga legal, más claridad para que puedas volver al juego cuanto antes."
+        sections={sections}
+    />
 </Layout>

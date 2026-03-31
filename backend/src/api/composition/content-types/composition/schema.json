@@ -12,10 +12,22 @@
   "pluginOptions": {},
   "attributes": {
     "title": {
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    "Set": {
+      "type": "enumeration",
+      "required": true,
+      "default": "set17",
+      "enum": [
+        "set16",
+        "set17"
+      ]
     },
     "slug": {
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "unique": true
     },
     "tier": {
       "type": "enumeration",
@@ -27,17 +39,8 @@
       ]
     },
     "author": {
-      "type": "string"
-    },
-    "cover": {
-      "type": "media",
-      "multiple": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
+      "type": "string",
+      "default": "AKAWonder"
     },
     "tags": {
       "type": "string"
@@ -52,7 +55,8 @@
       "type": "string"
     },
     "board": {
-      "type": "json"
+      "type": "json",
+      "required": false
     },
     "coreItems": {
       "type": "json"
