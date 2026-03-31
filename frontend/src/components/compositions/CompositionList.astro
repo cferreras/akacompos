@@ -2,11 +2,21 @@
 import Card from "../ui/Card.astro";
 import Section from "../ui/Section.astro";
 import { getCompositions } from "../../lib/strapi";
+import { normalizeCompositionSet } from "../../utils/compositionPaths";
 import { CompositionList as CompositionListReact } from "./CompositionList";
 
-// Obtener composiciones desde Strapi
-const { data: compositions, error } = await getCompositions();
-const { initialExpandedSlug } = Astro.props;
+const {
+    initialExpandedSlug,
+    setFilter,
+    compositions: providedCompositions,
+} = Astro.props;
+
+const normalizedSet = normalizeCompositionSet(setFilter);
+const shouldFetch = providedCompositions === undefined;
+const result = shouldFetch
+    ? await getCompositions(normalizedSet ?? undefined)
+    : { data: providedCompositions, error: null };
+const { data: compositions, error } = result;
 ---
 
 {

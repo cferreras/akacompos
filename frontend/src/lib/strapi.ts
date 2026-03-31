@@ -1,5 +1,5 @@
 /// <reference types="vite/client" />
-
+import { normalizeCompositionSet } from "../utils/compositionPaths";
 // En SSR, process.env se lee en runtime (valores del sistema).
 // import.meta.env solo incluye valores de .env files y se resuelve en build time.
 const STRAPI_URL = process.env.STRAPI_URL || import.meta.env.STRAPI_URL;
@@ -61,6 +61,7 @@ export interface Composition {
   id: number;
   title: string;
   slug: string;
+  set?: string;
   tier: string;
   author: string;
   cover?: string; // URL completa de la imagen
@@ -121,6 +122,7 @@ function transformComposition(item: any, forcedStatus?: "draft" | "published"): 
     id: item.id,
     title: item.title,
     slug: item.slug,
+    set: item.set ?? item.Set,
     tier: item.tier,
     author: item.author,
     // Usar versión medium de la imagen para optimizar carga
@@ -184,12 +186,19 @@ async function fetchWithPreview(
 }
 
 // Funciones helper para obtener composiciones de Strapi
-export async function getCompositions() {
+export async function getCompositions(set?: string) {
   try {
-    const { data } = await fetchWithPreview("compositions", {
+    const normalizedSet = normalizeCompositionSet(set);
+    const params: Record<string, any> = {
       populate: "*",
       "sort[0]": "createdAt:desc",
-    });
+    };
+
+    if (normalizedSet) {
+      params["filters[Set][$eq]"] = normalizedSet;
+    }
+
+    const { data } = await fetchWithPreview("compositions", params);
 
     return { data, error: null };
   } catch (error: any) {
@@ -257,6 +266,7 @@ export async function getCompositionsByTier(tier?: string) {
       "fields[5]": "description",
       "fields[6]": "tags",
       "fields[7]": "author",
+      "fields[8]": "Set",
     };
 
     if (tier) {

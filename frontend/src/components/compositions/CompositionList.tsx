@@ -26,6 +26,7 @@ import {
   type TierLevel,
   type TierStyleConfig,
 } from "../../utils/tierStyles";
+import { getCompositionPath } from "../../utils/compositionPaths";
 import { TFTBoardReact } from "./TFTBoardReact";
 
 dayjs.locale("es");
@@ -60,6 +61,7 @@ interface Composition {
   id: number;
   title: string;
   slug: string;
+  set?: string;
   tier: string;
   tags?: string | string[];
   cover?: string;
@@ -532,7 +534,7 @@ const ExpandedDetail = memo<{ comp: Composition }>(({ comp }) => {
           ) : <div />}
           <button onClick={() => {
             const url = new URL(window.location.href);
-            url.pathname = `/compositions/${encodeURIComponent(comp.slug)}`;
+            url.pathname = getCompositionPath(comp);
             url.search = "";
             url.hash = "";
             navigator.clipboard.writeText(url.toString());
@@ -636,7 +638,7 @@ export const CompositionList: React.FC<CompositionListProps> = ({
     if (typeof window === "undefined") return;
     if (initialExpandedSlug) return;
 
-    const pathMatch = window.location.pathname.match(/^\/compositions\/([^/]+)\/?$/);
+    const pathMatch = window.location.pathname.match(/^\/(?:(?:compositions)|(?:set[^/]+))\/([^/]+)\/?$/i);
     const pathSlug = pathMatch ? decodeURIComponent(pathMatch[1]) : null;
     const params = new URLSearchParams(window.location.search);
     const querySlug = params.get("comp");
@@ -677,7 +679,9 @@ export const CompositionList: React.FC<CompositionListProps> = ({
       const next = prev === slug ? null : slug;
       if (typeof window !== "undefined") {
         const url = new URL(window.location.href);
-        if (next) url.pathname = `/compositions/${encodeURIComponent(next)}`;
+        const nextComposition = compositions.find((comp) => comp.slug === next);
+        if (next && nextComposition) url.pathname = getCompositionPath(nextComposition);
+        else if (next) url.pathname = `/compositions/${encodeURIComponent(next)}`;
         else url.pathname = "/compositions";
         url.search = "";
         url.hash = "";
@@ -685,7 +689,7 @@ export const CompositionList: React.FC<CompositionListProps> = ({
       }
       return next;
     });
-  }, []);
+  }, [compositions]);
 
   if (compositions.length === 0) {
     return (

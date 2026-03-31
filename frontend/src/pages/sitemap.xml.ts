@@ -1,4 +1,5 @@
 import { getCompositions } from '../lib/strapi';
+import { getCompositionPath, normalizeCompositionSet } from '../utils/compositionPaths';
 import type { APIRoute } from 'astro';
 
 export const GET: APIRoute = async ({ site }) => {
@@ -12,10 +13,20 @@ export const GET: APIRoute = async ({ site }) => {
   ];
 
   const compositionUrls = compositions
-    ? compositions.map((c: any) => `compositions/${c.slug}`)
+    ? compositions.map((composition: any) => getCompositionPath(composition))
     : [];
 
-  const allPages = [...pages, ...compositionUrls];
+  const setUrls = compositions
+    ? Array.from(
+        new Set(
+          compositions
+            .map((composition: any) => normalizeCompositionSet(composition.set))
+            .filter(Boolean),
+        ),
+      ).map((set) => `compositions/${set}`)
+    : [];
+
+  const allPages = [...pages, ...setUrls, ...compositionUrls];
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

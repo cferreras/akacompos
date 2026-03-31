@@ -442,11 +442,10 @@ export interface ApiCompositionComposition extends Struct.CollectionTypeSchema {
   };
   attributes: {
     augments: Schema.Attribute.JSON;
-    author: Schema.Attribute.String;
+    author: Schema.Attribute.String & Schema.Attribute.DefaultTo<'AKAWonder'>;
     board: Schema.Attribute.JSON;
     compCode: Schema.Attribute.String;
     coreItems: Schema.Attribute.JSON;
-    cover: Schema.Attribute.Media<'images' | 'files' | 'videos' | 'audios'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -459,12 +458,17 @@ export interface ApiCompositionComposition extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    slug: Schema.Attribute.String;
+    Set: Schema.Attribute.Enumeration<['set16', 'set17']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'set17'>;
+    slug: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
     tags: Schema.Attribute.String;
     tier: Schema.Attribute.Enumeration<
       ['S Tier', 'A Tier', 'B Tier', 'C Tier']
     >;
-    title: Schema.Attribute.String;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
