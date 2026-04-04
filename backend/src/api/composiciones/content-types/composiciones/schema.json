@@ -11,6 +11,11 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "Title": {
+      "type": "string",
+      "private": true,
+      "unique": true
+    },
     "JSON": {
       "type": "json",
       "required": true
