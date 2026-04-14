@@ -1,6 +1,7 @@
 /// <reference types="vite/client" />
 import { normalizeCompositionSet } from "../utils/compositionPaths";
 import { getRichTextPlainText } from "../tft/richText";
+import { getSetRuntime } from "../tft/sets/registry";
 import type {
   CompositionBoard,
   CompositionPriority,
@@ -166,6 +167,42 @@ function normalizePriorities(value: unknown): CompositionPriority[] {
     .filter((entry): entry is CompositionPriority => Boolean(entry));
 }
 
+function normalizeItemNameForSet(value: string, set: string): string {
+  const raw = value.trim();
+  if (!raw) return "";
+
+  const runtime = getSetRuntime(set);
+  const resolved = runtime.resolveItemName(raw);
+  return runtime.getItemAsset(resolved) ? resolved : raw;
+}
+
+function normalizeBoardForSet(board: CompositionBoard | null, set: string): CompositionBoard | null {
+  if (!board) return null;
+
+  return {
+    champions: board.champions.map((champion) => ({
+      ...champion,
+      items: Array.isArray(champion.items)
+        ? champion.items
+            .map((item) => normalizeItemNameForSet(item, set))
+            .filter(Boolean)
+            .slice(0, 3)
+        : [],
+    })),
+  };
+}
+
+function normalizePrioritiesForSet(
+  priorities: CompositionPriority[],
+  set: string,
+): CompositionPriority[] {
+  return priorities.map((priority) => (
+    priority.type === "item"
+      ? { ...priority, name: normalizeItemNameForSet(priority.name, set) }
+      : priority
+  ));
+}
+
 function getExcerpt(...values: RichTextContent[]): string | undefined {
   for (const value of values) {
     const plainText = getRichTextPlainText(value).replace(/\s+/g, " ").trim();
@@ -293,11 +330,12 @@ function normalizeJsonComposition(
       ? "draft"
       : forcedStatus ?? (!item.publishedAt ? "draft" : "published");
 
-  const board = ensureBoard(payload.board ?? payload.tablero ?? payload.composicion);
+  const board = normalizeBoardForSet(ensureBoard(payload.board ?? payload.tablero ?? payload.composicion), normalizedSet);
   const tips = (payload.consejos ?? payload.consejosYTrucos ?? payload.tips) as RichTextContent;
   const development = normalizeDevelopment(payload.desarrollo ?? payload.development);
-  const priorities = normalizePriorities(
-    payload.prioridades ?? payload.winConditions ?? payload.priorities,
+  const priorities = normalizePrioritiesForSet(
+    normalizePriorities(payload.prioridades ?? payload.winConditions ?? payload.priorities),
+    normalizedSet,
   );
   const tags = normalizeStringArray(payload.tags);
   const title = typeof payload.title === "string" ? payload.title : typeof payload.titulo === "string" ? payload.titulo : "";

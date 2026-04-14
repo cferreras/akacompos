@@ -161,6 +161,7 @@ import ThiefsGlovesImg from "../assets/items/combined/thiefs-gloves.png";
 import TitansResolveImg from "../assets/items/combined/titans-resolve.png";
 import VoidStaffImg from "../assets/items/combined/voidstaff.png";
 import WarmogsArmorImg from "../assets/items/combined/warmogs-armor.png";
+import { set17ItemAssets } from "./set17ItemAssets";
 
 // ============================================================================
 // CHAMPION IMAGE POSITIONS
@@ -297,8 +298,7 @@ export const championAssets: Record<string, any> = {
  * @param imagePath - Ruta como "/src/assets/Champions/Braum.png" o nombre como "Braum"
  * @returns La URL de la imagen o una imagen por defecto
  */
-export const itemAssets: Record<string, any> = {
-  // Basic items
+const legacyItemAssets: Record<string, any> = {
   "B.F. Sword": BfSwordImg,
   "Chain Vest": ChainVestImg,
   "Frying Pan": FryingPanImg,
@@ -309,8 +309,6 @@ export const itemAssets: Record<string, any> = {
   "Sparring Gloves": SparringGlovesImg,
   "Spatula": SpatulaImg,
   "Tear of the Goddess": TearOfTheGoddessImg,
-
-  // Combined items
   "Adaptive Helm": AdaptiveHelmImg,
   "Archangel's Staff": ArchangelsStaffImg,
   "Bloodthirster": BloodthirsterImg,
@@ -351,6 +349,12 @@ export const itemAssets: Record<string, any> = {
   "Void Staff": VoidStaffImg,
   "Warmog's Armor": WarmogsArmorImg,
 };
+
+export const itemAssets: Record<string, any> = legacyItemAssets;
+
+function getItemAssetMap(set?: string | null): Record<string, any> {
+  return set?.trim().toLowerCase() === "set17" ? set17ItemAssets : itemAssets;
+}
 
 // ============================================================================
 // HELPER FUNCTIONS
@@ -503,9 +507,10 @@ export function getChampionImageMeta(imagePath: string) {
  * @param itemName - Nombre del item como "Infinity Edge"
  * @returns La URL de la imagen o una imagen por defecto
  */
-export function getItemImage(itemName: string): string {
-  const resolvedName = resolveKey(itemName, itemAssets);
-  const asset = itemAssets[resolvedName as keyof typeof itemAssets];
+export function getItemImage(itemName: string, set?: string | null): string {
+  const assets = getItemAssetMap(set);
+  const resolvedName = resolveKey(itemName, assets);
+  const asset = assets[resolvedName as keyof typeof assets];
 
   if (!asset) return "";
   return typeof asset === 'string' ? asset : asset.src || "";
@@ -516,9 +521,10 @@ export function getItemImage(itemName: string): string {
  * @param itemName - Nombre del item como "Infinity Edge"
  * @returns ImageMetadata para usar con el componente Image de Astro
  */
-export function getItemImageMeta(itemName: string) {
-  const resolvedName = resolveKey(itemName, itemAssets);
-  return itemAssets[resolvedName as keyof typeof itemAssets];
+export function getItemImageMeta(itemName: string, set?: string | null) {
+  const assets = getItemAssetMap(set);
+  const resolvedName = resolveKey(itemName, assets);
+  return assets[resolvedName as keyof typeof assets];
 }
 
 /**
@@ -536,9 +542,10 @@ export function hasChampion(championName: string): boolean {
  * @param itemName - Nombre del item
  * @returns True si el item existe
  */
-export function hasItem(itemName: string): boolean {
-  const resolvedName = resolveKey(itemName, itemAssets);
-  return resolvedName in itemAssets;
+export function hasItem(itemName: string, set?: string | null): boolean {
+  const assets = getItemAssetMap(set);
+  const resolvedName = resolveKey(itemName, assets);
+  return resolvedName in assets;
 }
 
 /**
@@ -553,8 +560,8 @@ export function getChampionNames(): string[] {
  * Obtiene todos los nombres de items disponibles
  * @returns Array con todos los nombres de items
  */
-export function getItemNames(): string[] {
-  return Object.keys(itemAssets);
+export function getItemNames(set?: string | null): string[] {
+  return Object.keys(getItemAssetMap(set));
 }
 
 // Champion rarity/cost mapping - TFT Set 16 (Lore & Legends)

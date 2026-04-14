@@ -42,6 +42,12 @@ type NoticeStatus = "idle" | "success" | "error";
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null && !Array.isArray(value);
 const safeText = (value: unknown, fallback = "") => typeof value === "string" ? value : fallback;
 const safeStringArray = (value: unknown) => Array.isArray(value) ? value.filter((entry): entry is string => typeof entry === "string") : [];
+const normalizeRuntimeItemName = (value: unknown) => {
+  const raw = safeText(value).trim();
+  if (!raw) return "";
+  const resolved = runtime.resolveItemName(raw);
+  return runtime.getItemAsset(resolved) ? resolved : raw;
+};
 const safeStars = (value: unknown) => value === 2 || value === 3 ? value : 1;
 const safePosition = (value: unknown) => {
   const row = isRecord(value) && typeof value.row === "number" ? Math.max(0, Math.min(3, Math.round(value.row))) : 0;
@@ -81,10 +87,12 @@ const toBuilderState = (value: unknown): BuilderState => {
     prioridades: prioridades.length > 0
       ? prioridades.map((entry) => {
           const row = isRecord(entry) ? entry : {};
+          const type = safeText(row.type, "item");
+          const name = safeText(row.name);
           return {
             id: nextId(),
-            name: safeText(row.name),
-            type: safeText(row.type, "item"),
+            name: type === "item" ? normalizeRuntimeItemName(name) : name,
+            type,
             description: safeText(row.description),
             icon: safeText(row.icon),
           };
@@ -99,7 +107,7 @@ const toBuilderState = (value: unknown): BuilderState => {
             name: safeText(champ.name),
             position: safePosition(champ.position),
             stars: safeStars(champ.stars),
-            items: safeStringArray(champ.items).slice(0, 3),
+            items: safeStringArray(champ.items).map((item) => normalizeRuntimeItemName(item)).filter(Boolean).slice(0, 3),
           };
         })
         .filter((champ) => champ.name),
@@ -237,7 +245,7 @@ export const CompositionBuilder = () => {
               </div>
 
               <div className="border border-[#292524] bg-[#0c0a09] p-4">
-                {picked ? <div className="space-y-3"><div className="flex items-center justify-between"><p className="text-[10px] uppercase tracking-[0.2em] text-[#d4af37]">Inspector</p><button type="button" onClick={() => { patch({ board: { champions: data.board.champions.filter((c) => c.id !== picked.id) } }); setSelected(null); }} className="text-[10px] uppercase tracking-[0.2em] text-[#a8a29e]">Quitar</button></div><input list="champ-list" value={picked.name} onChange={(e) => editChamp("name", e.target.value)} className="w-full border border-[#292524] bg-[#1c1917] px-4 py-3 text-sm text-[#f5f5f4]" /><select value={picked.stars} onChange={(e) => editChamp("stars", Number(e.target.value))} className="w-full border border-[#292524] bg-[#1c1917] px-4 py-3 text-sm text-[#f5f5f4]"><option value={1}>1 estrella</option><option value={2}>2 estrellas</option><option value={3}>3 estrellas</option></select>{[0, 1, 2].map((slot) => <input key={slot} list="item-list" value={picked.items[slot] || ""} onChange={(e) => { const next = [...picked.items]; next[slot] = e.target.value; editChamp("items", next.filter(Boolean)); }} className="w-full border border-[#292524] bg-[#1c1917] px-4 py-3 text-sm text-[#f5f5f4]" placeholder={`Item ${slot + 1}`} />)}</div> : <div className="border border-dashed border-[#292524] px-4 py-8 text-center text-sm text-[#a8a29e]">Selecciona una unidad del tablero para editarla.</div>}
+                {picked ? <div className="space-y-3"><div className="flex items-center justify-between"><p className="text-[10px] uppercase tracking-[0.2em] text-[#d4af37]">Inspector</p><button type="button" onClick={() => { patch({ board: { champions: data.board.champions.filter((c) => c.id !== picked.id) } }); setSelected(null); }} className="text-[10px] uppercase tracking-[0.2em] text-[#a8a29e]">Quitar</button></div><input list="champ-list" value={picked.name} onChange={(e) => editChamp("name", e.target.value)} className="w-full border border-[#292524] bg-[#1c1917] px-4 py-3 text-sm text-[#f5f5f4]" /><select value={picked.stars} onChange={(e) => editChamp("stars", Number(e.target.value))} className="w-full border border-[#292524] bg-[#1c1917] px-4 py-3 text-sm text-[#f5f5f4]"><option value={1}>1 estrella</option><option value={2}>2 estrellas</option><option value={3}>3 estrellas</option></select>{[0, 1, 2].map((slot) => <input key={slot} list="item-list" value={picked.items[slot] || ""} onChange={(e) => { const next = [...picked.items]; next[slot] = normalizeRuntimeItemName(e.target.value); editChamp("items", next.filter(Boolean)); }} className="w-full border border-[#292524] bg-[#1c1917] px-4 py-3 text-sm text-[#f5f5f4]" placeholder={`Item ${slot + 1}`} />)}</div> : <div className="border border-dashed border-[#292524] px-4 py-8 text-center text-sm text-[#a8a29e]">Selecciona una unidad del tablero para editarla.</div>}
               </div>
 
               <div className="flex flex-wrap gap-2">{runtime.calculateActiveTraits(data.board.champions.map((c) => c.name)).map((trait) => <button key={trait.trait.id} type="button" onClick={() => { if (!data.tags.includes(trait.trait.name)) patch({ tags: [...data.tags, trait.trait.name] }); }} className="border border-[#292524] bg-[#0c0a09] px-3 py-2 text-xs text-[#f5f5f4]">{trait.trait.name} · {trait.count}</button>)}</div>
