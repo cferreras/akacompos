@@ -109,7 +109,7 @@ export function createPressKitRuntime(
   const championNames = Object.keys(config.championAssets);
   const championThumbs = config.championThumbs || config.championAssets;
   const traitNames = Object.keys(config.traitAssets);
-  const itemNames = getItemNames();
+  const itemNames = getItemNames(config.id);
   const itemIndex = buildNameIndex(itemNames, {});
   const championIndex = buildNameIndex(championNames, championAliases);
   const traitIndex = buildNameIndex(traitNames, traitAliases);
@@ -149,7 +149,7 @@ export function createPressKitRuntime(
 
       if (type === "item") {
         const resolvedName = resolveItemName(name);
-        const icon = getItemImageMeta(resolvedName);
+        const icon = getItemImageMeta(resolvedName, config.id);
         if (icon) {
           return { type, name: resolvedName, icon };
         }
@@ -197,7 +197,7 @@ export function createPressKitRuntime(
     getChampionImagePosition: (name) =>
       championImagePositions[resolveChampionName(name)] || championImagePositions.Default,
     resolveItemName,
-    getItemAsset: (name) => getItemImageMeta(resolveItemName(name)),
+    getItemAsset: (name) => getItemImageMeta(resolveItemName(name), config.id),
     getTrait,
     calculateActiveTraits: (names) =>
       createActiveTraits(
