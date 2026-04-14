@@ -100,7 +100,7 @@ const HexCharacter: React.FC<{
         </div>
       )}
       {champion && showName && (
-        <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", left: 0, right: 0, textAlign: "center", color: "#f5f5f4", fontFamily: "'Cormorant', serif", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textShadow: "0 2px 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.9)", padding: "0 4px", fontSize, zIndex: 5, transition: "color 0.3s ease", pointerEvents: "none" }} className="group-hover:text-[#d4af37]">
+        <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", left: 0, right: 0, textAlign: "center", color: "#f5f5f4", fontFamily: "'Inknut Antiqua', serif", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textShadow: "0 2px 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.9)", padding: "0 4px", fontSize, zIndex: 5, transition: "color 0.3s ease", pointerEvents: "none" }} className="group-hover:text-[#d4af37]">
           {champion}
         </div>
       )}
