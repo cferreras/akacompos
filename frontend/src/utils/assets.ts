@@ -103,6 +103,7 @@ import ZaahenImg from "../assets/Champions/Zaahen.jpg";
 import ZiggsImg from "../assets/Champions/Ziggs.jpg";
 import ZileanImg from "../assets/Champions/Zilean.jpg";
 import ZoeImg from "../assets/Champions/Zoe.jpg";
+import { set17ChampionAssets, set17ChampionRarity } from "./set17ChampionIcons";
 
 // ============================================================================
 // ITEMS ASSETS - Importaciones centralizadas
@@ -171,7 +172,7 @@ import WarmogsArmorImg from "../assets/items/combined/warmogs-armor.png";
  * Formato: "x% y%"
  */
 export const championImagePositions: Record<string, string> = {
-    "Default": "90% 20%", // Valor por defecto para centrar en las caras
+    "Default": "50% 50%", // Los iconos cuadrados del set 17 ya vienen centrados
 };
 
 // ============================================================================
@@ -179,7 +180,7 @@ export const championImagePositions: Record<string, string> = {
 // ============================================================================
 
 // Champion assets mapping for Set 16
-export const championAssets: Record<string, any> = {
+const legacyChampionAssets: Record<string, any> = {
   "Aatrox": AatroxImg,
   "Ahri": AhriImg,
   "Ambessa": AmbessaImg,
@@ -280,6 +281,11 @@ export const championAssets: Record<string, any> = {
   "Ziggs": ZiggsImg,
   "Zilean": ZileanImg,
   "Zoe": ZoeImg,
+};
+
+export const championAssets: Record<string, any> = {
+  ...legacyChampionAssets,
+  ...set17ChampionAssets,
 };
 
 // ============================================================================
@@ -383,6 +389,12 @@ const synonymMap: Record<string, string> = {
   "KhaZix": "Kha'Zix",
   "VelKoz": "Vel'Koz",
   "RenataGlasc": "Renata Glasc",
+  "Belveth": "Bel'Veth",
+  "Nunu": "Nunu & Willump",
+  "NunuWillump": "Nunu & Willump",
+  "NunuAndWillump": "Nunu & Willump",
+  "TheMightyMech": "The Mighty Mech",
+  "MightyMech": "The Mighty Mech",
 
   // Items
   "B.F.Sword": "B.F. Sword",
@@ -461,7 +473,7 @@ export function resolveChampionName(name: string): string {
  */
 export function getChampionImage(imagePath: string): string {
   // Si es una ruta completa, extraer el nombre del campeón
-  const match = imagePath.match(/\/([^\/]+)\.png$/);
+  const match = imagePath.match(/\/([^\/]+)\.(?:png|jpe?g|webp)$/);
   let championName = match ? match[1] : imagePath;
 
   championName = resolveKey(championName, championAssets);
@@ -478,7 +490,7 @@ export function getChampionImage(imagePath: string): string {
  * @returns ImageMetadata para usar con el componente Image de Astro
  */
 export function getChampionImageMeta(imagePath: string) {
-  const match = imagePath.match(/\/([^\/]+)\.png$/);
+  const match = imagePath.match(/\/([^\/]+)\.(?:png|jpe?g|webp)$/);
   let championName = match ? match[1] : imagePath;
 
   championName = resolveKey(championName, championAssets);
@@ -547,7 +559,7 @@ export function getItemNames(): string[] {
 
 // Champion rarity/cost mapping - TFT Set 16 (Lore & Legends)
 // Based on data from CSV file
-export const championRarity: Record<string, number> = {
+const legacyChampionRarity: Record<string, number> = {
   // Cost 1
   "Anivia": 1,
   "Blitzcrank": 1,
@@ -660,4 +672,8 @@ export const championRarity: Record<string, number> = {
   "Zaahen": 7,
 };
 
+export const championRarity: Record<string, number> = {
+  ...legacyChampionRarity,
+  ...set17ChampionRarity,
+};
 
