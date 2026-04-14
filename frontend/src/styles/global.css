@@ -3,7 +3,7 @@
 /* ============================================
    DESIGN SYSTEM — AKACompos Dark Fantasy Editorial
    Aesthetic: High-end luxury, dark academia, magic
-   Typography: Cormorant (display) + DM Sans (body)
+   Typography: Inknut Antiqua (display) + General Sans (body)
    ============================================ */
 
 @theme {
@@ -22,12 +22,14 @@
     --surface: #1c1917;
     --accent: #7f1d1d;
     --border: #292524;
+    --font-display: "Inknut Antiqua", serif;
+    --font-body: "General Sans", sans-serif;
 }
 
 html, body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    font-family: 'DM Sans', sans-serif;
+    font-family: var(--font-body);
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
 }
@@ -49,7 +51,7 @@ body::after {
 }
 
 .font-serif {
-    font-family: 'Cormorant', serif;
+    font-family: var(--font-display);
 }
 
 .ornament-line {
