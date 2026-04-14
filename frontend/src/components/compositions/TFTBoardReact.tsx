@@ -69,9 +69,9 @@ const HexCharacter: React.FC<{
   const imgFit = runtime.id === "set17" ? "contain" : "cover";
   const validItems = items.slice(0, 3).filter((item) => Boolean(runtime.getItemAsset(item)));
   const nameLen = champion ? champion.length : 0;
-  let fontSize = "calc(var(--hex-size) * 0.16)";
-  if (nameLen > 12) fontSize = "calc(var(--hex-size) * 0.12)";
-  else if (nameLen > 8) fontSize = "calc(var(--hex-size) * 0.14)";
+  let fontSize = "calc(var(--hex-size) * 0.135)";
+  if (nameLen > 14) fontSize = "calc(var(--hex-size) * 0.095)";
+  else if (nameLen > 9) fontSize = "calc(var(--hex-size) * 0.11)";
 
   return (
     <div className="tft-hex-char group" style={{ position: "relative", width: "var(--hex-size)", height: "calc(var(--hex-size) + 12px)", display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -101,7 +101,7 @@ const HexCharacter: React.FC<{
         </div>
       )}
       {champion && showName && (
-        <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", left: 0, right: 0, textAlign: "center", color: "#f5f5f4", fontFamily: "'Inknut Antiqua', serif", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase", lineHeight: 1.1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", textShadow: "0 2px 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.9)", padding: "0 4px", fontSize, zIndex: 5, transition: "color 0.3s ease", pointerEvents: "none" }} className="group-hover:text-[#d4af37]">
+        <div style={{ position: "absolute", top: "50%", transform: "translateY(-50%)", left: 0, right: 0, textAlign: "center", color: "#f5f5f4", fontFamily: "'Inknut Antiqua', serif", fontWeight: 600, letterSpacing: "0.04em", textTransform: "uppercase", lineHeight: 1.05, overflow: "hidden", whiteSpace: "normal", wordBreak: "break-word", textShadow: "0 2px 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,0.9)", padding: "0 5px", fontSize, zIndex: 5, transition: "color 0.3s ease", pointerEvents: "none", display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical" }} className="group-hover:text-[#d4af37]">
           {champion}
         </div>
       )}

@@ -7,25 +7,9 @@ export const prerender = false;
 
 const setDefinitions = [
   {
-    id: "set16",
-    title: "Set 16",
-    eyebrow: "Tomo principal",
-    href: "/compositions/set16",
-    accent: "#d4af37",
-    borderClass: "border-[#d4af37]/30",
-    glowClass: "bg-[#d4af37]/12",
-    badgeClass: "text-[#d4af37] border-[#d4af37]/30 bg-[#1c1917]/80",
-    buttonClass:
-      "border-[#d4af37]/40 text-[#d4af37] hover:bg-[#d4af37] hover:text-[#0c0a09] hover:shadow-[0_0_24px_rgba(212,175,55,0.28)]",
-    description:
-      "La colección estable de estrategias para grindear el set actual con compos contrastadas, líneas refinadas y planes de juego más asentados.",
-    detail:
-      "Si buscas el tomo principal de AKACompos, aquí está la versión más sólida y más cómoda para rankeds.",
-  },
-  {
     id: "set17",
-    title: "Set 17 PBE",
-    eyebrow: "Avance del meta",
+    title: "Set 17",
+    eyebrow: "Tomo principal",
     href: "/compositions/set17",
     accent: "#fb923c",
     borderClass: "border-[#fb923c]/35",
@@ -34,9 +18,25 @@ const setDefinitions = [
     buttonClass:
       "border-[#fb923c]/40 text-[#fb923c] hover:bg-[#fb923c] hover:text-[#0c0a09] hover:shadow-[0_0_24px_rgba(251,146,60,0.28)]",
     description:
-      "La mesa de pruebas para adelantarte al próximo parche: compos tempranas, ideas explosivas y lecturas rápidas de lo que puede dominar cuando el set salga del PBE.",
+      "El tomo principal de AKACompos: las compos actuales, las líneas más fuertes del meta y los planes de juego que quieres tener a mano al entrar a rankeds.",
     detail:
-      "Ideal para explorar tendencias antes que nadie y preparar contenido, scrims o ladder cuando el meta aún no está cerrado.",
+      "Aquí está la ruta principal para consultar el meta vivo, abrir cada composición y navegar el set que toca ahora mismo.",
+  },
+  {
+    id: "set16",
+    title: "Set 16",
+    eyebrow: "Set antiguo",
+    href: "/compositions/set16",
+    accent: "#d4af37",
+    borderClass: "border-[#d4af37]/30",
+    glowClass: "bg-[#d4af37]/12",
+    badgeClass: "text-[#d4af37] border-[#d4af37]/30 bg-[#1c1917]/80",
+    buttonClass:
+      "border-[#d4af37]/40 text-[#d4af37] hover:bg-[#d4af37] hover:text-[#0c0a09] hover:shadow-[0_0_24px_rgba(212,175,55,0.28)]",
+    description:
+      "Archivo del set anterior para revisar compos, ideas y estructuras que ya no forman parte del bloque principal.",
+    detail:
+      "Útil si quieres rescatar referencias antiguas, comparar metas o revisar contenido archivado.",
   },
 ] as const;
 
@@ -53,72 +53,86 @@ const summaries = await Promise.all(
     };
   }),
 );
+
+const featuredSet = summaries.find((setSummary) => setSummary.id === "set17");
+const legacySets = summaries.filter((setSummary) => setSummary.id !== "set17");
 ---
 
 <Layout
   title="Archivo de Sets - AKACompos"
-  description="Explora los sets disponibles en AKACompos y entra al tomo de estrategias que quieras consultar."
+  description="Explora los sets disponibles en AKACompos con Set 17 como tomo principal y los sets anteriores agrupados aparte."
 >
   <div class="relative overflow-hidden border-b border-[#292524] bg-[#0c0a09] pt-32 pb-20">
     <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.05] pointer-events-none"></div>
-    <div class="absolute left-1/2 top-0 -translate-x-1/2 h-[420px] w-[860px] rounded-[100%] bg-[#d4af37] opacity-[0.05] blur-[150px] pointer-events-none"></div>
+    <div class="absolute left-1/2 top-0 -translate-x-1/2 h-[420px] w-[860px] rounded-[100%] bg-[#fb923c] opacity-[0.06] blur-[150px] pointer-events-none"></div>
 
     <Container maxWidth="xl">
       <div class="relative mx-auto max-w-4xl space-y-8 text-center">
-        <div class="inline-flex items-center gap-3 border border-[#d4af37]/30 bg-[#1c1917]/80 px-5 py-2 backdrop-blur-md">
-          <i class="fa-solid fa-book-open text-[#d4af37] text-sm" />
-          <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#d4af37]">Archivo de Sets</span>
+        <div class="inline-flex items-center gap-3 border border-[#fb923c]/30 bg-[#1c1917]/80 px-5 py-2 backdrop-blur-md">
+          <i class="fa-solid fa-book-open text-[#fb923c] text-sm" />
+          <span class="text-[10px] font-bold uppercase tracking-[0.25em] text-[#fb923c]">Archivo de Sets</span>
         </div>
 
         <h1 class="font-serif text-5xl leading-tight text-[#f5f5f4] md:text-7xl">
           EL ARCHIVO DE<br />
-          <span class="font-light italic text-[#d4af37]">ESTRATEGIAS</span>
+          <span class="font-light italic text-[#fb923c]">ESTRATEGIAS</span>
         </h1>
 
         <p class="mx-auto max-w-2xl text-lg font-light leading-relaxed text-[#a8a29e]">
-          <span class="text-[#f5f5f4]">/compositions</span> ahora funciona como portal de sets.
-          Elige entre el tomo estable de <span class="text-[#f5f5f4]">Set 16</span> o el avance competitivo de <span class="text-[#f5f5f4]">Set 17 en PBE</span>.
+          <span class="text-[#f5f5f4]">/compositions</span> ahora entra directo al bloque principal del
+          <span class="text-[#f5f5f4]"> Set 17</span>, mientras que los sets anteriores se quedan recogidos aparte para consulta histórica.
         </p>
 
-        <div class="mx-auto mt-4 h-px w-24 bg-[#d4af37]/50"></div>
+        <div class="mx-auto mt-4 h-px w-24 bg-[#fb923c]/50"></div>
       </div>
     </Container>
   </div>
 
   <div class="min-h-screen bg-[#1c1917] py-20">
     <Container maxWidth="xl">
-      <div class="grid gap-8 xl:grid-cols-2">
-        {summaries.map((setSummary) => (
-          <article class={`group relative overflow-hidden border ${setSummary.borderClass} bg-[#0c0a09] p-8 md:p-10`}>
-            <div class={`pointer-events-none absolute inset-0 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100 ${setSummary.glowClass}`}></div>
+      {featuredSet && (
+        <section class="mb-16">
+          <div class="mb-6 flex items-center justify-between gap-4 border-b border-[#292524] pb-4">
+            <div>
+              <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#fb923c]">Principal</p>
+              <h2 class="mt-2 font-serif text-3xl text-[#f5f5f4] md:text-4xl">Set actual</h2>
+            </div>
+            <span class="text-sm font-light italic text-[#78716c]">
+              {featuredSet.count} {featuredSet.count === 1 ? "composición" : "composiciones"}
+            </span>
+          </div>
+
+          <article class={`group relative overflow-hidden border ${featuredSet.borderClass} bg-[#0c0a09] p-8 md:p-10`}>
+            <div class={`pointer-events-none absolute inset-0 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100 ${featuredSet.glowClass}`}></div>
             <div class="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.04]"></div>
 
             <div class="relative flex h-full flex-col gap-8">
               <div class="flex flex-wrap items-center justify-between gap-4">
-                <div class={`inline-flex items-center gap-3 border px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] ${setSummary.badgeClass}`}>
-                  <span class="h-2 w-2 rounded-full" style={`background:${setSummary.accent}`}></span>
-                  {setSummary.eyebrow}
+                <div class={`inline-flex items-center gap-3 border px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] ${featuredSet.badgeClass}`}>
+                  <span class="h-2 w-2 rounded-full" style={`background:${featuredSet.accent}`}></span>
+                  {featuredSet.eyebrow}
                 </div>
-                <span class="text-sm font-light italic text-[#78716c]">
-                  {setSummary.count} {setSummary.count === 1 ? "composición" : "composiciones"}
-                </span>
+                <div class="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.25em] text-[#fed7aa]">
+                  <i class="fa-solid fa-fire-flame-curved"></i>
+                  Meta activo
+                </div>
               </div>
 
               <div class="space-y-4">
-                <h2 class="font-serif text-4xl text-[#f5f5f4] md:text-5xl">{setSummary.title}</h2>
-                <p class="max-w-xl text-base font-light leading-relaxed text-[#a8a29e] md:text-lg">
-                  {setSummary.description}
+                <h3 class="font-serif text-4xl text-[#f5f5f4] md:text-6xl">{featuredSet.title}</h3>
+                <p class="max-w-3xl text-base font-light leading-relaxed text-[#d6d3d1] md:text-lg">
+                  {featuredSet.description}
                 </p>
               </div>
 
               <div class="grid gap-4 border border-[#292524] bg-[#120f0e]/80 p-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
                 <div class="space-y-3">
                   <p class="text-[10px] uppercase tracking-[0.25em] text-[#78716c]">Lectura rápida</p>
-                  <p class="text-sm leading-relaxed text-[#d6d3d1]">{setSummary.detail}</p>
+                  <p class="text-sm leading-relaxed text-[#d6d3d1]">{featuredSet.detail}</p>
                 </div>
                 <div class="flex flex-wrap gap-2 md:justify-end">
-                  {setSummary.tiers.length > 0 ? (
-                    setSummary.tiers.map((tier) => (
+                  {featuredSet.tiers.length > 0 ? (
+                    featuredSet.tiers.map((tier) => (
                       <span class="border border-[#292524] px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-[#a8a29e]">
                         {tier}
                       </span>
@@ -133,20 +147,93 @@ const summaries = await Promise.all(
 
               <div class="mt-auto flex items-center justify-between gap-6 border-t border-[#292524] pt-6">
                 <p class="max-w-sm text-sm font-light leading-relaxed text-[#78716c]">
-                  Entrar al tomo filtrado para ver solo las compos de {setSummary.title}.
+                  Entrar al tomo principal para ver solo las compos de {featuredSet.title}.
                 </p>
                 <a
-                  href={setSummary.href}
-                  class={`inline-flex items-center gap-3 border px-6 py-3 text-[10px] font-bold uppercase tracking-[0.25em] transition-all duration-300 ${setSummary.buttonClass}`}
+                  href={featuredSet.href}
+                  class={`inline-flex items-center gap-3 border px-6 py-3 text-[10px] font-bold uppercase tracking-[0.25em] transition-all duration-300 ${featuredSet.buttonClass}`}
                 >
-                  Abrir {setSummary.title}
+                  Abrir {featuredSet.title}
                   <i class="fa-solid fa-arrow-right-long transition-transform duration-300 group-hover:translate-x-1"></i>
                 </a>
               </div>
             </div>
           </article>
-        ))}
-      </div>
+        </section>
+      )}
+
+      <section>
+        <div class="mb-6 flex items-center justify-between gap-4 border-b border-[#292524] pb-4">
+          <div>
+            <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-[#a8a29e]">Archivo</p>
+            <h2 class="mt-2 font-serif text-3xl text-[#f5f5f4] md:text-4xl">Sets antiguos</h2>
+          </div>
+          <span class="text-sm font-light italic text-[#78716c]">
+            {legacySets.length} {legacySets.length === 1 ? "set" : "sets"}
+          </span>
+        </div>
+
+        <div class="grid gap-8 xl:grid-cols-2">
+          {legacySets.map((setSummary) => (
+            <article class={`group relative overflow-hidden border ${setSummary.borderClass} bg-[#0c0a09] p-8 md:p-10`}>
+              <div class={`pointer-events-none absolute inset-0 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100 ${setSummary.glowClass}`}></div>
+              <div class="pointer-events-none absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-[0.04]"></div>
+
+              <div class="relative flex h-full flex-col gap-8">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                  <div class={`inline-flex items-center gap-3 border px-4 py-2 text-[10px] font-bold uppercase tracking-[0.25em] ${setSummary.badgeClass}`}>
+                    <span class="h-2 w-2 rounded-full" style={`background:${setSummary.accent}`}></span>
+                    {setSummary.eyebrow}
+                  </div>
+                  <span class="text-sm font-light italic text-[#78716c]">
+                    {setSummary.count} {setSummary.count === 1 ? "composición" : "composiciones"}
+                  </span>
+                </div>
+
+                <div class="space-y-4">
+                  <h3 class="font-serif text-4xl text-[#f5f5f4] md:text-5xl">{setSummary.title}</h3>
+                  <p class="max-w-xl text-base font-light leading-relaxed text-[#a8a29e] md:text-lg">
+                    {setSummary.description}
+                  </p>
+                </div>
+
+                <div class="grid gap-4 border border-[#292524] bg-[#120f0e]/80 p-5 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
+                  <div class="space-y-3">
+                    <p class="text-[10px] uppercase tracking-[0.25em] text-[#78716c]">Lectura rápida</p>
+                    <p class="text-sm leading-relaxed text-[#d6d3d1]">{setSummary.detail}</p>
+                  </div>
+                  <div class="flex flex-wrap gap-2 md:justify-end">
+                    {setSummary.tiers.length > 0 ? (
+                      setSummary.tiers.map((tier) => (
+                        <span class="border border-[#292524] px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-[#a8a29e]">
+                          {tier}
+                        </span>
+                      ))
+                    ) : (
+                      <span class="border border-[#292524] px-2.5 py-1 text-[10px] uppercase tracking-[0.2em] text-[#57534e]">
+                        Sin compos todavía
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div class="mt-auto flex items-center justify-between gap-6 border-t border-[#292524] pt-6">
+                  <p class="max-w-sm text-sm font-light leading-relaxed text-[#78716c]">
+                    Entrar al archivo filtrado para ver solo las compos de {setSummary.title}.
+                  </p>
+                  <a
+                    href={setSummary.href}
+                    class={`inline-flex items-center gap-3 border px-6 py-3 text-[10px] font-bold uppercase tracking-[0.25em] transition-all duration-300 ${setSummary.buttonClass}`}
+                  >
+                    Abrir {setSummary.title}
+                    <i class="fa-solid fa-arrow-right-long transition-transform duration-300 group-hover:translate-x-1"></i>
+                  </a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
     </Container>
   </div>
 </Layout>

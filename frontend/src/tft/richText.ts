@@ -38,6 +38,18 @@ function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function buildMentionPattern(name: string): string {
+  return Array.from(name)
+    .map((char) => {
+      if (/\s/.test(char)) return "\\s+";
+      if (char === "'") return "(?:'|&#39;|’|&#8217;)";
+      if (char === "&") return "(?:&|&amp;)";
+      if (char === "\"") return "(?:\"|&quot;)";
+      return escapeRegex(char);
+    })
+    .join("");
+}
+
 function buildMentionHtml(name: string, iconSrc: string): string {
   const safeName = escapeHtml(name);
   const safeIcon = escapeHtml(iconSrc);
@@ -73,9 +85,12 @@ export function renderRichTextWithSetMentions(
     const iconSrc = getAssetSrc(resolved?.icon);
     if (!iconSrc) continue;
 
-    const regex = new RegExp(`\\b${escapeRegex(candidate.name)}\\b`, "gi");
-    rendered = rendered.replace(regex, () =>
-      buildMentionHtml(candidate.name, iconSrc),
+    const regex = new RegExp(
+      `(^|[^a-zA-Z0-9])(${buildMentionPattern(candidate.name)})(?=$|[^a-zA-Z0-9])`,
+      "gi",
+    );
+    rendered = rendered.replace(regex, (_match, prefix: string) =>
+      `${prefix}${buildMentionHtml(candidate.name, iconSrc)}`,
     );
   }
 

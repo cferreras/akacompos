@@ -350,7 +350,13 @@ const PrioritiesDisplay = memo(function PrioritiesDisplay({
           priority.name,
           priority.type === "custom" ? undefined : priority.type,
         );
-        const iconSrc = priority.icon || getImgSrc(resolved?.icon);
+        const isChampionPriority =
+          priority.type === "champion" || resolved?.type === "champion";
+        const iconSrc = priority.icon || (
+          isChampionPriority
+            ? getImgSrc(runtime.getChampionThumb(resolved?.name || priority.name))
+            : getImgSrc(resolved?.icon)
+        );
         return (
           <div key={`${priority.name}-${i}`} className="flex items-start gap-4 p-3 bg-[#0c0a09] border border-[#292524] hover:border-[#d4af37]/20 transition-colors">
             <div className="w-11 h-11 bg-[#1c1917] overflow-hidden flex-shrink-0 border border-[#d4af37]/10 p-1 flex items-center justify-center">
