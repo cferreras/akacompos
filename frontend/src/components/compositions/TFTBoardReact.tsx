@@ -66,6 +66,7 @@ const HexCharacter: React.FC<{
   const color = borderColors[borderColor] || borderColors.empty;
   const imgSrc = champion ? getImgSrc(runtime.getChampionThumb(champion)) : null;
   const imgPos = champion ? runtime.getChampionImagePosition(champion) || "center" : "center";
+  const imgFit = runtime.id === "set17" ? "contain" : "cover";
   const validItems = items.slice(0, 3).filter((item) => Boolean(runtime.getItemAsset(item)));
   const nameLen = champion ? champion.length : 0;
   let fontSize = "calc(var(--hex-size) * 0.16)";
@@ -79,7 +80,7 @@ const HexCharacter: React.FC<{
         <div style={{ width: "100%", height: "100%", background: "#0c0a09", clipPath: hexClip, display: "flex", alignItems: "center", justifyContent: "center", overflow: "hidden", position: "relative" }}>
           {imgSrc ? (
             <>
-              <img src={imgSrc} alt={champion || ""} loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: imgPos, filter: "contrast(1.1) grayscale(10%)", transition: "all 0.5s ease" }} className="group-hover:grayscale-0 group-hover:contrast-125" />
+              <img src={imgSrc} alt={champion || ""} loading="lazy" style={{ width: "100%", height: "100%", objectFit: imgFit, objectPosition: imgPos, filter: "contrast(1.1) grayscale(10%)", transition: "all 0.5s ease" }} className="group-hover:grayscale-0 group-hover:contrast-125" />
               <div style={{ position: "absolute", inset: 0, background: "radial-gradient(circle at center, rgba(12,10,9,0.7) 0%, transparent 70%)" }}></div>
             </>
           ) : (
@@ -148,3 +149,4 @@ export const TFTBoardReact: React.FC<TFTBoardReactProps> = ({ boardData, runtime
     </div>
   );
 };
+

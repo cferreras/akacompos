@@ -2,6 +2,7 @@
 import { championAssets, itemAssets, championImagePositions } from "../utils/assets";
 import StarsComponent from "./StarsComponent.astro";
 import { Image } from "astro:assets";
+import { isSet17Champion } from "../utils/set17ChampionIcons";
 
 const borderColors = {
     purple: "#7f1d1d", // Magic Crimson
@@ -34,6 +35,7 @@ const {
 
 const finalImageSrc = champion ? championAssets[champion] : null;
 const imagePosition = champion ? (championImagePositions[champion] || championImagePositions["Default"]) : championImagePositions["Default"];
+const imageFit = champion && isSet17Champion(champion) ? "contain" : "cover";
 const showEmptySlot = !champion && !imageUrl;
 const finalBorderColor = borderColors[borderColor as keyof typeof borderColors] || borderColors.empty;
 const validItems = items.slice(0, 3).filter((item) => item in itemAssets);
@@ -63,7 +65,7 @@ else if (nameLength > 8) fontSize = "calc(var(--size) * 0.14)";
 
 <div
     class="character group"
-    style={`--border-color: ${finalBorderColor}; --size: ${size};`}
+    style={`--border-color: ${finalBorderColor}; --size: ${size}; --champion-fit: ${imageFit};`}
 >
     <div class="stars">
         <StarsComponent stars={stars} />
@@ -78,7 +80,7 @@ else if (nameLength > 8) fontSize = "calc(var(--size) * 0.14)";
                             src={finalImageSrc}
                             alt={champion ? `${champion}` : "Champion"}
                             class="hexagon-img"
-                            style={`object-position: ${imagePosition};`}
+                            style={`object-position: ${imagePosition}; object-fit: ${imageFit};`}
                             width={optimizedSize}
                             height={optimizedSize}
                             loading="lazy"
@@ -90,7 +92,7 @@ else if (nameLength > 8) fontSize = "calc(var(--size) * 0.14)";
                     </>
                 ) : imageUrl ? (
                     <>
-                        <img src={imageUrl} alt="Champion" class="hexagon-img" style={`object-position: ${imagePosition};`} />
+                        <img src={imageUrl} alt="Champion" class="hexagon-img" style={`object-position: ${imagePosition}; object-fit: ${imageFit};`} />
                         <div class="hexagon-overlay"></div>
                     </>
                 ) : (
@@ -172,7 +174,7 @@ else if (nameLength > 8) fontSize = "calc(var(--size) * 0.14)";
     .hexagon-img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: var(--champion-fit, cover);
         filter: contrast(1.1) grayscale(10%);
         transition: all 0.5s ease;
     }
@@ -222,7 +224,7 @@ else if (nameLength > 8) fontSize = "calc(var(--size) * 0.14)";
     .item-img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: var(--champion-fit, cover);
     }
 
     .stars {
@@ -275,3 +277,4 @@ else if (nameLength > 8) fontSize = "calc(var(--size) * 0.14)";
         color: #d4af37;
     }
 </style>
+
