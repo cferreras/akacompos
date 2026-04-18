@@ -34,10 +34,59 @@ export function getRichTextPlainText(content: RichTextContent): string {
     .join("\n");
 }
 
+function containsHtmlMarkup(value: string): boolean {
+  return /<\/?[a-z][^>]*>|&lt;\/?[a-z][^&]*&gt;/i.test(value);
+}
+
 function escapeRegex(value: string): string {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+function decodeHtmlEntities(value: string): string {
+  return value
+    .replace(/&nbsp;/gi, " ")
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;/gi, "'")
+    .replace(/&lt;/gi, "<")
+    .replace(/&gt;/gi, ">")
+    .replace(/&amp;/gi, "&");
+}
+
+function stripHtmlTags(value: string): string {
+  return value
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>\s*<p[^>]*>/gi, "\n\n")
+    .replace(/<[^>]+>/g, "");
+}
+
+function stripLegacyImageFragments(value: string): string {
+  return value
+    .replace(/<img\b[^>]*>/gi, "")
+    .replace(/&lt;img\b[^&]*&gt;/gi, "")
+    .replace(
+      /[^\s<>"']*?\.(?:png|jpe?g|gif|webp|svg)(?:"|'|&quot;)(?:\s+(?:alt|class|src|width|height|loading|decoding|style|title|aria-[\w-]+)\s*=\s*(?:"[^"]*"|'[^']*'|&quot;[^&]*&quot;|[^\s>]+))*\s*\/?>?/gi,
+      "",
+    )
+    .replace(
+      /(?:\s+(?:alt|class|src|width|height|loading|decoding|style|title|aria-[\w-]+)\s*=\s*(?:"[^"]*"|'[^']*'|&quot;[^&]*&quot;|[^\s>]+)){2,}\s*\/?>?/gi,
+      "",
+    )
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/[ \t]+\n/g, "\n")
+    .replace(/\n[ \t]+/g, "\n")
+    .trim();
+}
+
+export function getSanitizedRichTextPlainText(content: RichTextContent): string {
+  const plainText = getRichTextPlainText(content);
+  if (!plainText) return "";
+
+  const normalized = containsHtmlMarkup(plainText)
+    ? stripHtmlTags(decodeHtmlEntities(plainText))
+    : decodeHtmlEntities(plainText);
+
+  return stripLegacyImageFragments(normalized);
+}
 function buildMentionPattern(name: string): string {
   return Array.from(name)
     .map((char) => {
@@ -57,14 +106,24 @@ function buildMentionHtml(name: string, iconSrc: string): string {
   return `<b>${safeName}</b> <img src="${safeIcon}" alt="${safeName}" class="rounded-full aspect-square h-4 inline align-middle border border-[#292524]"/>`;
 }
 
+export function renderInlineDescriptionWithSetMentions(
+  content: string | null | undefined,
+  runtime: SetRuntime,
+): string {
+  if (!content) return "";
+
+  return renderRichTextWithSetMentions(getSanitizedRichTextPlainText(content), runtime);
+}
+
 export function renderRichTextWithSetMentions(
   content: RichTextContent,
   runtime: SetRuntime,
 ): string {
-  const plainText = getRichTextPlainText(content);
+  const plainText = getSanitizedRichTextPlainText(content);
   if (!plainText) return "";
 
   let rendered = escapeHtml(plainText);
+  const mentionHtmlByToken = new Map<string, string>();
   const seen = new Set<string>();
   const candidates = [
     ...runtime.championNames.map((name) => ({ name, type: "champion" as const })),
@@ -89,10 +148,17 @@ export function renderRichTextWithSetMentions(
       `(^|[^a-zA-Z0-9])(${buildMentionPattern(candidate.name)})(?=$|[^a-zA-Z0-9])`,
       "gi",
     );
-    rendered = rendered.replace(regex, (_match, prefix: string) =>
-      `${prefix}${buildMentionHtml(candidate.name, iconSrc)}`,
-    );
+    rendered = rendered.replace(regex, (_match, prefix: string) => {
+      const token = `__MENTION_${mentionHtmlByToken.size}__`;
+      mentionHtmlByToken.set(token, buildMentionHtml(candidate.name, iconSrc));
+      return `${prefix}${token}`;
+    });
+  }
+
+  for (const [token, html] of mentionHtmlByToken) {
+    rendered = rendered.replaceAll(token, html);
   }
 
   return rendered.replace(/\n/g, "<br />");
 }
+

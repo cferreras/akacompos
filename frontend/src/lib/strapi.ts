@@ -1,6 +1,6 @@
 /// <reference types="vite/client" />
 import { normalizeCompositionSet } from "../utils/compositionPaths";
-import { getRichTextPlainText } from "../tft/richText";
+import { getSanitizedRichTextPlainText } from "../tft/richText";
 import { getSetRuntime } from "../tft/sets/registry";
 import type {
   CompositionBoard,
@@ -205,7 +205,7 @@ function normalizePrioritiesForSet(
 
 function getExcerpt(...values: RichTextContent[]): string | undefined {
   for (const value of values) {
-    const plainText = getRichTextPlainText(value).replace(/\s+/g, " ").trim();
+    const plainText = getSanitizedRichTextPlainText(value).replace(/\s+/g, " ").trim();
     if (plainText) {
       return plainText.slice(0, 180);
     }
