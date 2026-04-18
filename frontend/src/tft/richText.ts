@@ -87,7 +87,6 @@ export function getSanitizedRichTextPlainText(content: RichTextContent): string 
 
   return stripLegacyImageFragments(normalized);
 }
-
 function buildMentionPattern(name: string): string {
   return Array.from(name)
     .map((char) => {
