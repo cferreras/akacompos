@@ -18,7 +18,10 @@ import type {
   LegacyAugmentReference,
   LegacyCoreItem,
 } from "../../tft/types";
-import { renderRichTextWithSetMentions } from "../../tft/richText";
+import {
+  renderInlineDescriptionWithSetMentions,
+  renderRichTextWithSetMentions,
+} from "../../tft/richText";
 import { getSetRuntime, getSetLabel } from "../../tft/sets/registry";
 import type { SetRuntime } from "../../tft/types";
 import {
@@ -274,6 +277,10 @@ const LegacyItemsDisplay = memo(function LegacyItemsDisplay({
     <div className="space-y-3">
       {items.map((item, i) => {
         const src = getImgSrc(runtime.getItemAsset(item.name));
+        const descriptionHtml = renderInlineDescriptionWithSetMentions(
+          item.description,
+          runtime,
+        );
         return (
           <div key={`${item.name}-${i}`} className="flex items-start gap-4 p-3 bg-[#0c0a09] border border-[#292524] hover:border-[#d4af37]/20 transition-colors">
             <div className="w-12 h-12 bg-[#1c1917] overflow-hidden flex-shrink-0 border border-[#d4af37]/10 p-0.5">
@@ -287,8 +294,11 @@ const LegacyItemsDisplay = memo(function LegacyItemsDisplay({
             </div>
             <div className="flex-1 min-w-0 pt-0.5">
               <p className="font-serif text-lg text-[#f5f5f4] leading-tight mb-1 truncate">{item.name}</p>
-              {item.description && (
-                <p className="text-xs text-[#a8a29e] leading-relaxed font-light">{item.description}</p>
+              {descriptionHtml && (
+                <div
+                  className="text-xs text-[#a8a29e] leading-relaxed font-light [&_b]:font-medium [&_b]:text-[#f5f5f4] [&_img]:inline [&_img]:mx-1 [&_img]:align-sub"
+                  dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+                />
               )}
             </div>
           </div>
@@ -312,6 +322,10 @@ const LegacyAugmentsDisplay = memo(function LegacyAugmentsDisplay({
       {augments.map((augment, i) => {
         const resolved = runtime.getAugment(augment.name);
         const imgSrc = getImgSrc(resolved?.image) || augment.icon || null;
+        const descriptionHtml = renderInlineDescriptionWithSetMentions(
+          augment.description,
+          runtime,
+        );
         return (
           <div key={`${augment.name}-${i}`} className="flex items-start gap-4 p-3 bg-[#0c0a09] border border-[#57534e] hover:bg-[#1c1917] transition-colors">
             <div className="w-10 h-10 overflow-hidden flex-shrink-0 bg-[#1c1917] flex items-center justify-center p-1 rounded-sm">
@@ -323,8 +337,11 @@ const LegacyAugmentsDisplay = memo(function LegacyAugmentsDisplay({
             </div>
             <div className="flex-1 min-w-0 pt-0.5">
               <p className="font-serif text-lg leading-tight truncate mb-0.5 text-[#f5f5f4]">{augment.name}</p>
-              {augment.description && (
-                <p className="text-xs text-[#a8a29e] leading-relaxed font-light">{augment.description}</p>
+              {descriptionHtml && (
+                <div
+                  className="text-xs text-[#a8a29e] leading-relaxed font-light [&_b]:font-medium [&_b]:text-[#f5f5f4] [&_img]:inline [&_img]:mx-1 [&_img]:align-sub"
+                  dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+                />
               )}
             </div>
           </div>
@@ -437,6 +454,7 @@ const ExpandedDetail = memo(function ExpandedDetail({ comp }: { comp: Compositio
     () => renderRichTextWithSetMentions(comp.legacy?.gameplayMode, runtime),
     [comp.legacy?.gameplayMode, runtime],
   );
+  const hasSupplementaryColumn = comp.development.length > 0 && Boolean(tipsHtml || gameplayHtml);
 
   const handleCopy = useCallback(async () => {
     if (!comp.compCode) return;
@@ -523,7 +541,7 @@ const ExpandedDetail = memo(function ExpandedDetail({ comp }: { comp: Compositio
         </div>
 
         {(tipsHtml || gameplayHtml || comp.development.length > 0) && (
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+          <div className={`grid grid-cols-1 ${hasSupplementaryColumn ? "xl:grid-cols-2" : "xl:grid-cols-1"} gap-8`}>
             {(tipsHtml || gameplayHtml) && (
               <div className="border border-[#292524] bg-[#1c1917] p-6 md:p-8 space-y-10">
                 {tipsHtml && (
@@ -821,6 +839,7 @@ export const CompositionList: React.FC<CompositionListProps> = ({
     </div>
   );
 };
+
 
 
 
