@@ -2,7 +2,7 @@
 title: "Celestial Guardians"
 tier: "S Tier"
 author: "AKAWonder"
-image: "/src/assets/Champions/Leona.png"
+image: "/src/assets/Champions/Leona.webp"
 tags: ["Fast 8", "High Roll", "Guardians", "Celestial"]
 description: "Una composición poderosa que combina la protección celestial con guardianes tanques. Ideal para jugadores que buscan una estrategia equilibrada entre ofensa y defensa."
 gameplayMode: "Perfecta para partidas ranked y normales. Requiere farm temprano para conseguir fast 8 y encontrar las unidades clave."

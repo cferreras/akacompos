@@ -2,7 +2,7 @@
 title: "Cosmic Infiltrators"
 tier: "S Tier"
 author: "AKAWonder"
-image: "/src/assets/Champions/Akali.png"
+image: "/src/assets/Champions/Akali.webp"
 tags: ["Infiltrators", "Cosmic", "High Roll", "Aggressive"]
 description: "This composition excels BF Sword in high-roll scenarios Ahri where you can quickly level up and acquire key champions. It's an aggressive playstyle focused on early and mid-game dominance. Ideal for players comfortable with fast-paced decision-making and resource management."
 gameplayMode: "This composition is best suited for Ranked and Normal game modes. It's highly competitive and requires strategic positioning and itemization to maximize its potential. Avoid using it in Hyper Roll due to the different leveling and economy dynamics."

@@ -2,7 +2,7 @@
 title: "Shadow Assassins"
 tier: "B Tier"
 author: "NinjaPlayer"
-image: "/src/assets/Champions/Katarina.png"
+image: "/src/assets/Champions/Katarina.webp"
 tags: ["Assassins", "Shadow", "Burst", "High Risk"]
 description: "A high-risk, high-reward composition focused on eliminating key enemy champions quickly. Requires precise positioning and timing."
 gameplayMode: "Best for experienced players who understand positioning mechanics. Works well in fast-paced games but struggles against heavy tank compositions."
