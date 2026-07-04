@@ -3,106 +3,106 @@
 // ============================================================================
 
 // Import all champion assets for Set 16
-import AatroxImg from "../assets/Champions/Aatrox.jpg";
-import AhriImg from "../assets/Champions/Ahri.jpg";
-import AmbessaImg from "../assets/Champions/Ambessa.jpg";
-import AniviaImg from "../assets/Champions/Anivia.jpg";
-import AnnieImg from "../assets/Champions/Annie.jpg";
-import ApheliosImg from "../assets/Champions/Aphelios.jpg";
-import AsheImg from "../assets/Champions/Ashe.jpg";
-import AurelionSolImg from "../assets/Champions/AurelionSol.jpg";
-import AzirImg from "../assets/Champions/Azir.jpg";
-import BardImg from "../assets/Champions/Bard.jpg";
-import BaronNashorImg from "../assets/Champions/Baron Nashor.jpg";
-import BelVethImg from "../assets/Champions/Bel_Veth.jpg";
-import BlitzcrankImg from "../assets/Champions/Blitzcrank.jpg";
-import BraumImg from "../assets/Champions/Braum.jpg";
-import BriarImg from "../assets/Champions/Briar.jpg";
-import BrockImg from "../assets/Champions/Brock.jpg";
-import CaitlynImg from "../assets/Champions/Caitlyn.jpg";
-import ChoGathImg from "../assets/Champions/ChoGath.jpg";
-import DariusImg from "../assets/Champions/Darius.jpg";
-import DianaImg from "../assets/Champions/Diana.jpg";
-import DravenImg from "../assets/Champions/Draven.jpg";
-import DrMundoImg from "../assets/Champions/DrMundo.jpg";
-import EkkoImg from "../assets/Champions/Ekko.jpg";
-import FiddlesticksImg from "../assets/Champions/Fiddlesticks.jpg";
-import FizzImg from "../assets/Champions/Fizz.jpg";
-import GalioImg from "../assets/Champions/Galio.jpg";
-import GangplankImg from "../assets/Champions/Gangplank.jpg";
-import GarenImg from "../assets/Champions/Garen.jpg";
-import GravesImg from "../assets/Champions/Graves.jpg";
-import GwenImg from "../assets/Champions/Gwen.jpg";
-import IllaoiImg from "../assets/Champions/Illaoi.jpg";
-import JarvanIVImg from "../assets/Champions/JarvanIV.jpg";
-import JhinImg from "../assets/Champions/Jhin.jpg";
-import JinxImg from "../assets/Champions/Jinx.jpg";
-import KaiSaImg from "../assets/Champions/KaiSa.jpg";
-import KalistaImg from "../assets/Champions/Kalista.jpg";
-import KennenImg from "../assets/Champions/Kennen.jpg";
-import KindredImg from "../assets/Champions/Kindred.jpg";
-import KobukoImg from "../assets/Champions/Kobuko.jpg";
-import KogMawImg from "../assets/Champions/Kog_Maw.jpg";
-import LeBlancImg from "../assets/Champions/Leblanc.jpg";
-import LeonaImg from "../assets/Champions/Leona.jpg";
-import LissandraImg from "../assets/Champions/Lissandra.jpg";
-import LorisImg from "../assets/Champions/Loris.jpg";
-import LucianSennaImg from "../assets/Champions/LucianSenna.jpg";
-import LuluImg from "../assets/Champions/Lulu.jpg";
-import LuxImg from "../assets/Champions/Lux.jpg";
-import MalzaharImg from "../assets/Champions/Malzahar.jpg";
-import MelImg from "../assets/Champions/Mel.jpg";
-import MilioImg from "../assets/Champions/Milio.jpg";
-import MissFortuneImg from "../assets/Champions/MissFortune.jpg";
-import NasusImg from "../assets/Champions/Nasus.jpg";
-import NautilusImg from "../assets/Champions/Nautilus.jpg";
-import NeekoImg from "../assets/Champions/Neeko.jpg";
-import NidaleeImg from "../assets/Champions/Nidalee.jpg";
-import OriannaImg from "../assets/Champions/Orianna.jpg";
-import OrnnImg from "../assets/Champions/Ornn.jpg";
-import PoppyImg from "../assets/Champions/Poppy.jpg";
-import QiyanaImg from "../assets/Champions/Quiyana.jpg";
-import RekSaiImg from "../assets/Champions/RekSai.jpg";
-import RenektonImg from "../assets/Champions/Renekton.jpg";
+import AatroxImg from "../assets/Champions/Aatrox.jpg.webp";
+import AhriImg from "../assets/Champions/Ahri.jpg.webp";
+import AmbessaImg from "../assets/Champions/Ambessa.webp";
+import AniviaImg from "../assets/Champions/Anivia.webp";
+import AnnieImg from "../assets/Champions/Annie.webp";
+import ApheliosImg from "../assets/Champions/Aphelios.webp";
+import AsheImg from "../assets/Champions/Ashe.jpg.webp";
+import AurelionSolImg from "../assets/Champions/AurelionSol.webp";
+import AzirImg from "../assets/Champions/Azir.webp";
+import BardImg from "../assets/Champions/Bard.webp";
+import BaronNashorImg from "../assets/Champions/Baron Nashor.webp";
+import BelVethImg from "../assets/Champions/Bel_Veth.webp";
+import BlitzcrankImg from "../assets/Champions/Blitzcrank.webp";
+import BraumImg from "../assets/Champions/Braum.jpg.webp";
+import BriarImg from "../assets/Champions/Briar.webp";
+import BrockImg from "../assets/Champions/Brock.webp";
+import CaitlynImg from "../assets/Champions/Caitlyn.jpg.webp";
+import ChoGathImg from "../assets/Champions/ChoGath.webp";
+import DariusImg from "../assets/Champions/Darius.jpg.webp";
+import DianaImg from "../assets/Champions/Diana.webp";
+import DravenImg from "../assets/Champions/Draven.webp";
+import DrMundoImg from "../assets/Champions/DrMundo.webp";
+import EkkoImg from "../assets/Champions/Ekko.webp";
+import FiddlesticksImg from "../assets/Champions/Fiddlesticks.webp";
+import FizzImg from "../assets/Champions/Fizz.webp";
+import GalioImg from "../assets/Champions/Galio.webp";
+import GangplankImg from "../assets/Champions/Gangplank.jpg.webp";
+import GarenImg from "../assets/Champions/Garen.jpg.webp";
+import GravesImg from "../assets/Champions/Graves.webp";
+import GwenImg from "../assets/Champions/Gwen.jpg.webp";
+import IllaoiImg from "../assets/Champions/Illaoi.webp";
+import JarvanIVImg from "../assets/Champions/JarvanIV.jpg.webp";
+import JhinImg from "../assets/Champions/Jhin.jpg.webp";
+import JinxImg from "../assets/Champions/Jinx.jpg.webp";
+import KaiSaImg from "../assets/Champions/KaiSa.jpg.webp";
+import KalistaImg from "../assets/Champions/Kalista.jpg.webp";
+import KennenImg from "../assets/Champions/Kennen.jpg.webp";
+import KindredImg from "../assets/Champions/Kindred.webp";
+import KobukoImg from "../assets/Champions/Kobuko.jpg.webp";
+import KogMawImg from "../assets/Champions/Kog_Maw.webp";
+import LeBlancImg from "../assets/Champions/Leblanc.webp";
+import LeonaImg from "../assets/Champions/Leona.jpg.webp";
+import LissandraImg from "../assets/Champions/Lissandra.webp";
+import LorisImg from "../assets/Champions/Loris.webp";
+import LucianSennaImg from "../assets/Champions/LucianSenna.webp";
+import LuluImg from "../assets/Champions/Lulu.jpg.webp";
+import LuxImg from "../assets/Champions/Lux.jpg.webp";
+import MalzaharImg from "../assets/Champions/Malzahar.jpg.webp";
+import MelImg from "../assets/Champions/Mel.webp";
+import MilioImg from "../assets/Champions/Milio.webp";
+import MissFortuneImg from "../assets/Champions/MissFortune.webp";
+import NasusImg from "../assets/Champions/Nasus.webp";
+import NautilusImg from "../assets/Champions/Nautilus.webp";
+import NeekoImg from "../assets/Champions/Neeko.jpg.webp";
+import NidaleeImg from "../assets/Champions/Nidalee.webp";
+import OriannaImg from "../assets/Champions/Orianna.webp";
+import OrnnImg from "../assets/Champions/Ornn.webp";
+import PoppyImg from "../assets/Champions/Poppy.jpg.webp";
+import QiyanaImg from "../assets/Champions/Quiyana.webp";
+import RekSaiImg from "../assets/Champions/RekSai.webp";
+import RenektonImg from "../assets/Champions/Renekton.webp";
 import RiftHeraldImg from "../assets/Champions/RiftHerald.jpg";
-import RumbleImg from "../assets/Champions/Rumble.jpg";
-import RyzeImg from "../assets/Champions/Ryze.jpg";
-import SejuaniImg from "../assets/Champions/Sejuani.jpg";
-import SeraphineImg from "../assets/Champions/Seraphine.jpg";
-import SettImg from "../assets/Champions/Sett.jpg";
-import ShenImg from "../assets/Champions/Shen.jpg";
-import ShyvanaImg from "../assets/Champions/Shyvana.jpg";
-import SingedImg from "../assets/Champions/Singed.jpg";
-import SionImg from "../assets/Champions/Sion.jpg";
-import SkarnerImg from "../assets/Champions/Skarner.jpg";
-import SonaImg from "../assets/Champions/Sona.jpg";
-import SwainImg from "../assets/Champions/Swain.jpg";
-import SylasImg from "../assets/Champions/Sylas.jpg";
-import TahmKenchImg from "../assets/Champions/TahmKench.jpg";
-import TaricImg from "../assets/Champions/Taric.jpg";
-import TeemoImg from "../assets/Champions/Teemo.jpg";
-import THexImg from "../assets/Champions/THex.jpg";
-import ThreshImg from "../assets/Champions/Thresh.jpg";
-import TristanaImg from "../assets/Champions/Tristana.jpg";
-import TryndamereImg from "../assets/Champions/Tryndamere.jpg";
-import TwistedFateImg from "../assets/Champions/TwistedFate.jpg";
-import VayneImg from "../assets/Champions/Vayne.jpg";
-import VeigarImg from "../assets/Champions/Veigar.jpg";
-import ViImg from "../assets/Champions/Vi.jpg";
-import ViegoImg from "../assets/Champions/Viego.jpg";
-import VolibearImg from "../assets/Champions/Volibear.jpg";
-import WarwickImg from "../assets/Champions/Warwick.jpg";
-import WukongImg from "../assets/Champions/Wukong.jpg";
-import XerathImg from "../assets/Champions/Xerath.jpg";
-import XinZhaoImg from "../assets/Champions/XinZhao.jpg";
-import YasuoImg from "../assets/Champions/Yasuo.jpg";
-import YoneImg from "../assets/Champions/Yone.jpg";
-import YorickImg from "../assets/Champions/Yorick.jpg";
-import YunaraImg from "../assets/Champions/Yunara.jpg";
-import ZaahenImg from "../assets/Champions/Zaahen.jpg";
-import ZiggsImg from "../assets/Champions/Ziggs.jpg";
-import ZileanImg from "../assets/Champions/Zilean.jpg";
-import ZoeImg from "../assets/Champions/Zoe.jpg";
+import RumbleImg from "../assets/Champions/Rumble.webp";
+import RyzeImg from "../assets/Champions/Ryze.jpg.webp";
+import SejuaniImg from "../assets/Champions/Sejuani.webp";
+import SeraphineImg from "../assets/Champions/Seraphine.jpg.webp";
+import SettImg from "../assets/Champions/Sett.jpg.webp";
+import ShenImg from "../assets/Champions/Shen.jpg.webp";
+import ShyvanaImg from "../assets/Champions/Shyvana.webp";
+import SingedImg from "../assets/Champions/Singed.webp";
+import SionImg from "../assets/Champions/Sion.webp";
+import SkarnerImg from "../assets/Champions/Skarner.webp";
+import SonaImg from "../assets/Champions/Sona.webp";
+import SwainImg from "../assets/Champions/Swain.jpg.webp";
+import SylasImg from "../assets/Champions/Sylas.webp";
+import TahmKenchImg from "../assets/Champions/TahmKench.webp";
+import TaricImg from "../assets/Champions/Taric.webp";
+import TeemoImg from "../assets/Champions/Teemo.webp";
+import THexImg from "../assets/Champions/THex.webp";
+import ThreshImg from "../assets/Champions/Thresh.webp";
+import TristanaImg from "../assets/Champions/Tristana.webp";
+import TryndamereImg from "../assets/Champions/Tryndamere.webp";
+import TwistedFateImg from "../assets/Champions/TwistedFate.webp";
+import VayneImg from "../assets/Champions/Vayne.webp";
+import VeigarImg from "../assets/Champions/Veigar.webp";
+import ViImg from "../assets/Champions/Vi.jpg.webp";
+import ViegoImg from "../assets/Champions/Viego.jpg.webp";
+import VolibearImg from "../assets/Champions/Volibear.jpg.webp";
+import WarwickImg from "../assets/Champions/Warwick.webp";
+import WukongImg from "../assets/Champions/Wukong.webp";
+import XerathImg from "../assets/Champions/Xerath.webp";
+import XinZhaoImg from "../assets/Champions/XinZhao.webp";
+import YasuoImg from "../assets/Champions/Yasuo.jpg.webp";
+import YoneImg from "../assets/Champions/Yone.jpg.webp";
+import YorickImg from "../assets/Champions/Yorick.webp";
+import YunaraImg from "../assets/Champions/Yunara.webp";
+import ZaahenImg from "../assets/Champions/Zaahen.webp";
+import ZiggsImg from "../assets/Champions/Ziggs.jpg.webp";
+import ZileanImg from "../assets/Champions/Zilean.webp";
+import ZoeImg from "../assets/Champions/Zoe.webp";
 import { set17ChampionAssets, set17ChampionRarity } from "./set17ChampionIcons";
 
 // ============================================================================
@@ -132,17 +132,17 @@ import DeathbladeImg from "../assets/items/combined/deathblade.png";
 import DragonClawImg from "../assets/items/combined/dragons-claw.png";
 import EdgeOfNightImg from "../assets/items/combined/edge-of-night.png";
 import EvenshroudImg from "../assets/items/combined/evenshroud.png";
-import FimbulwinterImg from "../assets/items/combined/fimbulwinter.png";
+import FimbulwinterImg from "../assets/items/combined/fimbulwinter.webp";
 import GargoyleStoneplateImg from "../assets/items/combined/gargoyle-stoneplate.png";
 import GiantSlayerImg from "../assets/items/combined/giant-slayer.png";
-import GuardbreakerImg from "../assets/items/combined/guardbreaker.png";
+import GuardbreakerImg from "../assets/items/combined/guardbreaker.webp";
 import GuinsoosRagebladeImg from "../assets/items/combined/guinsoos-rageblade.png";
 import HandOfJusticeImg from "../assets/items/combined/hand-of-justice.png";
 import HextechGunbladeImg from "../assets/items/combined/hextech-gunblade.png";
 import InfinityEdgeImg from "../assets/items/combined/infinity-edge.png";
 import IonicSparkImg from "../assets/items/combined/ionic-spark.png";
 import JeweledGauntletImg from "../assets/items/combined/jeweled-gauntlet.png";
-import KrakensFuryImg from "../assets/items/combined/krakensfury.png";
+import KrakensFuryImg from "../assets/items/combined/krakensfury.webp";
 import LastWhisperImg from "../assets/items/combined/last-whisper.png";
 import MorellonomiconImg from "../assets/items/combined/morellonomicon.png";
 import NashorsToothImg from "../assets/items/combined/nashors-tooth.png";
@@ -150,7 +150,7 @@ import QuicksilverImg from "../assets/items/combined/quicksilver.png";
 import RabadonsDeathcapImg from "../assets/items/combined/rabadons-deathcap.png";
 import RedBuffImg from "../assets/items/combined/redbuff.png";
 import SpearOfShojinImg from "../assets/items/combined/spear-of-shojin2.png";
-import SpiritVisageImg from "../assets/items/combined/spiritvisage.png";
+import SpiritVisageImg from "../assets/items/combined/spiritvisage.webp";
 import SteadfastHammerImg from "../assets/items/combined/steadfast-hammer.png";
 import SteraksGageImg from "../assets/items/combined/steraks-gage.png";
 import SunfireCapeImg from "../assets/items/combined/sunfire-cape.png";
@@ -159,7 +159,7 @@ import TacticiansCapeImg from "../assets/items/combined/tacticians_cape.png";
 import TacticiansShieldImg from "../assets/items/combined/tacticians_shield.png";
 import ThiefsGlovesImg from "../assets/items/combined/thiefs-gloves.png";
 import TitansResolveImg from "../assets/items/combined/titans-resolve.png";
-import VoidStaffImg from "../assets/items/combined/voidstaff.png";
+import VoidStaffImg from "../assets/items/combined/voidstaff.webp";
 import WarmogsArmorImg from "../assets/items/combined/warmogs-armor.png";
 import { set17ItemAssets } from "./set17ItemAssets";
 
@@ -295,7 +295,7 @@ export const championAssets: Record<string, any> = {
 
 /**
  * Obtiene la imagen de un campeón a partir de una ruta de archivo o nombre
- * @param imagePath - Ruta como "/src/assets/Champions/Braum.png" o nombre como "Braum"
+ * @param imagePath - Ruta como "/src/assets/Champions/Braum.png.webp" o nombre como "Braum"
  * @returns La URL de la imagen o una imagen por defecto
  */
 const legacyItemAssets: Record<string, any> = {
@@ -472,7 +472,7 @@ export function resolveChampionName(name: string): string {
 
 /**
  * Obtiene la imagen de un campeón a partir de una ruta de archivo o nombre
- * @param imagePath - Ruta como "/src/assets/Champions/Braum.png" o nombre como "Braum"
+ * @param imagePath - Ruta como "/src/assets/Champions/Braum.png.webp" o nombre como "Braum"
  * @returns La URL de la imagen o una imagen por defecto
  */
 export function getChampionImage(imagePath: string): string {
@@ -490,7 +490,7 @@ export function getChampionImage(imagePath: string): string {
 
 /**
  * Obtiene la metadata de imagen de un campeón para usar con el componente Image de Astro
- * @param imagePath - Ruta como "/src/assets/Champions/Braum.png" o nombre como "Braum"
+ * @param imagePath - Ruta como "/src/assets/Champions/Braum.png.webp" o nombre como "Braum"
  * @returns ImageMetadata para usar con el componente Image de Astro
  */
 export function getChampionImageMeta(imagePath: string) {
