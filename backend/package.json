@@ -36,6 +36,11 @@
     "node": ">=18.0.0 <=22.x.x",
     "npm": ">=6.0.0"
   },
+  "pnpm": {
+    "overrides": {
+      "undici@6": "^6.29.1"
+    }
+  },
   "strapi": {
     "uuid": "b9131040-0c6c-4364-b9e8-6c5183c44c68",
     "installId": "00972d8106401e0a5958c7337ff4ef505e0e41818c511648a2d0a8ddefa3d0b4"
